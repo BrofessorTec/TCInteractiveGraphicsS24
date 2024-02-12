@@ -14,7 +14,7 @@ public:
     unsigned char* GetTextureData();
     void SetTextureData(unsigned int count, unsigned char* data);
     bool IsLoadedFromFile();
-    unsigned int TextureId();
+    unsigned int GetTextureId();
 private:
     void CleanUp();
 };

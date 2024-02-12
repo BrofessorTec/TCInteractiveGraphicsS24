@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "..\TCInteractiveGraphicsS24\Texture.h"
+//#include "..\..\TCInteractiveGraphicsS24\3rdparty\glad\include\glad\glad.h"
+//#include "..\..\TCInteractiveGraphicsS24\3rdparty\glfw\include\GLFW\glfw3.h"
+#include "..\3rdparty\glad\include\glad\glad.h"
+#include "..\3rdparty\glfw\include\GLFW\glfw3.h"
 
 namespace IGTesting
 {

@@ -29,7 +29,7 @@ bool Texture::IsLoadedFromFile()
 	return isLoadedFromFile;
 }
 
-unsigned int Texture::TextureId()
+unsigned int Texture::GetTextureId()
 {
 	return textureId;
 }
