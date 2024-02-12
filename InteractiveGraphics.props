@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glfw\include;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glad\include;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\imgui;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glm;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glfw\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\imgui;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glad\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>
+		  glfw3.lib;
+		  opengl32.lib;
+		  shell32.lib;
+		  user32.lib;
+		  gdi32.lib;
+	  </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
