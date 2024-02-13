@@ -5,11 +5,9 @@
 #include "..\3rdparty\glad\include\glad\glad.h"
 #include "..\3rdparty\glfw\include\GLFW\glfw3.h"
 
-/*
-namespace IGTesting
+namespace IGTesting3
 {
 	// where does this go?
-	
 	bool SetUpGraphics() {
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -54,12 +52,7 @@ namespace IGTesting
 
 }
 
-
-
-
 TEST(TestCaseName, TestName) {
   EXPECT_EQ(1, 1);
   EXPECT_TRUE(true);
 }
-
-*/
