@@ -7,21 +7,6 @@
 
 namespace IGTesting
 {
-	TEST(ATexture, HasNullTextureDataWhenCreated)
-	{
-		Texture sut;
-		//EXPECT_EQ(1, 1);
-		EXPECT_TRUE(sut.GetTextureData() == nullptr);
-	}
-
-	TEST(ATexture, CanSetTheTextureData)
-	{
-		Texture sut;
-		unsigned char data[] = { 255, 255, 255, 255 };
-		sut.SetTextureData(4, data);
-		EXPECT_TRUE(sut.GetTextureData() != nullptr);
-		EXPECT_TRUE(sut.IsLoadedFromFile() == false);
-	}
 	// where does this go?
 	bool SetUpGraphics() {
 		glfwInit();
@@ -47,6 +32,23 @@ namespace IGTesting
 		EXPECT_TRUE(sut.GetTextureId() != 0);
 		glfwTerminate();
 	}
+
+	TEST(ATexture, HasNullTextureDataWhenCreated)
+	{
+		Texture sut;
+		//EXPECT_EQ(1, 1);
+		EXPECT_TRUE(sut.GetTextureData() == nullptr);
+	}
+
+	TEST(ATexture, CanSetTheTextureData)
+	{
+		Texture sut;
+		unsigned char data[] = { 255, 255, 255, 255 };
+		sut.SetTextureData(4, data);
+		EXPECT_TRUE(sut.GetTextureData() != nullptr);
+		EXPECT_TRUE(sut.IsLoadedFromFile() == false);
+	}
+
 
 }
 
