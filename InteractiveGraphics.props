@@ -3,19 +3,14 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glfw\include;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glad\include;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\imgui;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glm;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glfw\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\imgui;C:\Users\Tyler\OneDrive - East Tennessee State University\Spring2024\CSCI4157 Graphics\Labs\Labs\3rdparty\glad\src;$(SourcePath)</SourcePath>
+    <IncludePath>$(SolutionDir)3rdparty\glfw\include;$(SolutionDir)3rdparty\glad\include;$(SolutionDir)3rdparty\imgui;$(SolutionDir)3rdparty\glm;$(SolutionDir)3rdparty;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)3rdparty\glfw\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SolutionDir)3rdparty\imgui;$(SolutionDir)3rdparty\glad\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>
-		  glfw3.lib;
-		  opengl32.lib;
-		  shell32.lib;
-		  user32.lib;
-		  gdi32.lib;
-	  </AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
