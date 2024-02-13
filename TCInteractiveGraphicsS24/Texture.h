@@ -1,9 +1,9 @@
 #pragma once
 #include "BaseObject.h"
-/*#include "glm/glm.hpp"
+#include "glm/glm.hpp"
 #include "glfw/glfw3.h"
 #include "glad/glad.h"
-*/
+
 
 class Texture :
     public BaseObject
