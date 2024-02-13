@@ -37,6 +37,7 @@ unsigned int Texture::GetTextureId()
 Texture::~Texture()
 {
 	CleanUp();
+	glDeleteTextures(1, &textureId);
 }
 
 unsigned char* Texture::GetTextureData()
@@ -56,4 +57,40 @@ void Texture::CleanUp()
 	}
 
 	textureData = nullptr;
+}
+
+void Texture::SetWidth(unsigned int width)
+{
+	this->width = width;
+}
+
+void Texture::SetHeight(unsigned int height)
+{
+	this->height = height;
+}
+
+void Texture::SelectToChange()
+{
+	glBindTexture(type, textureId);
+}
+
+void Texture::Deselect()
+{
+	glBindTexture(type, 0);
+}
+
+void Texture::SelectToRender(int textureUnit)
+{
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glBindTexture(type, textureId);
+}
+
+void Texture::Allocate()
+{
+	SelectToChange();
+	// set up texture parameters?
+	// send texture data to GPU
+	//CleanUp();
+	// generate mipmaps
+	//Deselect();
 }
