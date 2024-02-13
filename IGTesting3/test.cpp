@@ -5,7 +5,6 @@
 
 namespace IGTesting3
 {
-	// where does this go?
 	bool SetUpGraphics() {
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
