@@ -18,6 +18,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "TextFile.h"
+#include "Texture.h"
 
 void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
 {
@@ -29,6 +30,58 @@ void ProcessInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+}
+
+static void SetUpTexturedScene(std::shared_ptr<Shader>&
+	textureShader, std::shared_ptr<Scene>& textureScene)
+{
+	//unsigned int shaderProgram;
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("texture.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("texture.frag.glsl");
+
+	// am i supposed to use the shader that was passed into the method?
+	textureShader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	textureShader->AddUniform("projection");
+	textureShader->AddUniform("world");
+	textureShader->AddUniform("view");
+	textureShader->AddUniform("texUnit");
+	//shaderProgram = shader->GetShaderProgram();
+
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+	texture->SetHeight(4);
+	texture->SetWidth(4);
+	unsigned char* data = new unsigned char[ 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255 ];
+	texture->SetTextureData(64, data);
+
+	// next instruction is to create sharedscene object, arent we already passing one into this object?
+	textureScene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> graphicsObject = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(8);
+	vertexBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	vertexBuffer->AddVertexAttribute("position", 0, 3, 0);
+	vertexBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	vertexBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	vertexBuffer->SetTexture(texture);
+	graphicsObject->SetVertexBuffer(vertexBuffer);
+	graphicsObject->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));  //can adjust position if needed
+	textureScene->AddObject(graphicsObject);
+
 }
 
 /*
@@ -78,6 +131,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
 	GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
 	if (window == NULL) {
@@ -183,6 +237,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 
+	// setup texture info here
+	std::shared_ptr<Shader> textureShader;
+	std::shared_ptr<Scene> textureScene;
+	SetUpTexturedScene(textureShader, textureScene);
+	std::shared_ptr<Renderer> textureRenderer = std::make_shared<Renderer>(textureShader);
+	textureRenderer->AllocateVertexBuffers(textureScene->GetObjects());
+
+
+
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -202,6 +266,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	//unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
 	shader->SendMat4Uniform("projection", projection);
+
+	// new projection for texture here..?
+	textureShader->SendMat4Uniform("projection", projection);
 
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
@@ -230,6 +297,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 
+		//update texture objects here?
+		for (auto& object : textureScene->GetObjects()) {
+			object->ResetOrientation();
+			object->RotateLocalZ(angle);
+			for (auto& child : object->GetChildren()) {
+				child->ResetOrientation();
+				child->RotateLocalZ(childAngle);
+			}
+		}
+
 		/*
 		// Render the scene
 		if (shader->IsCreated()) {
@@ -249,6 +326,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		// Render the scene added here
 		renderer->RenderScene(scene, view);
+		// texture renderer here?
+		textureRenderer->RenderScene(textureScene, view);
 
 
 
