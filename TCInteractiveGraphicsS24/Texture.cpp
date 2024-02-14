@@ -1,14 +1,6 @@
 #include "Texture.h"
 #include "glad/glad.h"
 
-/*
-void Texture::SetTextureData(unsigned int count, unsigned char* data)
-{
-	textureData = new unsigned char[count];
-	memcpy(data, textureData, count);
-}
-*/
-
 Texture::Texture()
 {
 	textureData = nullptr;
@@ -88,9 +80,16 @@ void Texture::SelectToRender(int textureUnit)
 void Texture::Allocate()
 {
 	SelectToChange();
-	// set up texture parameters?
-	// send texture data to GPU
-	//CleanUp();
-	// generate mipmaps
-	//Deselect();
+	// Apply texture parameters 
+	glTexParameteri(type, GL_TEXTURE_WRAP_S, wrapS);
+	glTexParameteri(type, GL_TEXTURE_WRAP_T, wrapT);
+	glTexParameteri(type, GL_TEXTURE_MAG_FILTER, magFilter);
+	glTexParameteri(type, GL_TEXTURE_MIN_FILTER, minFilter);
+	// Send the texture to the GPU 
+	glTexImage2D(type, 0, internalFormat, width, height, 0, sourceFormat, GL_UNSIGNED_BYTE, textureData);
+	CleanUp();
+	// Generate mipmaps
+	glGenerateMipmap(type);
+	Deselect();
+
 }
