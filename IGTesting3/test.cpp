@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "..\TCInteractiveGraphicsS24\Texture.h"
-#include "glad\glad.h"
-#include "GLFW\glfw3.h"
+//#include "glad\glad.h"
+//#include "GLFW\glfw3.h"
 
 namespace IGTesting3
 {
