@@ -40,6 +40,7 @@ void VertexBuffer::StaticAllocate()
 	if (this->HasTexture())
 	{
 		// allocate bytes for texture here
+		texture->Allocate();
 	}
 }
 
@@ -91,11 +92,7 @@ void VertexBuffer::SetTexture(std::shared_ptr<Texture> texture)
 
 bool VertexBuffer::HasTexture() const
 {
-	if (this->texture != nullptr)
-	{
-		return true;
-	}
-	return false;
+	return this->texture != nullptr;
 }
 
 void VertexBuffer::SelectTexture()

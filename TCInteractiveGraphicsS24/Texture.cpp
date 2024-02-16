@@ -12,7 +12,7 @@ void Texture::SetTextureData(unsigned int count, unsigned char* data)
 {
 	CleanUp();
 	textureData = new unsigned char[count];
-	memcpy(data, textureData, count);
+	memcpy(textureData, data, count);
 	isLoadedFromFile = false;
 }
 

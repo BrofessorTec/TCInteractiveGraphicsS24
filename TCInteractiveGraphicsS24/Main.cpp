@@ -56,22 +56,22 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 	texture->SetHeight(4);
 	texture->SetWidth(4);
-	unsigned char* data = new unsigned char[ 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
-0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255 ];
+	unsigned char* data = new unsigned char[] { 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255 };
 	texture->SetTextureData(64, data);
 
 	// next instruction is to create sharedscene object, arent we already passing one into this object?
 	textureScene = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> graphicsObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(8);
-	vertexBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer->AddVertexData(8, -50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, -50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer->AddVertexData(8, 50.0f, -50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, -20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	vertexBuffer->AddVertexAttribute("position", 0, 3, 0);
 	vertexBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
@@ -79,7 +79,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 	vertexBuffer->SetTexture(texture);
 	graphicsObject->SetVertexBuffer(vertexBuffer);
-	graphicsObject->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));  //can adjust position if needed
+	graphicsObject->SetPosition(glm::vec3(-40.0f, -20.0f, 0.0f));  //can adjust position if needed
 	textureScene->AddObject(graphicsObject);
 
 }
@@ -289,16 +289,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Update the objects in the scene
 		// should the update objects be in the render class?
 		for (auto& object : scene->GetObjects()) {
-			object->ResetOrientation();
-			object->RotateLocalZ(angle);
-			for (auto& child : object->GetChildren()) {
-				child->ResetOrientation();
-				child->RotateLocalZ(childAngle);
-			}
-		}
-
-		//update texture objects here?
-		for (auto& object : textureScene->GetObjects()) {
 			object->ResetOrientation();
 			object->RotateLocalZ(angle);
 			for (auto& child : object->GetChildren()) {

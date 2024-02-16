@@ -101,4 +101,8 @@
     <None Include="basic.frag.glsl" />
     <None Include="basic.vert.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="texture.vert.glsl" />
+    <Text Include="texture.frag.glsl" />
+  </ItemGroup>
 </Project>
