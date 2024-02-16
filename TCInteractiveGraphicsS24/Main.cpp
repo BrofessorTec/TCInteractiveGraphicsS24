@@ -100,7 +100,8 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 
 	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
-	texture2->LoadTextureDataFromFile("C:\\Users\\tcamp\\source\\repos\\TCInteractiveGraphicsS24\\3rdparty\\texture\\Default\\Tiles\\tile_0122.png");
+	texture2->LoadTextureDataFromFile("..\\3rdparty\\texture\\Default\\Tiles\\tile_0122.png");
+
 
 	vertexBuffer2->SetTexture(texture2);
 	graphicsObject2->SetVertexBuffer(vertexBuffer2);
