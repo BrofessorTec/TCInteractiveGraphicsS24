@@ -37,6 +37,10 @@ public:
     void Allocate();
     int GetNumberOfChannels();
     void LoadTextureDataFromFile(const std::string& filepath);
+    void SetWrapS(unsigned int wrapS);
+    void SetWrapT(unsigned int wrapT);
+    void SetMagFilter(unsigned int magFilter);
+    void SetMinFilter(unsigned int minFilter);
 private:
     void CleanUp();
 };

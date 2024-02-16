@@ -67,16 +67,23 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	textureScene = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> graphicsObject = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(8);
-	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	//updated the tex vertex data from 1 to 3
+	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
 	vertexBuffer->AddVertexData(8, -20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer->AddVertexData(8, 20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, -20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, -20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer->AddVertexData(8, 20.0f, 20.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f);
 
 	vertexBuffer->AddVertexAttribute("position", 0, 3, 0);
 	vertexBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
 	vertexBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	// adjusting the texture settings here
+	texture->SetWrapS(GL_CLAMP_TO_EDGE);
+	texture->SetWrapT(GL_CLAMP_TO_EDGE);
+	texture->SetMagFilter(GL_LINEAR);
+	texture->SetMinFilter(GL_LINEAR);
 
 	vertexBuffer->SetTexture(texture);
 	graphicsObject->SetVertexBuffer(vertexBuffer);
