@@ -21,6 +21,7 @@ private:
     unsigned int wrapT = GL_REPEAT;
     unsigned int magFilter = GL_NEAREST;
     unsigned int minFilter = GL_NEAREST;
+    int numberOfChannels = 4;
 public:
     Texture();
     ~Texture();  //calls cleanup
@@ -34,6 +35,8 @@ public:
     void Deselect();
     void SelectToRender(int textureUnit = 0);
     void Allocate();
+    int GetNumberOfChannels();
+    void LoadTextureDataFromFile(const std::string& filepath);
 private:
     void CleanUp();
 };

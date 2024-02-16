@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include "Texture.h"
 #include "glad/glad.h"
 
@@ -47,6 +49,10 @@ void Texture::CleanUp()
 	{
 		delete[] textureData;
 	}
+	else
+	{
+		stbi_image_free(textureData);
+	}
 
 	textureData = nullptr;
 }
@@ -92,4 +98,24 @@ void Texture::Allocate()
 	glGenerateMipmap(type);
 	Deselect();
 
+}
+
+int Texture::GetNumberOfChannels()
+{
+	return numberOfChannels;
+}
+
+void Texture::LoadTextureDataFromFile(const std::string& filepath)
+{
+	CleanUp();
+	int width, height;
+	stbi_set_flip_vertically_on_load(true);
+	textureData = stbi_load(filepath.c_str(), &width, &height,
+		&numberOfChannels, 0);
+	this->width = width;
+	this->height = height;
+	if (numberOfChannels == 3) {
+		sourceFormat = GL_RGB;
+	}
+	isLoadedFromFile = true;
 }

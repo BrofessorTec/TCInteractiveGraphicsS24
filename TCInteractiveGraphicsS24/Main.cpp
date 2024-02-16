@@ -60,6 +60,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
 		0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
 		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255 };
+
 	texture->SetTextureData(64, data);
 
 	// next instruction is to create sharedscene object, arent we already passing one into this object?
@@ -81,6 +82,31 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	graphicsObject->SetVertexBuffer(vertexBuffer);
 	graphicsObject->SetPosition(glm::vec3(-40.0f, -20.0f, 0.0f));  //can adjust position if needed
 	textureScene->AddObject(graphicsObject);
+
+
+	// new textured object to scene
+	std::shared_ptr<GraphicsObject> graphicsObject2 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> vertexBuffer2 = std::make_shared<VertexBuffer>(8);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	vertexBuffer2->AddVertexAttribute("position", 0, 3, 0);
+	vertexBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
+	vertexBuffer2->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
+	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
+	texture2->LoadTextureDataFromFile("C:\\Users\\tcamp\\source\\repos\\TCInteractiveGraphicsS24\\3rdparty\\texture\\Default\\Tiles\\tile_0122.png");
+
+	vertexBuffer2->SetTexture(texture2);
+	graphicsObject2->SetVertexBuffer(vertexBuffer2);
+	graphicsObject2->SetPosition(glm::vec3(40.0f, 20.0f, 0.0f));  //can adjust position if needed
+	textureScene->AddObject(graphicsObject2);
+
 
 }
 
@@ -131,6 +157,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	//enable transparency currently causing an crash
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);

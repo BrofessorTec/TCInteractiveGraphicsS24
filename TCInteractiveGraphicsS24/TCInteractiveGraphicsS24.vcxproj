@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdparty\stb_image.h" />
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="GraphicsObject.h" />
     <ClInclude Include="Renderer.h" />
