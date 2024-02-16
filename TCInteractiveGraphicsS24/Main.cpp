@@ -105,7 +105,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 	vertexBuffer2->SetTexture(texture2);
 	graphicsObject2->SetVertexBuffer(vertexBuffer2);
-	graphicsObject2->SetPosition(glm::vec3(40.0f, 20.0f, 0.0f));  //can adjust position if needed
+	graphicsObject2->SetPosition(glm::vec3(40.0f, 10.0f, 0.0f));  //can adjust position if needed
 	textureScene->AddObject(graphicsObject2);
 
 
@@ -159,10 +159,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	//enable transparency currently causing an crash
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 	GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
 	if (window == NULL) {
@@ -176,15 +172,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+	//enable transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(0, 0, 1200, 800);
 	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
 	//glfwMaximizeWindow(window);
 
 	unsigned int shaderProgram;
-	//Result result = CreateShaderProgram(vertexSource, fragmentSource, shaderProgram);
-	//std::shared_ptr<Shader> shader = std::make_shared<Shader>();
-	// need to change this to be the parameterized constructor and leave the default
 	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
 	// relative path 
 	vertFile->ReadFile("basic.vert.glsl");
