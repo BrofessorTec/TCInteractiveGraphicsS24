@@ -37,6 +37,11 @@ void VertexBuffer::StaticAllocate()
 	unsigned long long bytesToAllocate = vertexData.size() * sizeof(float);
 	glBufferData(
 		GL_ARRAY_BUFFER, bytesToAllocate, vertexData.data(), GL_STATIC_DRAW);
+	if (this->HasTexture())
+	{
+		// allocate bytes for texture here
+		texture->Allocate();
+	}
 }
 
 void VertexBuffer::AddVertexAttribute(
@@ -62,5 +67,38 @@ void VertexBuffer::SetUpAttributeInterpretration()
 			attr.index, attr.numberOfComponents, attr.type,
 			attr.isNormalized, attr.bytesToNext, attr.byteOffset
 		);
+	}
+}
+
+int VertexBuffer::GetTextureUnit()
+{
+	return textureUnit;
+}
+
+void VertexBuffer::SetTextureUnit(int textureUnit)
+{
+	this->textureUnit = textureUnit;
+}
+
+std::shared_ptr<Texture> VertexBuffer::GetTexture()
+{
+	return this->texture;
+}
+
+void VertexBuffer::SetTexture(std::shared_ptr<Texture> texture)
+{
+	this->texture = texture;
+}
+
+bool VertexBuffer::HasTexture() const
+{
+	return this->texture != nullptr;
+}
+
+void VertexBuffer::SelectTexture()
+{
+	if (this->texture != nullptr)
+	{
+		textureUnit = texture->GetTextureId();
 	}
 }

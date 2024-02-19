@@ -168,3 +168,8 @@ void Shader::CreateShaderProgram()
 	Log("Successfully created the shader!");
 	return;
 }
+
+void Shader::SendIntUniform(const std::string& uniformName, int value)
+{
+	glUniform1i(uniformMap[uniformName], value);  //is this right for the uniform map?
+}
