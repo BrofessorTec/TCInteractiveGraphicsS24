@@ -62,6 +62,7 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 		255, 255, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 255, 255, 255 };
 
 	texture->SetTextureData(64, data);
+	delete[] data;
 
 	// next instruction is to create sharedscene object, arent we already passing one into this object?
 	textureScene = std::make_shared<Scene>();
