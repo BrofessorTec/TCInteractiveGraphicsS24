@@ -119,90 +119,9 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 }
 
-/*
-static void RenderObject(const GraphicsObject& object, std::shared_ptr<Shader> shader)
+static void SetUpNonTexturedScene(std::shared_ptr<Shader>&
+	shader, std::shared_ptr<Scene>& scene)
 {
-	//glUniformMatrix4fv(
-	//	matrixLoc, 1, GL_FALSE,
-	//	glm::value_ptr(object.GetReferenceFrame()));
-
-	shader->SendMat4Uniform("world", object.GetReferenceFrame());
-
-	auto& buffer = object.GetVertexBuffer();
-	buffer->Select();
-	buffer->SetUpAttributeInterpretration();
-	glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
-
-	// Recursively render the children
-	auto& children = object.GetChildren();
-	for (auto& child : children) {
-		RenderObject(*child, shader);
-	}
-} 
-*/
-
-static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
-{
-	glm::vec3 right = glm::cross(direction, up);
-	right = glm::normalize(right);
-
-	glm::vec3 vUp = glm::cross(right, direction);
-	vUp = glm::normalize(vUp);
-
-	glm::mat4 view(1.0f);
-	view[0] = glm::vec4(right, 0.0f);
-	view[1] = glm::vec4(up, 0.0f);
-	view[2] = glm::vec4(direction, 0.0f);
-	view[3] = glm::vec4(position, 1.0f);
-	return glm::inverse(view);
-}
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine,
-	_In_ int       nCmdShow)
-{
-
-	std::shared_ptr<GraphicsEnvironment> graphicsEnviron = std::make_shared<GraphicsEnvironment>();
-	graphicsEnviron->Init(4, 3);
-
-
-	/*glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
-
-	//GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
-
-	bool created = graphicsEnviron->SetWindow(1200, 800, "ETSU Computing Interactive Graphics");
-	if (created == false) return -1;
-
-/*	if (created == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-	*/
-
-	bool loaded = graphicsEnviron->InitGlad();
-	if (loaded == false) return -1;
-
-	/*if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
-	*/
-
-
-	//enable transparency
-	graphicsEnviron->SetUpGraphics();
-	/*glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
-
-	//glViewport(0, 0, 1200, 800);
-	//glfwSetFramebufferSizeCallback(graphicsEnviron->GetWindow(), graphicsEnviron->OnWindowSizeChanged);
-	//glfwMaximizeWindow(window);
-
 	unsigned int shaderProgram;
 	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
 	// relative path 
@@ -213,27 +132,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	fragFile->ReadFile("basic.frag.glsl");
 
 
-	std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+	shader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
 
 	shader->AddUniform("projection");
 	shader->AddUniform("world");
 	shader->AddUniform("view");
 	shaderProgram = shader->GetShaderProgram();
 
-
-	/*int width, height;
-	glfwGetWindowSize(graphicsEnviron->GetWindow(), &width, &height);
-	float aspectRatio = width / (height * 1.0f);
-
-	float left = -50.0f;
-	float right = 50.0f;
-	float bottom = -50.0f;
-	float top = 50.0f;
-	left *= aspectRatio;
-	right *= aspectRatio;
-	glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);*/
-
-	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+	scene = std::make_shared<Scene>();
 
 	std::shared_ptr<GraphicsObject> square = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> buffer = std::make_shared<VertexBuffer>(6);
@@ -262,28 +168,59 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<GraphicsObject> line = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> buffer3 = std::make_shared<VertexBuffer>(6);
 	buffer3->SetPrimitiveType(GL_LINES);
-	buffer3->AddVertexData(6, 0.0f,  2.5f, 0.0f, 0.0f, 1.0f, 0.0f);
+	buffer3->AddVertexData(6, 0.0f, 2.5f, 0.0f, 0.0f, 1.0f, 0.0f);
 	buffer3->AddVertexData(6, 0.0f, -2.5f, 0.0f, 0.0f, 1.0f, 0.0f);
 	buffer3->AddVertexAttribute("position", 0, 3);
 	buffer3->AddVertexAttribute("color", 1, 3, 3);
 	line->SetVertexBuffer(buffer3);
 	line->SetPosition(glm::vec3(5.0f, -10.0f, 0.0f));
 	triangle->AddChild(line);
+}
 
-	/*
-	unsigned int vaoId;
-	glGenVertexArrays(1, &vaoId);
-	glBindVertexArray(vaoId);
-	auto& objects = scene->GetObjects();
-	for (auto& object : objects) {
-		object->StaticAllocateVertexBuffer();
-	}
-	glBindVertexArray(0);
-	*/
 
-	// new render object created here
-	std::shared_ptr<Renderer> renderer = std::make_shared<Renderer>(shader);
-	renderer->AllocateVertexBuffers(scene->GetObjects());
+static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
+{
+	glm::vec3 right = glm::cross(direction, up);
+	right = glm::normalize(right);
+
+	glm::vec3 vUp = glm::cross(right, direction);
+	vUp = glm::normalize(vUp);
+
+	glm::mat4 view(1.0f);
+	view[0] = glm::vec4(right, 0.0f);
+	view[1] = glm::vec4(up, 0.0f);
+	view[2] = glm::vec4(direction, 0.0f);
+	view[3] = glm::vec4(position, 1.0f);
+	return glm::inverse(view);
+}
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
+{
+
+	std::shared_ptr<GraphicsEnvironment> graphicsEnviron = std::make_shared<GraphicsEnvironment>();
+	graphicsEnviron->Init(4, 3);
+
+	bool created = graphicsEnviron->SetWindow(1200, 800, "ETSU Computing Interactive Graphics");
+	if (created == false) return -1;
+
+
+	bool loaded = graphicsEnviron->InitGlad();
+	if (loaded == false) return -1;
+
+	//enable transparency
+	graphicsEnviron->SetUpGraphics();
+
+
+	std::shared_ptr<Shader> shader;
+	std::shared_ptr<Scene> scene;
+	SetUpNonTexturedScene(shader, scene);
+
+
+	graphicsEnviron->CreateRenderer("renderer1", shader);
+
 
 
 
@@ -291,34 +228,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<Shader> textureShader;
 	std::shared_ptr<Scene> textureScene;
 	SetUpTexturedScene(textureShader, textureScene);
-	std::shared_ptr<Renderer> textureRenderer = std::make_shared<Renderer>(textureShader);
-	textureRenderer->AllocateVertexBuffers(textureScene->GetObjects());
 
 
+	graphicsEnviron->CreateRenderer("renderer2", textureShader);
 
-	/*
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 430");*/
-
-	//std::string message = result.message;
 
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
 
-	glUseProgram(shaderProgram);  // use new shaderProgram
+	glUseProgram(shader->GetShaderProgram());  // use new shaderProgram
 
-	//unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-	//glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-	//unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	//unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
-	//shader->SendMat4Uniform("projection", projection);
-
-	// new projection for texture here..?
-	//textureShader->SendMat4Uniform("projection", projection);
 
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
@@ -364,34 +282,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 
-		/*
-		// Render the scene
-		if (shader->IsCreated()) {
-			glUseProgram(shaderProgram);
-			glBindVertexArray(vaoId);
-			//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-			shader->SendMat4Uniform("view", view);
-			// Render the objects in the scene
-			for (auto& object : objects) {
-				RenderObject(*object, shader);
-			}
-			glDisableVertexAttribArray(0);
-			glDisableVertexAttribArray(1);
-			glUseProgram(0);
-			glBindVertexArray(0);
-		}*/
 
-		// Render the scene added here
-		renderer->SetScene(scene);
-		renderer->SetView(view);
-		renderer->SetProjection(projection);
-		renderer->RenderScene();
-		// texture renderer here?
-		textureRenderer->SetScene(textureScene);
-		textureRenderer->SetView(view);
-		textureRenderer->SetProjection(projection);
-		textureRenderer->RenderScene();
 
+		graphicsEnviron->GetRenderer("renderer1")->SetScene(scene);
+		graphicsEnviron->GetRenderer("renderer1")->SetView(view);
+		graphicsEnviron->GetRenderer("renderer1")->SetProjection(projection);
+		graphicsEnviron->GetRenderer("renderer2")->SetScene(textureScene);
+		graphicsEnviron->GetRenderer("renderer2")->SetView(view);
+		graphicsEnviron->GetRenderer("renderer2")->SetProjection(projection);
+		
+		
+		graphicsEnviron->StaticAllocate();
+
+		graphicsEnviron->Render();
 
 
 		ImGui_ImplOpenGL3_NewFrame();

@@ -27,5 +27,6 @@ public:
         shader);
     std::shared_ptr<Renderer> GetRenderer(const std::string& name);
     void StaticAllocate();
+    void Render();
 };
 

@@ -84,32 +84,29 @@ void GraphicsEnvironment::StaticAllocate()
 	std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
 		= rendererMap.begin();
 
-	// Iterating over the unordered_map till unordered_map 
-	// end. 
-	/*std::for_each(rendererMap.begin(), rendererMap.end(),
-		[](std::pair<std::string, int> p) {
-			std::cout << p.first
-				<< " :: " << p.second
-				<< std::endl;
-		};
-*/
-
-	//map<std::string, std::shared_ptr<Renderer>>::iterator it;
-
-	/*for (it = rendererMap.begin(); it != rendererMap.end(); it++)
-	{
-		std::cout << it->first    // string (key)
-			<< ':'
-			<< it->second   // string's value 
-			<< std::endl;
-	}
-	*/
-
 	for (const auto& pair : rendererMap) {
 		std::string key = pair.first;
 		std::shared_ptr<Renderer> renderer = pair.second;
 
 		// Process key and renderer
-		std::cout << "Key: " << key << ", Renderer: /* do something with renderer */" << std::endl;
+
+		std::cout << "Key: " << key << ", Renderer: ";
+		//renderer->AllocateVertexBuffers(renderer->GetScene()->GetObjects());
+		renderer->AllocateVertexBuffers();
+		std::cout << std::endl;
+	}
+
+}
+
+void GraphicsEnvironment::Render()
+{
+	for (const auto& pair : rendererMap) {
+		std::string key = pair.first;
+		std::shared_ptr<Renderer> renderer = pair.second;
+
+		// Process key and renderer
+		std::cout << "Key: " << key << ", Renderer: ";
+		renderer->RenderScene();
+		std::cout << std::endl;
 	}
 }

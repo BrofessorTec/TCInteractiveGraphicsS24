@@ -17,9 +17,9 @@ private:
         glm::mat4 projection;
 
 public:
-    Renderer(std::shared_ptr<Shader> shader)
+    Renderer(std::shared_ptr<Shader> shader2)
     {
-        this->shader = shader;
+        shader = shader2;
         glGenVertexArrays(1, &vaoId);
     }
     inline const std::shared_ptr<Shader>& GetShader() const { return shader; }
@@ -39,14 +39,26 @@ public:
     {
         projection = projection2;
     }
-    void AllocateVertexBuffers(const auto& objects)
+    /*void AllocateVertexBuffers(const auto& objects)
     {
         glBindVertexArray(vaoId);
         for (auto& object : objects) {
             object->StaticAllocateVertexBuffer();
         }
         glBindVertexArray(0);
+    }*/
+    
+    // testing this to remove the need to pass in the objects parameter but still getting a crash
+    void AllocateVertexBuffers() 
+    {
+        std::vector<std::shared_ptr<GraphicsObject>> objects = scene->GetObjects();
+        glBindVertexArray(vaoId);
+        for (auto& object : objects) {
+            object->StaticAllocateVertexBuffer();
+        }
+        glBindVertexArray(0);
     }
+    
     void RenderScene()
     {
         if (shader->IsCreated()) {
