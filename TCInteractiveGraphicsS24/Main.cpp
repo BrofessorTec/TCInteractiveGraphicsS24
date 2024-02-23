@@ -80,10 +80,10 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	vertexBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
 
 	// adjusting the texture settings here
-	texture->SetWrapS(GL_CLAMP_TO_EDGE);
-	texture->SetWrapT(GL_CLAMP_TO_EDGE);
-	texture->SetMagFilter(GL_LINEAR);
-	texture->SetMinFilter(GL_LINEAR);
+	texture->SetWrapS(GL_REPEAT);
+	texture->SetWrapT(GL_REPEAT);
+	texture->SetMagFilter(GL_NEAREST);
+	texture->SetMinFilter(GL_NEAREST);
 
 	vertexBuffer->SetTexture(texture);
 	graphicsObject->SetVertexBuffer(vertexBuffer);
@@ -94,12 +94,12 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	// new textured object to scene
 	std::shared_ptr<GraphicsObject> graphicsObject2 = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> vertexBuffer2 = std::make_shared<VertexBuffer>(8);
-	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
 	vertexBuffer2->AddVertexData(8, -10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f);
 
 	vertexBuffer2->AddVertexAttribute("position", 0, 3, 0);
 	vertexBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
@@ -108,6 +108,10 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
 	texture2->LoadTextureDataFromFile("..\\3rdparty\\texture\\Default\\Tiles\\tile_0122.png");
+	texture2->SetWrapS(GL_REPEAT);
+	texture2->SetWrapT(GL_REPEAT);
+	texture2->SetMagFilter(GL_NEAREST);
+	texture2->SetMinFilter(GL_NEAREST);
 
 
 	vertexBuffer2->SetTexture(texture2);
