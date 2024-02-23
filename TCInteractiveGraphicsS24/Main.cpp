@@ -19,11 +19,12 @@
 #include "Renderer.h"
 #include "TextFile.h"
 #include "Texture.h"
+#include "GraphicsEnvironment.h"
 
-void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
+/*void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-}
+}*/
 
 void ProcessInput(GLFWwindow* window)
 {
@@ -161,30 +162,45 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	glfwInit();
+
+	std::shared_ptr<GraphicsEnvironment> graphicsEnviron = std::make_shared<GraphicsEnvironment>();
+	graphicsEnviron->Init(4, 3);
+
+
+	/*glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
 
+	//GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
 
-	GLFWwindow* window = glfwCreateWindow(1200, 800, "ETSU Computing Interactive Graphics", NULL, NULL);
-	if (window == NULL) {
+	bool created = graphicsEnviron->SetWindow(1200, 800, "ETSU Computing Interactive Graphics");
+	if (created == false) return -1;
+
+/*	if (created == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window);
+	*/
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+	bool loaded = graphicsEnviron->InitGlad();
+	if (loaded == false) return -1;
+
+	/*if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	//enable transparency
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	*/
 
-	glViewport(0, 0, 1200, 800);
-	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
+
+	//enable transparency
+	graphicsEnviron->SetUpGraphics();
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
+
+	//glViewport(0, 0, 1200, 800);
+	//glfwSetFramebufferSizeCallback(graphicsEnviron->GetWindow(), graphicsEnviron->OnWindowSizeChanged);
 	//glfwMaximizeWindow(window);
 
 	unsigned int shaderProgram;
@@ -205,8 +221,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	shaderProgram = shader->GetShaderProgram();
 
 
-	int width, height;
-	glfwGetWindowSize(window, &width, &height);
+	/*int width, height;
+	glfwGetWindowSize(graphicsEnviron->GetWindow(), &width, &height);
 	float aspectRatio = width / (height * 1.0f);
 
 	float left = -50.0f;
@@ -215,7 +231,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float top = 50.0f;
 	left *= aspectRatio;
 	right *= aspectRatio;
-	glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);*/
 
 	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
 
@@ -280,13 +296,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 
-
+	/*
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 430");
+	ImGui_ImplOpenGL3_Init("#version 430");*/
 
 	//std::string message = result.message;
 
@@ -299,17 +315,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	//unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	//unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
-	shader->SendMat4Uniform("projection", projection);
+	//shader->SendMat4Uniform("projection", projection);
 
 	// new projection for texture here..?
-	textureShader->SendMat4Uniform("projection", projection);
+	//textureShader->SendMat4Uniform("projection", projection);
 
 	float angle = 0, childAngle = 0;
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
 
-	while (!glfwWindowShouldClose(window)) {
-		ProcessInput(window);
+
+	// added the io back here
+	ImGuiIO& io = ImGui::GetIO();
+
+	while (!glfwWindowShouldClose(graphicsEnviron->GetWindow())) {
+		ProcessInput(graphicsEnviron->GetWindow());
+
+		// moved projection matrix calc to here
+		int width, height;
+		glfwGetWindowSize(graphicsEnviron->GetWindow(), &width, &height);
+		float aspectRatio = width / (height * 1.0f);
+
+		float left = -50.0f;
+		float right = 50.0f;
+		float bottom = -50.0f;
+		float top = 50.0f;
+		left *= aspectRatio;
+		right *= aspectRatio;
+		glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -349,9 +382,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}*/
 
 		// Render the scene added here
-		renderer->RenderScene(scene, view);
+		renderer->SetScene(scene);
+		renderer->SetView(view);
+		renderer->SetProjection(projection);
+		renderer->RenderScene();
 		// texture renderer here?
-		textureRenderer->RenderScene(textureScene, view);
+		textureRenderer->SetScene(textureScene);
+		textureRenderer->SetView(view);
+		textureRenderer->SetProjection(projection);
+		textureRenderer->RenderScene();
 
 
 
@@ -371,7 +410,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(graphicsEnviron->GetWindow());
 		glfwPollEvents();
 	}
 
