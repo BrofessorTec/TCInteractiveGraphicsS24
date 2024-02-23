@@ -21,17 +21,6 @@
 #include "Texture.h"
 #include "GraphicsEnvironment.h"
 
-/*void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}*/
-
-void ProcessInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-}
 
 static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	textureShader, std::shared_ptr<Scene>& textureScene)
@@ -177,23 +166,6 @@ static void SetUpNonTexturedScene(std::shared_ptr<Shader>&
 	triangle->AddChild(line);
 }
 
-
-static glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
-{
-	glm::vec3 right = glm::cross(direction, up);
-	right = glm::normalize(right);
-
-	glm::vec3 vUp = glm::cross(right, direction);
-	vUp = glm::normalize(vUp);
-
-	glm::mat4 view(1.0f);
-	view[0] = glm::vec4(right, 0.0f);
-	view[1] = glm::vec4(up, 0.0f);
-	view[2] = glm::vec4(direction, 0.0f);
-	view[3] = glm::vec4(position, 1.0f);
-	return glm::inverse(view);
-}
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -210,7 +182,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	bool loaded = graphicsEnviron->InitGlad();
 	if (loaded == false) return -1;
 
-	//enable transparency
 	graphicsEnviron->SetUpGraphics();
 
 
@@ -220,8 +191,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	graphicsEnviron->CreateRenderer("renderer1", shader);
-
-
+	graphicsEnviron->GetRenderer("renderer1")->SetScene(scene);
 
 
 	// setup texture info here
@@ -231,97 +201,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	graphicsEnviron->CreateRenderer("renderer2", textureShader);
+	graphicsEnviron->GetRenderer("renderer2")->SetScene(textureScene);
 
+	graphicsEnviron->StaticAllocate();
 
-	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
+	graphicsEnviron->Run2D();
 
-	glUseProgram(shader->GetShaderProgram());  // use new shaderProgram
-
-
-	float angle = 0, childAngle = 0;
-	float cameraX = -10, cameraY = 0;
-	glm::mat4 view;
-
-
-	// added the io back here
-	ImGuiIO& io = ImGui::GetIO();
-
-	while (!glfwWindowShouldClose(graphicsEnviron->GetWindow())) {
-		ProcessInput(graphicsEnviron->GetWindow());
-
-		// moved projection matrix calc to here
-		int width, height;
-		glfwGetWindowSize(graphicsEnviron->GetWindow(), &width, &height);
-		float aspectRatio = width / (height * 1.0f);
-
-		float left = -50.0f;
-		float right = 50.0f;
-		float bottom = -50.0f;
-		float top = 50.0f;
-		left *= aspectRatio;
-		right *= aspectRatio;
-		glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
-
-		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		view = CreateViewMatrix(
-			glm::vec3(cameraX, cameraY, 1.0f),
-			glm::vec3(0.0f, 0.0f, -1.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
-
-		// Update the objects in the scene
-		// should the update objects be in the render class?
-		for (auto& object : scene->GetObjects()) {
-			object->ResetOrientation();
-			object->RotateLocalZ(angle);
-			for (auto& child : object->GetChildren()) {
-				child->ResetOrientation();
-				child->RotateLocalZ(childAngle);
-			}
-		}
-
-
-
-		graphicsEnviron->GetRenderer("renderer1")->SetScene(scene);
-		graphicsEnviron->GetRenderer("renderer1")->SetView(view);
-		graphicsEnviron->GetRenderer("renderer1")->SetProjection(projection);
-		graphicsEnviron->GetRenderer("renderer2")->SetScene(textureScene);
-		graphicsEnviron->GetRenderer("renderer2")->SetView(view);
-		graphicsEnviron->GetRenderer("renderer2")->SetProjection(projection);
-		
-		
-		graphicsEnviron->StaticAllocate();
-
-		graphicsEnviron->Render();
-
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::Begin("Computing Interactive Graphics");
-		ImGui::Text(shader->GetLog().c_str());
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			1000.0f / io.Framerate, io.Framerate);
-		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
-		ImGui::SliderFloat("Angle", &angle, 0, 360);
-		ImGui::SliderFloat("Child Angle", &childAngle, 0, 360);
-		ImGui::SliderFloat("Camera X", &cameraX, left, right);
-		ImGui::SliderFloat("Camera Y", &cameraY, bottom, top);
-		ImGui::End();
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		glfwSwapBuffers(graphicsEnviron->GetWindow());
-		glfwPollEvents();
-	}
-
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	glfwTerminate();
 	return 0;
 }
 
