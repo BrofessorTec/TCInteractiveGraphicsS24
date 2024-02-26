@@ -92,21 +92,6 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	texture3d->SetTextureData(64, textureData);
 
 
-	// Generate the texture id
-	GLuint textureId;
-	glGenTextures(1, &textureId);
-	// Select the texture 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	// Apply texture parameters 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// Send the texture to the GPU 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-	// Generate mipmaps
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 
 
@@ -344,6 +329,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	bool loaded = graphicsEnviron->InitGlad();
 	if (loaded == false) return -1;
 
+	/*
 	graphicsEnviron->SetUpGraphics();
 
 
@@ -370,11 +356,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	graphicsEnviron->StaticAllocate();
 
 	// can comment this out for now to not run the 2d graphics program
-	graphicsEnviron->Run2D();
+	//graphicsEnviron->Run2D();
+	*/
 
 
 	// can i reuse the same graphics environ here?
-	/*
+	
 	graphicsEnviron->SetUpGraphics();
 
 	// new 3d code created here
@@ -383,14 +370,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	SetUp3DScene1(shader3d, scene3d);
 
 
-	graphicsEnviron->CreateRenderer("renderer3", shader3d);
-	graphicsEnviron->GetRenderer("renderer3")->SetScene(scene3d);
+	graphicsEnviron->CreateRenderer("renderer3d", shader3d);
+	graphicsEnviron->GetRenderer("renderer3d")->SetScene(scene3d);
 
 
 	graphicsEnviron->StaticAllocate();
 
 	graphicsEnviron->Run3D();
-	*/
+	
 	return 0;
 }
 
