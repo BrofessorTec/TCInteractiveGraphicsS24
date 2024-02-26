@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseObject.h"
 #include "Renderer.h"
+#include "Timer.h"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -36,6 +37,5 @@ public:
     glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
     void Run2D();
     void Run3D();
-    void EnableAttribute(int attribIndex, int elementCount, int sizeInBytes, void* offset);
 };
 

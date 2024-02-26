@@ -276,7 +276,13 @@ void GraphicsEnvironment::Run3D()
 	glm::mat4 referenceFrame(1.0f);
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
 
+
+	double elapsedSeconds;
+
+	Timer timer;
+
 	while (!glfwWindowShouldClose(window)) {
+		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window);
 		glfwGetWindowSize(window, &width, &height);
 
@@ -310,9 +316,6 @@ void GraphicsEnvironment::Run3D()
 
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
-
-
-		//StaticAllocate();
 
 		Render();
 
