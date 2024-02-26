@@ -35,5 +35,6 @@ public:
     void ProcessInput(GLFWwindow* window);
     glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
     void Run2D();
+    void Run3D();
 };
 

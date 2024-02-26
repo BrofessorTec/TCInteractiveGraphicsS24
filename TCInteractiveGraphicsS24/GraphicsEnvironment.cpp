@@ -59,6 +59,19 @@ void GraphicsEnvironment::SetUpGraphics()
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
+
+    // Cull back faces and use counter-clockwise winding of front faces
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    // Enable depth testing
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+
+
 }
 
 void GraphicsEnvironment::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
@@ -225,3 +238,123 @@ void GraphicsEnvironment::Run2D()
 
 	glfwTerminate();
 }
+
+/*
+void GraphicsEnvironment::Run3D()
+{
+
+
+	unsigned int vaoId, vboId;
+	glGenVertexArrays(1, &vaoId);
+	glBindVertexArray(vaoId);
+	glGenBuffers(1, &vboId);
+	glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	float cubeYAngle = 0;
+    float cubeXAngle = 0;
+    float cubeZAngle = 0;
+    float left = -20.0f;
+    float right = 20.0f;
+    float bottom = -20.0f;
+    float top = 20.0f;
+    int width, height;
+    
+    std::string message = result.message;
+
+    float aspectRatio;
+    float nearPlane = 1.0f;
+    float farPlane = 50.0f;
+    float fieldOfView = 60;
+
+    glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
+    glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+
+    glm::mat4 view;
+    glm::mat4 projection;
+    glm::mat4 referenceFrame(1.0f);
+    glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
+
+    while (!glfwWindowShouldClose(window)) {
+        ProcessInput(window);
+        glfwGetWindowSize(window, &width, &height);
+
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        referenceFrame = glm::rotate(glm::mat4(1.0f), glm::radians(cubeYAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+        referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+        referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+       
+        view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+        
+        if (width >= height) {
+            aspectRatio = width / (height * 1.0f);
+        }
+        else {
+            aspectRatio = height / (width * 1.0f);
+        }
+        projection = glm::perspective(
+            glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
+
+        // Render the object
+        if (result.isSuccess)
+        {
+			unsigned int shaderProgram = GetRenderer("renderer3d")->GetShader()->GetShaderProgram();
+            glUseProgram(shaderProgram);
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "worldLoc"), 1, GL_FALSE, glm::value_ptr(referenceFrame));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "viewLoc"), 1, GL_FALSE, glm::value_ptr(view));
+            glBindVertexArray(vaoId);
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            // Positions
+            EnableAttribute(0, 3, sizeof(VertexData), (void*)0);
+            // Colors
+            EnableAttribute(1, 3, sizeof(VertexData), (void*)sizeof(glm::vec3));
+            // Texture Coords
+            EnableAttribute(2, 2, sizeof(VertexData), (void*)(sizeof(glm::vec3)*2));
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, textureId);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
+            glUseProgram(0);
+            glBindVertexArray(0);
+        }
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::Begin("Computing Interactive Graphics");
+        ImGui::Text(message.c_str());
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+            1000.0f / io.Framerate, io.Framerate);
+        ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
+        ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);
+        ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
+        ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
+        ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
+        ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
+        ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwTerminate();
+
+}
+*/

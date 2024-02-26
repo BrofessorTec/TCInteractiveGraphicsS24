@@ -63,3 +63,8 @@ void GraphicsObject::RotateLocalZ(float degrees)
 		glm::vec3(0.0f, 0.0f, 1.0f)
 	);
 }
+
+void GraphicsObject::SetReferenceFrame(glm::mat4 newReferenceFrame)
+{
+	referenceFrame = newReferenceFrame;
+}

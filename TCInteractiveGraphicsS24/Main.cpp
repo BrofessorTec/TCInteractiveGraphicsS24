@@ -22,6 +22,168 @@
 #include "GraphicsEnvironment.h"
 
 
+static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
+	std::shared_ptr<Scene>& scene3d)
+{
+
+	struct VertexData {
+		glm::vec3 position, color;
+		glm::vec2 tex;
+	};
+
+
+	std::string vertexSource =
+		"#version 430\n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec3 color;\n"
+		"layout(location = 2) in vec2 texCoord;\n"
+		"out vec4 fragColor;\n"
+		"out vec2 fragTexCoord;\n"
+		"uniform mat4 world;\n"
+		"uniform mat4 view;\n"
+		"uniform mat4 projection;\n"
+		"void main()\n"
+		"{\n"
+		"   gl_Position = projection * view * world * vec4(position, 1.0);\n"
+		"   fragColor = vec4(color, 1.0);\n"
+		"   fragTexCoord = texCoord;\n"
+		"}\n";
+
+	std::string fragmentSource =
+		"#version 430\n"
+		"in vec4 fragColor;\n"
+		"in vec2 fragTexCoord;\n"
+		"out vec4 color;\n"
+		"uniform sampler2D tex;\n"
+		"void main()\n"
+		"{\n"
+		"   vec4 texFragColor = texture(tex, fragTexCoord) * fragColor;\n"
+		"   color = texFragColor;\n"
+		"}\n";
+
+	shader3d = std::make_shared<Shader>(vertexSource, fragmentSource);
+
+	shader3d->AddUniform("projection");
+	shader3d->AddUniform("world");
+	shader3d->AddUniform("view");
+	shader3d->AddUniform("texUnit");
+
+	unsigned int shaderProgram = shader3d->GetShaderProgram();
+
+
+	// Get the uniform locations
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+	unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
+
+
+	std::shared_ptr<Texture> texture3d = std::make_shared<Texture>();
+	texture3d->SetHeight(4);
+	texture3d->SetWidth(4);
+
+	// Create the texture data
+	unsigned char* textureData = new unsigned char[] {
+		0, 0, 0, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 255,
+			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+			0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 0, 255
+		};
+
+	texture3d->SetTextureData(64, textureData);
+
+
+	// Generate the texture id
+	GLuint textureId;
+	glGenTextures(1, &textureId);
+	// Select the texture 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	// Apply texture parameters 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	// Send the texture to the GPU 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+	// Generate mipmaps
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+
+
+
+
+
+	scene3d = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> vertexBuffer3d = std::make_shared<VertexBuffer>(8);
+
+	// front face? or is this totally wrong now
+	/*
+	vertexBuffer3d->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer3d->AddVertexData(8, -5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	vertexBuffer3d->AddVertexData(8, 5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer3d->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+
+	vertexBuffer3d->AddVertexAttribute("position", 0, 3, 0);
+	vertexBuffer3d->AddVertexAttribute("vertexColor", 1, 3, 3);
+	vertexBuffer3d->AddVertexAttribute("texCoord", 2, 2, 6);
+	*/
+
+
+
+	// Front face
+	VertexData A = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData B = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData C = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData D = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	// Right face
+	VertexData E = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData F = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData G = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData H = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	// Back face
+	VertexData I = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData J = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData K = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData L = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	// Left face
+	VertexData M = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData N = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData O = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData P = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	// Top face
+	VertexData Q = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData R = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData S = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData T = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	// Bottom face
+	VertexData U = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
+	VertexData V = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
+	VertexData W = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
+	VertexData X = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+
+	// 3 vertex per triangle, 2 triangles per face, 6 faces
+	// 3 * 2 * 6 = 36 vertices
+	VertexData vertexData[36]{
+		// Front face
+		A, B, C, A, C, D,
+		// Right face
+		E, F, G, E, G, H,
+		// Back face
+		I, J, K, I, K, L,
+		// Left face
+		M, N, O, M, O, P,
+		// Top face
+		Q, R, S, Q, S, T,
+		// Bottom face
+		U, V, W, U, W, X
+	};
+
+}
+
+
+
 static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	textureShader, std::shared_ptr<Scene>& textureScene)
 {
@@ -203,10 +365,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	graphicsEnviron->CreateRenderer("renderer2", textureShader);
 	graphicsEnviron->GetRenderer("renderer2")->SetScene(textureScene);
 
+
+
 	graphicsEnviron->StaticAllocate();
 
+	// can comment this out for now to not run the 2d graphics program
 	graphicsEnviron->Run2D();
 
+
+	// can i reuse the same graphics environ here?
+	/*
+	graphicsEnviron->SetUpGraphics();
+
+	// new 3d code created here
+	std::shared_ptr<Shader> shader3d;
+	std::shared_ptr<Scene> scene3d;
+	SetUp3DScene1(shader3d, scene3d);
+
+
+	graphicsEnviron->CreateRenderer("renderer3", shader3d);
+	graphicsEnviron->GetRenderer("renderer3")->SetScene(scene3d);
+
+
+	graphicsEnviron->StaticAllocate();
+
+	graphicsEnviron->Run3D();
+	*/
 	return 0;
 }
 
