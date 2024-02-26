@@ -246,106 +246,7 @@ void GraphicsEnvironment::Run2D()
 
 
 void GraphicsEnvironment::Run3D()
-{
-	/*
-	std::shared_ptr<Texture> texture3d = std::make_shared<Texture>();
-	texture3d->SetHeight(4);
-	texture3d->SetWidth(4);
-
-
-	// Create the texture data
-	unsigned char* textureData = new unsigned char[] {
-		0, 0, 0, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 255,
-			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
-			0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 0, 255
-		};
-
-
-	texture3d->SetTextureData(64, textureData);
-
-	// Generate the texture id
-	GLuint textureId;
-	glGenTextures(1, &textureId);
-	// Select the texture 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	// Apply texture parameters 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// Send the texture to the GPU 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-	// Generate mipmaps
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-
-	// trying to create graphics object here??
-	//std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
-
-
-	// Front face
-	VertexData A = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData B = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData C = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData D = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Right face
-	VertexData E = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData F = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData G = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData H = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Back face
-	VertexData I = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData J = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData K = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData L = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Left face
-	VertexData M = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData N = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData O = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData P = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Top face
-	VertexData Q = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData R = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData S = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData T = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Bottom face
-	VertexData U = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData V = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData W = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData X = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-
-	// 3 vertex per triangle, 2 triangles per face, 6 faces
-	// 3 * 2 * 6 = 36 vertices
-	VertexData vertexData[36]{
-		// Front face
-		A, B, C, A, C, D,
-		// Right face
-		E, F, G, E, G, H,
-		// Back face
-		I, J, K, I, K, L,
-		// Left face
-		M, N, O, M, O, P,
-		// Top face
-		Q, R, S, Q, S, T,
-		// Bottom face
-		U, V, W, U, W, X
-	};
-
-	
-	*/
-
-	unsigned int vaoId, vboId;
-	glGenVertexArrays(1, &vaoId);
-	glBindVertexArray(vaoId);
-	glGenBuffers(1, &vboId);
-	glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	
-	
+{	
 
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -396,30 +297,23 @@ void GraphicsEnvironment::Run3D()
 		projection = glm::perspective(
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
-		// Render the object
-		//if (result.isSuccess) comment out since no result object anymore?
-		//{
-			unsigned int shaderProgram = GetRenderer("renderer3d")->GetShader()->GetShaderProgram();
-			glUseProgram(shaderProgram);
-			glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-			glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "worldLoc"), 1, GL_FALSE, glm::value_ptr(referenceFrame));
-			glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "viewLoc"), 1, GL_FALSE, glm::value_ptr(view));
-			glBindVertexArray(vaoId);
-			glBindBuffer(GL_ARRAY_BUFFER, vboId);
-			// Positions
-			EnableAttribute(0, 3, sizeof(VertexData), (void*)0);
-			// Colors
-			EnableAttribute(1, 3, sizeof(VertexData), (void*)sizeof(glm::vec3));
-			// Texture Coords
-			EnableAttribute(2, 2, sizeof(VertexData), (void*)(sizeof(glm::vec3) * 2));
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, textureId);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glDisableVertexAttribArray(0);
-			glDisableVertexAttribArray(1);
-			glUseProgram(0);
-			glBindVertexArray(0);
-		//}
+		// Update the objects in the scene
+		// should the update objects be in the render class?
+		for (auto& object : GetRenderer("renderer3d")->GetScene()->GetObjects()) {
+			object->ResetOrientation();
+			object->RotateLocalX(cubeXAngle);
+			object->RotateLocalY(cubeYAngle);
+			object->RotateLocalZ(cubeZAngle);
+		}
+
+
+		GetRenderer("renderer3d")->SetView(view);
+		GetRenderer("renderer3d")->SetProjection(projection);
+
+
+		//StaticAllocate();
+
+		Render();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

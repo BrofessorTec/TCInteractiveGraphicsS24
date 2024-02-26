@@ -110,8 +110,8 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	// adjusting the texture settings here
 	texture3d->SetWrapS(GL_REPEAT);
 	texture3d->SetWrapT(GL_REPEAT);
-	texture3d->SetMagFilter(GL_LINEAR);
-	texture3d->SetMinFilter(GL_LINEAR);
+	texture3d->SetMagFilter(GL_NEAREST);
+	texture3d->SetMinFilter(GL_NEAREST);
 
 	buffer->SetTexture(texture3d);
 
@@ -123,72 +123,36 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	scene3d->AddObject(graphicsObject3d);
 
 
+	// new crate code here
+	std::shared_ptr<Texture> texture3dNew = std::make_shared<Texture>();
+
+	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
+	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
 
 
-	// front face? or is this totally wrong now
-	/*
-	vertexBuffer3d->AddVertexData(8, -5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer3d->AddVertexData(8, -5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer3d->AddVertexData(8, 5.0f, -5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer3d->AddVertexData(8, 5.0f, 5.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferNew = Generate::Cuboid(5.0f, 5.0f, 5.0f);
+
+	bufferNew->AddVertexAttribute("position", 0, 3, 0);
+	bufferNew->AddVertexAttribute("vertexColor", 1, 3, 3);
+	bufferNew->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	// adjusting the texture settings here
+	texture3d->SetWrapS(GL_REPEAT);
+	texture3d->SetWrapT(GL_REPEAT);
+	texture3d->SetMagFilter(GL_NEAREST);
+	texture3d->SetMinFilter(GL_NEAREST);
+
+	bufferNew->SetTexture(texture3dNew);
 
 
-	vertexBuffer3d->AddVertexAttribute("position", 0, 3, 0);
-	vertexBuffer3d->AddVertexAttribute("vertexColor", 1, 3, 3);
-	vertexBuffer3d->AddVertexAttribute("texCoord", 2, 2, 6);
-	*/
 
-	// Replaced by the genreate cuboid now
+	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
 
-	/*
-	// Front face
-	VertexData A = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData B = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData C = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData D = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Right face
-	VertexData E = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData F = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData G = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData H = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Back face
-	VertexData I = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData J = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData K = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData L = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Left face
-	VertexData M = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData N = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData O = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData P = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Top face
-	VertexData Q = { {-5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData R = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData S = { { 5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData T = { { 5.0f, 5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
-	// Bottom face
-	VertexData U = { { 5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
-	VertexData V = { { 5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
-	VertexData W = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f} };
-	VertexData X = { {-5.0f,-5.0f,-5.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f} };
+	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dCrate);
 
-	// 3 vertex per triangle, 2 triangles per face, 6 faces
-	// 3 * 2 * 6 = 36 vertices
-	VertexData vertexData[36]{
-		// Front face
-		A, B, C, A, C, D,
-		// Right face
-		E, F, G, E, G, H,
-		// Back face
-		I, J, K, I, K, L,
-		// Left face
-		M, N, O, M, O, P,
-		// Top face
-		Q, R, S, Q, S, T,
-		// Bottom face
-		U, V, W, U, W, X
-	};
-	*/
+
 
 }
 
@@ -354,6 +318,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	bool loaded = graphicsEnviron->InitGlad();
 	if (loaded == false) return -1;
 
+	
+	// Run 2d Code below here
 	/*
 	graphicsEnviron->SetUpGraphics();
 
@@ -381,7 +347,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	graphicsEnviron->StaticAllocate();
 
 	// can comment this out for now to not run the 2d graphics program
-	//graphicsEnviron->Run2D();
+	graphicsEnviron->Run2D();
 	*/
 
 
@@ -402,6 +368,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	graphicsEnviron->StaticAllocate();
 
 	graphicsEnviron->Run3D();
+	
 	
 	return 0;
 }
