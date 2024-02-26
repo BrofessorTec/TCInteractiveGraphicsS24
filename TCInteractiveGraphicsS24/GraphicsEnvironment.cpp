@@ -27,6 +27,7 @@ void GraphicsEnvironment::Init(unsigned int majorVersion, unsigned int minorVers
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorVersion);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minorVersion);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 }
 
 bool GraphicsEnvironment::SetWindow(unsigned int width, unsigned int height, const std::string& title)
@@ -76,7 +77,7 @@ void GraphicsEnvironment::SetUpGraphics()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
 
-
+	glEnable(GL_MULTISAMPLE);
 }
 
 void GraphicsEnvironment::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
@@ -263,7 +264,7 @@ void GraphicsEnvironment::Run3D()
 
 	float aspectRatio;
 	float nearPlane = 1.0f;
-	float farPlane = 50.0f;
+	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
 	glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
@@ -345,16 +346,4 @@ void GraphicsEnvironment::Run3D()
 
 }
 
-void GraphicsEnvironment::EnableAttribute(int attribIndex, int elementCount, int sizeInBytes, void* offset)
-{
-	glEnableVertexAttribArray(attribIndex);
-	glVertexAttribPointer(
-		attribIndex,
-		elementCount,
-		GL_FLOAT,
-		GL_FALSE,
-		sizeInBytes, // The number of bytes to the next element
-		offset       // Byte offset of the first position in the array
-	);
-}
 

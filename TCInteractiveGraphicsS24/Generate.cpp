@@ -16,51 +16,76 @@ std::shared_ptr<VertexBuffer> Generate::Cuboid(float width, float height, float 
 	// front face  with 6 vertices and no indexed buffer?
 	vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex.t);
 	vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, 0, 0);
-    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex.t);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, tex.s, tex.t);
 
     // right face  with 6 vertices and no indexed buffer?
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, depth / 2, color.r, color.g, color.b, 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, depth / 2, color.r, color.g, color.b, 0, 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, -depth / 2, color.r, color.g, color.b, tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, depth / 2, color.r, color.g, color.b, 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, -depth / 2, color.r, color.g, color.b, tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, -depth / 2, color.r, color.g, color.b, tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, 0, 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], tex[1]);
 
     // back face  with 6 vertices and no indexed buffer?
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], 0, 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, -depth / 2, color[0], color[1], color[2], tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], 0, 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], tex[0], tex[1]);
 
     // left face  with 6 vertices and no indexed buffer?
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], 0, 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, depth / 2, color[0], color[1], color[2], tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], 0, 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color[0], color[1], color[2], tex[0], tex[1]);
 
     // top face  with 6 vertices and no indexed buffer?
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, depth / 2, color[0], color[1], color[2], 0, 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, height / 2, -depth / 2, color[0], color[1], color[2], tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color[0], color[1], color[2], 0, 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color[2], tex[0], tex[1]);
 
     // bottom face  with 6 vertices and no indexed buffer?
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, depth / 2, color[0], color[1], color[2], 0, 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], 0, tex[1]);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, depth / 2, color[0], color[1], color[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(8, -width / 2, -height / 2, -depth / 2, color[0], color[1], color[2], tex[0], tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color[0], color[1], color[2], 0, 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], 0, tex[1]);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color[2], tex[0], 0);
+    vertexBuffer3d->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color[2], tex[0], tex[1]);
 
 
     return vertexBuffer3d;
+}
+
+std::shared_ptr<VertexBuffer> Generate::XZPlane(float width, float depth, glm::vec3 color, glm::vec2 tex)
+{
+    std::shared_ptr<VertexBuffer> vertexBufferFloor = std::make_shared<VertexBuffer>(8);
+    float halfWidth = width / 2;
+    float halfDepth = depth / 2;
+
+    // top face  with 6 vertices and no indexed buffer?
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, -halfDepth, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, halfDepth, color.r, color.g, color.b, 0, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, -halfDepth, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, -halfDepth, color.r, color.g, color.b, tex.s, tex.t);
+
+    // bottom face  with 6 vertices and no indexed buffer?
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, -halfDepth, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, halfDepth, color.r, color.g, color.b, 0, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, 0, -halfDepth, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, 0, -halfDepth, color.r, color.g, color.b, tex.s, tex.t);
+
+    return vertexBufferFloor;
 }

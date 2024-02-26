@@ -119,7 +119,7 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 
 	graphicsObject3d->SetVertexBuffer(buffer);
 
-	graphicsObject3d->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	graphicsObject3d->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3d);
 
 
@@ -149,8 +149,38 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 
 	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
 
-	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 0.0f, 0.0f));  //can adjust position if needed
+	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);
+
+
+	// new Floor code here
+	std::shared_ptr<Texture> texture3dFloor = std::make_shared<Texture>();
+
+	texture3dFloor->LoadTextureDataFromFile("..\\3rdparty\\FloorTex.jpg");
+
+
+	std::shared_ptr<GraphicsObject> graphicsObject3dFloor = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferFloor = Generate::XZPlane(60, 60, glm::vec3{1.0f, 1.0f, 1.0f}, glm::vec2{5.0f, 5.0f});
+
+	bufferFloor->AddVertexAttribute("position", 0, 3, 0);
+	bufferFloor->AddVertexAttribute("vertexColor", 1, 3, 3);
+	bufferFloor->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	// adjusting the texture settings here
+	texture3dFloor->SetWrapS(GL_REPEAT);
+	texture3dFloor->SetWrapT(GL_REPEAT);
+	texture3dFloor->SetMagFilter(GL_NEAREST);
+	texture3dFloor->SetMinFilter(GL_NEAREST);
+
+	bufferFloor->SetTexture(texture3dFloor);
+
+
+
+	graphicsObject3dFloor->SetVertexBuffer(bufferFloor);
+
+	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dFloor);
+
 
 
 
