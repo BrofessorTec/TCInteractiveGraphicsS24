@@ -20,16 +20,17 @@
 #include "TextFile.h"
 #include "Texture.h"
 #include "GraphicsEnvironment.h"
+#include "Generate.h"
 
 
 static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	std::shared_ptr<Scene>& scene3d)
 {
 
-	struct VertexData {
+	/*struct VertexData {
 		glm::vec3 position, color;
 		glm::vec2 tex;
-	};
+	};*/
 
 
 	std::string vertexSource =
@@ -100,7 +101,29 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 
 	scene3d = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> vertexBuffer3d = std::make_shared<VertexBuffer>(8);
+	std::shared_ptr<VertexBuffer> buffer = Generate::Cuboid(10.0f, 5.0f, 5.0f);
+
+	buffer->AddVertexAttribute("position", 0, 3, 0);
+	buffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	buffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+	// adjusting the texture settings here
+	texture3d->SetWrapS(GL_REPEAT);
+	texture3d->SetWrapT(GL_REPEAT);
+	texture3d->SetMagFilter(GL_LINEAR);
+	texture3d->SetMinFilter(GL_LINEAR);
+
+	buffer->SetTexture(texture3d);
+
+
+
+	graphicsObject3d->SetVertexBuffer(buffer);
+
+	graphicsObject3d->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3d);
+
+
+
 
 	// front face? or is this totally wrong now
 	/*
@@ -115,8 +138,9 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	vertexBuffer3d->AddVertexAttribute("texCoord", 2, 2, 6);
 	*/
 
+	// Replaced by the genreate cuboid now
 
-
+	/*
 	// Front face
 	VertexData A = { {-5.0f, 5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f} };
 	VertexData B = { {-5.0f,-5.0f, 5.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f} };
@@ -164,6 +188,7 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 		// Bottom face
 		U, V, W, U, W, X
 	};
+	*/
 
 }
 

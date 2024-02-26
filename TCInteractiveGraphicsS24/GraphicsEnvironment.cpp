@@ -247,7 +247,7 @@ void GraphicsEnvironment::Run2D()
 
 void GraphicsEnvironment::Run3D()
 {
-
+	/*
 	std::shared_ptr<Texture> texture3d = std::make_shared<Texture>();
 	texture3d->SetHeight(4);
 	texture3d->SetWidth(4);
@@ -280,6 +280,9 @@ void GraphicsEnvironment::Run3D()
 	// Generate mipmaps
 	glGenerateMipmap(GL_TEXTURE_2D);
 
+
+	// trying to create graphics object here??
+	//std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
 
 
 	// Front face
@@ -330,8 +333,8 @@ void GraphicsEnvironment::Run3D()
 		U, V, W, U, W, X
 	};
 
-
-
+	
+	*/
 
 	unsigned int vaoId, vboId;
 	glGenVertexArrays(1, &vaoId);
@@ -341,7 +344,8 @@ void GraphicsEnvironment::Run3D()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
+	
+	
 
 	ImGuiIO& io = ImGui::GetIO();
 
