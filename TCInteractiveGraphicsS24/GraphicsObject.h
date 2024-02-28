@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
-
+#include "IAnimation.h"
 #include "VertexBuffer.h"
 
 class IAnimation; // Forward declaration

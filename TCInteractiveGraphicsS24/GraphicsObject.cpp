@@ -92,7 +92,7 @@ void GraphicsObject::Update(double elapsedSeconds)
 	// needs stuff
 	if (this->animation != nullptr)
 	{
-		// call animation's update.. how to do this with abstract class?
+		// call animation's update
 		animation->Update(elapsedSeconds);
 	}
 }

@@ -317,12 +317,14 @@ void GraphicsEnvironment::Run3D()
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
 		// Update the objects in the scene
+		// commenting this out so the animation works correctly
+		/*
 		for (auto& object : GetRenderer("renderer3d")->GetScene()->GetObjects()) {
 			object->ResetOrientation();
 			object->RotateLocalX(cubeXAngle);
 			object->RotateLocalY(cubeYAngle);
 			object->RotateLocalZ(cubeZAngle);
-		}
+		}*/
 
 
 		GetRenderer("renderer3d")->SetView(view);
@@ -341,9 +343,9 @@ void GraphicsEnvironment::Run3D()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
-		ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);
-		ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
-		ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
+		//ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);  // commenting these out so the animation works correctly
+		//ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
+		//ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
 		ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
 		ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
