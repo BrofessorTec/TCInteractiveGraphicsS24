@@ -24,7 +24,7 @@
 
 
 static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
-	std::shared_ptr<Scene>& scene3d)
+	std::shared_ptr<Scene>& scene3d, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {
 
 	/*struct VertexData {
@@ -181,6 +181,9 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dFloor);
 
+	graphicsEnviron->AddObject("cube", graphicsObject3d);
+	graphicsEnviron->AddObject("texCube", graphicsObject3dCrate);
+	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
 
 
 
@@ -388,7 +391,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// new 3d code created here
 	std::shared_ptr<Shader> shader3d;
 	std::shared_ptr<Scene> scene3d;
-	SetUp3DScene1(shader3d, scene3d);
+	SetUp3DScene1(shader3d, scene3d, graphicsEnviron);
 
 
 	graphicsEnviron->CreateRenderer("renderer3d", shader3d);

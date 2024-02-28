@@ -35,5 +35,6 @@ public:
 	void RotateLocalY(float degrees);
 	void RotateLocalZ(float degrees);
 	void SetReferenceFrame(glm::mat4 newReferenceFrame);
+	void Update(double elapsedSeconds);   //needs definition
 };
 

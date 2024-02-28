@@ -16,6 +16,11 @@ GraphicsEnvironment::~GraphicsEnvironment()
     glfwTerminate();
 }
 
+GraphicsEnvironment::GraphicsEnvironment()
+{
+	objManager = std::make_shared<ObjectManager>();
+}
+
 GLFWwindow* GraphicsEnvironment::GetWindow()
 {
     return window;
@@ -100,8 +105,8 @@ void GraphicsEnvironment::StaticAllocate()
 {
 	// unordered_map iterator created 
 	// iterator pointing to start of unordered_map 
-	std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
-		= rendererMap.begin();
+	//std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
+	//	= rendererMap.begin();
 
 	for (const auto& pair : rendererMap) {
 		std::string key = pair.first;
@@ -305,7 +310,6 @@ void GraphicsEnvironment::Run3D()
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
 		// Update the objects in the scene
-		// should the update objects be in the render class?
 		for (auto& object : GetRenderer("renderer3d")->GetScene()->GetObjects()) {
 			object->ResetOrientation();
 			object->RotateLocalX(cubeXAngle);
@@ -316,6 +320,9 @@ void GraphicsEnvironment::Run3D()
 
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
+
+		// call update
+		objManager->Update(elapsedSeconds);
 
 		Render();
 
@@ -347,6 +354,12 @@ void GraphicsEnvironment::Run3D()
 
 	glfwTerminate();
 
+}
+
+void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<GraphicsObject> object)
+{
+	// does the objManager need to be declared as a shared pointer somewhere..?
+	objManager->SetObject(name, object);
 }
 
 

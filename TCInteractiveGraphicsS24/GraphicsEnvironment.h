@@ -8,6 +8,7 @@
 #include <glad/glad.h> 
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
+#include "ObjectManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
@@ -19,7 +20,9 @@ class GraphicsEnvironment :
 private: 
     GLFWwindow* window;
     std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
+    std::shared_ptr<ObjectManager> objManager;
 public:
+    GraphicsEnvironment();
     ~GraphicsEnvironment();
     GLFWwindow* GetWindow();
     void Init(unsigned int majorVersion, unsigned int minorVersion);
@@ -37,5 +40,7 @@ public:
     glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
     void Run2D();
     void Run3D();
+    void AddObject(const std::string name, std::shared_ptr<GraphicsObject>
+        object);
 };
 

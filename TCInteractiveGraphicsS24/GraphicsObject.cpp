@@ -86,3 +86,8 @@ void GraphicsObject::SetReferenceFrame(glm::mat4 newReferenceFrame)
 {
 	referenceFrame = newReferenceFrame;
 }
+
+void GraphicsObject::Update(double elapsedSeconds)
+{
+	// needs stuff
+}
