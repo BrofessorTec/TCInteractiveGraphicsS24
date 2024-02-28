@@ -4,6 +4,9 @@
 
 #include "VertexBuffer.h"
 
+class IAnimation; // Forward declaration
+
+
 class GraphicsObject
 {
 protected:
@@ -11,6 +14,7 @@ protected:
 	std::shared_ptr<VertexBuffer> buffer;
 	GraphicsObject* parent;
 	std::vector<std::shared_ptr<GraphicsObject>> children;
+	std::shared_ptr<IAnimation> animation = nullptr;
 
 public:
 	GraphicsObject();
@@ -36,5 +40,7 @@ public:
 	void RotateLocalZ(float degrees);
 	void SetReferenceFrame(glm::mat4 newReferenceFrame);
 	void Update(double elapsedSeconds);   //needs definition
+	void SetAnimation(std::shared_ptr<IAnimation> animation);
+	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; };
 };
 

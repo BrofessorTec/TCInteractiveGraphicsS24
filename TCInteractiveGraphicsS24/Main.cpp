@@ -182,7 +182,7 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	scene3d->AddObject(graphicsObject3dFloor);
 
 	graphicsEnviron->AddObject("cube", graphicsObject3d);
-	graphicsEnviron->AddObject("texCube", graphicsObject3dCrate);
+	graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
 
 

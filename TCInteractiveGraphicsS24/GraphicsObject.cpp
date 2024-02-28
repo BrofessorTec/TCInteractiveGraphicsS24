@@ -90,4 +90,14 @@ void GraphicsObject::SetReferenceFrame(glm::mat4 newReferenceFrame)
 void GraphicsObject::Update(double elapsedSeconds)
 {
 	// needs stuff
+	if (this->animation != nullptr)
+	{
+		// call animation's update.. how to do this with abstract class?
+		animation->Update(elapsedSeconds);
+	}
+}
+
+void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
+{
+	this->animation = animation;
 }

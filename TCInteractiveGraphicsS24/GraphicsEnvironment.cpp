@@ -286,6 +286,13 @@ void GraphicsEnvironment::Run3D()
 
 	Timer timer;
 
+	// add animation
+	std::shared_ptr<RotateAnimation> rotateAnimation =
+		std::make_shared<RotateAnimation>();
+	rotateAnimation->SetObject(objManager->GetObject("Crate"));
+	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
+
+
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window);
