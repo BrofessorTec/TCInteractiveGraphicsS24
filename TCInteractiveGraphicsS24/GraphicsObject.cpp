@@ -1,5 +1,6 @@
 #include "GraphicsObject.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "IAnimation.h"
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {

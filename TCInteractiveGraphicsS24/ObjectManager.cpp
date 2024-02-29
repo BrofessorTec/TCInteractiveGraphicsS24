@@ -1,4 +1,5 @@
 #include "ObjectManager.h"
+#include "IAnimation.h"
 #include <iostream>
 
 void ObjectManager::SetObject(std::string key, std::shared_ptr<GraphicsObject> graphObj)

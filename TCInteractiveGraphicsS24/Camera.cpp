@@ -12,8 +12,8 @@ void Camera::SetMoveSpeed(int speed)
 
 void Camera::SetPosition(glm::vec3 position)
 {
-	glm::vec4 posUpdate = { position[0], position[1], position[2], 1 };  // is last spot a 0 or 1? cant remember
-	refFrame[3] = posUpdate;
+	//glm::vec4 posUpdate = { position[0], position[1], position[2], 1.0f };  // is last spot a 0 or 1? cant remember
+	refFrame[3] = glm::vec4(position, 1.0f);
 }
 
 glm::mat4 Camera::LookForward()
