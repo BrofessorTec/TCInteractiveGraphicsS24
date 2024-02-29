@@ -16,5 +16,6 @@ public:
 	void SetPosition(glm::vec3 position);  
 	glm::mat4 LookForward();
 	glm::mat4 LookAtTarget(glm::vec3 target);
+	void MoveForward(double elapsedSeconds);
 };
 

@@ -22,18 +22,18 @@ glm::mat4 Camera::LookForward()
 	//returns a view matrix that looks forward. Use the look frame?
 	// tried to copy notes to what it would look like here but not sure if this is right at all
 
-	glm::vec3 cameraPosition;
+	//glm::vec3 cameraPosition;
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 	refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
 	glm::vec3 cameraForward;
 
 
-	cameraPosition = refFrame[3];
+	//cameraPosition = refFrame[3];
 	cameraForward = -refFrame[2];
-	cameraTarget = cameraPosition + cameraForward;
+	cameraTarget = glm::vec3(refFrame[3]) + cameraForward;
 	cameraUp = refFrame[1];
-	lookFrame = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+	lookFrame = glm::lookAt(glm::vec3(refFrame[3]), cameraTarget, cameraUp);
 
 	return lookFrame;
 }
@@ -44,17 +44,23 @@ glm::mat4 Camera::LookAtTarget(glm::vec3 target)
 	// (it returns a view matrix that looks at the target position).
 	//Use the look frame.
 
-	glm::vec3 cameraPosition;
+	//glm::vec3 cameraPosition;
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 	refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
 	glm::vec3 cameraForward;
 
 
-	cameraPosition = refFrame[3];
+	//cameraPosition = refFrame[3];
 	cameraForward = -refFrame[2];
 	cameraUp = refFrame[1];
-	lookFrame = glm::lookAt(cameraPosition, target, cameraUp);
+	lookFrame = glm::lookAt(glm::vec3(refFrame[3]), target, cameraUp);
 
 	return lookFrame;
+}
+
+void Camera::MoveForward(double elapsedSeconds)
+{
+	double speed = moveSpeed * elapsedSeconds;
+	refFrame[3] += speed;    // this doesnt look right, but trying to add the speed to each spot in the position..?
 }
