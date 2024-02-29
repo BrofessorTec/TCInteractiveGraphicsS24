@@ -19,6 +19,7 @@ GraphicsEnvironment::~GraphicsEnvironment()
 GraphicsEnvironment::GraphicsEnvironment()
 {
 	objManager = std::make_shared<ObjectManager>();
+	camera = std::make_shared<Camera>();
 }
 
 GLFWwindow* GraphicsEnvironment::GetWindow()
@@ -272,9 +273,9 @@ void GraphicsEnvironment::Run3D()
 	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
-	glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
+	//glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+	//glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
 	glm::mat4 view;
 	glm::mat4 projection;
@@ -305,7 +306,8 @@ void GraphicsEnvironment::Run3D()
 		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+		view = camera->LookForward();
 
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
@@ -346,9 +348,11 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);  // commenting these out so the animation works correctly
 		//ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
 		//ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
-		ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
-		ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
-		ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
+
+		//ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
+		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
+		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
+
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -369,6 +373,11 @@ void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<Grap
 {
 	// does the objManager need to be declared as a shared pointer somewhere..?
 	objManager->SetObject(name, object);
+}
+
+std::shared_ptr<Camera> GraphicsEnvironment::GetCamera()
+{
+	return camera;
 }
 
 

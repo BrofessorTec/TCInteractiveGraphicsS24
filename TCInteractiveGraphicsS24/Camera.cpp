@@ -19,18 +19,42 @@ void Camera::SetPosition(glm::vec3 position)
 glm::mat4 Camera::LookForward()
 {
 	// how to do this?
-	//returns a view matrix that looks forward. Use the look frame
+	//returns a view matrix that looks forward. Use the look frame?
+	// tried to copy notes to what it would look like here but not sure if this is right at all
+
+	glm::vec3 cameraPosition;
+	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+	refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
+	glm::vec3 cameraForward;
 
 
-	return glm::mat4();
+	cameraPosition = refFrame[3];
+	cameraForward = -refFrame[2];
+	cameraTarget = cameraPosition + cameraForward;
+	cameraUp = refFrame[1];
+	lookFrame = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+
+	return lookFrame;
 }
 
-glm::mat4 Camera::LookAtTarget()
+glm::mat4 Camera::LookAtTarget(glm::vec3 target)
 {
 	// how to do this?
 	// (it returns a view matrix that looks at the target position).
 	//Use the look frame.
 
+	glm::vec3 cameraPosition;
+	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+	refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
+	glm::vec3 cameraForward;
 
-	return glm::mat4();
+
+	cameraPosition = refFrame[3];
+	cameraForward = -refFrame[2];
+	cameraUp = refFrame[1];
+	lookFrame = glm::lookAt(cameraPosition, target, cameraUp);
+
+	return lookFrame;
 }

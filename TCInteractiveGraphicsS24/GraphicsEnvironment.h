@@ -14,6 +14,7 @@
 #include <vector>
 #include "IAnimation.h"
 #include "RotateAnimation.h"
+#include "Camera.h"
 
 
 class GraphicsEnvironment :
@@ -23,6 +24,7 @@ private:
     GLFWwindow* window;
     std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
     std::shared_ptr<ObjectManager> objManager;
+    std::shared_ptr<Camera> camera;   //is this how to include camera to graphics environment?
 public:
     GraphicsEnvironment();
     ~GraphicsEnvironment();
@@ -44,5 +46,6 @@ public:
     void Run3D();
     void AddObject(const std::string name, std::shared_ptr<GraphicsObject>
         object);
+    std::shared_ptr<Camera> GetCamera();
 };
 
