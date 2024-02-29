@@ -136,11 +136,17 @@ void GraphicsEnvironment::Render()
 	}
 }
 
-void GraphicsEnvironment::ProcessInput(GLFWwindow* window)
+void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		camera->MoveForward(elapsedSeconds);
+		return;
+	}
+
 }
 
 glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
@@ -174,9 +180,13 @@ void GraphicsEnvironment::Run2D()
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
 
+	Timer timer;
+	double elapsedSeconds;
+
 
 	while (!glfwWindowShouldClose(window)) {
-		ProcessInput(window);
+		elapsedSeconds = timer.GetElapsedTimeInSeconds();
+		ProcessInput(window, elapsedSeconds);
 
 		// moved projection matrix calc to here
 		int width, height;
@@ -296,7 +306,7 @@ void GraphicsEnvironment::Run3D()
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
-		ProcessInput(window);
+		ProcessInput(window, elapsedSeconds);
 		glfwGetWindowSize(window, &width, &height);
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);

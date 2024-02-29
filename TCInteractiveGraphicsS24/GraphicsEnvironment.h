@@ -40,7 +40,7 @@ public:
     std::shared_ptr<Renderer> GetRenderer(const std::string& name);
     void StaticAllocate();
     void Render();
-    void ProcessInput(GLFWwindow* window);
+    void ProcessInput(GLFWwindow* window, double elapsedSeconds);
     glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
     void Run2D();
     void Run3D();

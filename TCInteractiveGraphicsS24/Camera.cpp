@@ -61,6 +61,10 @@ glm::mat4 Camera::LookAtTarget(glm::vec3 target)
 
 void Camera::MoveForward(double elapsedSeconds)
 {
-	double speed = moveSpeed * elapsedSeconds;
-	refFrame[3] += speed;    // this doesnt look right, but trying to add the speed to each spot in the position..?
+	glm::vec3 forward = -refFrame[2];
+	glm::vec3 position = refFrame[3];
+	forward = forward * static_cast<float>(moveSpeed * elapsedSeconds);
+	position = position + forward;
+	refFrame[3] = glm::vec4(position, 1.0f);
+	//lookFrame[3] = glm::vec4(position, 1.0f);
 }
