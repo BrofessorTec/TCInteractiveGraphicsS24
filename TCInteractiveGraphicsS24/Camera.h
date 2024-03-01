@@ -17,5 +17,10 @@ public:
 	glm::mat4 LookForward();
 	glm::mat4 LookAtTarget(glm::vec3 target);
 	void MoveForward(double elapsedSeconds);
+	void MoveBackward(double elapsedSeconds);
+	void MoveLeft(double elapsedSeconds);
+	void MoveRight(double elapsedSeconds);
+	void MoveUp(double elapsedSeconds);
+	void MoveDown(double elapsedSeconds);
 };
 

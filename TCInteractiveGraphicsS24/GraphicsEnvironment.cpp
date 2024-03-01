@@ -147,6 +147,31 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		return;
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		camera->MoveLeft(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		camera->MoveBackward(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		camera->MoveRight(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		camera->MoveUp(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		camera->MoveDown(elapsedSeconds);
+		return;
+	}
+
 }
 
 glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
@@ -291,6 +316,7 @@ void GraphicsEnvironment::Run3D()
 	glm::mat4 projection;
 	glm::mat4 referenceFrame(1.0f);
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
+	camera->SetPosition(glm::vec3(0.0f, 3.0f, 30.0f));
 
 
 	double elapsedSeconds;

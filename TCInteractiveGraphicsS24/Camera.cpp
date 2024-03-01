@@ -25,7 +25,7 @@ glm::mat4 Camera::LookForward()
 	//glm::vec3 cameraPosition;
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
-	refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
+	//refFrame[3] = glm::vec4(0.0f, 3.0f, 30.0f, 1.0f);  // initial camera position? could be altered
 	glm::vec3 cameraForward;
 
 
@@ -67,4 +67,49 @@ void Camera::MoveForward(double elapsedSeconds)
 	position = position + forward;
 	refFrame[3] = glm::vec4(position, 1.0f);
 	//lookFrame[3] = glm::vec4(position, 1.0f);
+}
+
+void Camera::MoveBackward(double elapsedSeconds)
+{
+	glm::vec3 backward = refFrame[2];
+	glm::vec3 position = refFrame[3];
+	backward = backward * static_cast<float>(moveSpeed * elapsedSeconds);
+	position = position + backward;
+	refFrame[3] = glm::vec4(position, 1.0f);
+}
+
+void Camera::MoveLeft(double elapsedSeconds)
+{
+	glm::vec3 toLeft = -refFrame[0];
+	glm::vec3 position = refFrame[3];
+	toLeft = toLeft * static_cast<float>(10.0f * elapsedSeconds);
+	position = position + toLeft;
+	refFrame[3] = glm::vec4(position, 1.0f);
+}
+
+void Camera::MoveRight(double elapsedSeconds)
+{
+	glm::vec3 toRight = refFrame[0];
+	glm::vec3 position = refFrame[3];
+	toRight = toRight * static_cast<float>(10.0f * elapsedSeconds);
+	position = position + toRight;
+	refFrame[3] = glm::vec4(position, 1.0f);
+}
+
+void Camera::MoveUp(double elapsedSeconds)
+{
+	glm::vec3 up = refFrame[1];
+	glm::vec3 position = refFrame[3];
+	up = up * static_cast<float>(moveSpeed * elapsedSeconds);
+	position = position + up;
+	refFrame[3] = glm::vec4(position, 1.0f);
+}
+
+void Camera::MoveDown(double elapsedSeconds)
+{
+	glm::vec3 up = -refFrame[1];
+	glm::vec3 position = refFrame[3];
+	up = up * static_cast<float>(moveSpeed * elapsedSeconds);
+	position = position + up;
+	refFrame[3] = glm::vec4(position, 1.0f);
 }
