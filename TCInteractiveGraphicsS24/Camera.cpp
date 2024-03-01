@@ -47,7 +47,7 @@ glm::mat4 Camera::LookAtTarget(glm::vec3 target)
 
 void Camera::MoveForward(double elapsedSeconds)
 {
-	glm::vec3 forward = -refFrame[2];
+	glm::vec3 forward = -lookFrame[2];
 	glm::vec3 position = refFrame[3];
 	forward = forward * static_cast<float>(moveSpeed * elapsedSeconds);
 	position = position + forward;
@@ -56,7 +56,7 @@ void Camera::MoveForward(double elapsedSeconds)
 
 void Camera::MoveBackward(double elapsedSeconds)
 {
-	glm::vec3 backward = refFrame[2];
+	glm::vec3 backward = lookFrame[2];
 	glm::vec3 position = refFrame[3];
 	backward = backward * static_cast<float>(moveSpeed * elapsedSeconds);
 	position = position + backward;
@@ -65,7 +65,7 @@ void Camera::MoveBackward(double elapsedSeconds)
 
 void Camera::MoveLeft(double elapsedSeconds)
 {
-	glm::vec3 toLeft = -refFrame[0];
+	glm::vec3 toLeft = -lookFrame[0];
 	glm::vec3 position = refFrame[3];
 	toLeft = toLeft * static_cast<float>(10.0f * elapsedSeconds);
 	position = position + toLeft;
@@ -74,7 +74,7 @@ void Camera::MoveLeft(double elapsedSeconds)
 
 void Camera::MoveRight(double elapsedSeconds)
 {
-	glm::vec3 toRight = refFrame[0];
+	glm::vec3 toRight = lookFrame[0];
 	glm::vec3 position = refFrame[3];
 	toRight = toRight * static_cast<float>(10.0f * elapsedSeconds);
 	position = position + toRight;
