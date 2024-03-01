@@ -5,6 +5,9 @@
 #include <string>
 #include <iterator> 
 
+
+GraphicsEnvironment* GraphicsEnvironment::self;
+
 struct VertexData {
 	glm::vec3 position, color;
 	glm::vec2 tex;
@@ -20,6 +23,7 @@ GraphicsEnvironment::GraphicsEnvironment()
 {
 	objManager = std::make_shared<ObjectManager>();
 	camera = std::make_shared<Camera>();
+	self = this;
 }
 
 GLFWwindow* GraphicsEnvironment::GetWindow()
@@ -84,6 +88,9 @@ void GraphicsEnvironment::SetUpGraphics()
     glDepthRange(0.0f, 1.0f);
 
 	glEnable(GL_MULTISAMPLE);
+
+	// on mouse move callback
+	glfwSetCursorPosCallback(window, OnMouseMove);
 }
 
 void GraphicsEnvironment::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
@@ -334,6 +341,9 @@ void GraphicsEnvironment::Run3D()
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
 		ProcessInput(window, elapsedSeconds);
 		glfwGetWindowSize(window, &width, &height);
+		// set mouse parameters
+		mouse.windowWidth = width;
+		mouse.windowHeight = height;
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -343,6 +353,9 @@ void GraphicsEnvironment::Run3D()
 		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+
+		// is this supposed to be the camera reference frame at this point?
+		camera->SetLookFrame(referenceFrame); 
 		view = camera->LookForward();
 
 		if (width >= height) {
@@ -414,6 +427,18 @@ void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<Grap
 std::shared_ptr<Camera> GraphicsEnvironment::GetCamera()
 {
 	return camera;
+}
+
+void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
+{
+	mouse.x = mouseX;
+	mouse.y = mouseY;
+
+	float xPercent = static_cast<float>(mouse.x / mouse.windowWidth);
+	float yPercent = static_cast<float>(mouse.y / mouse.windowHeight);
+
+	mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
+	mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
 }
 
 

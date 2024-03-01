@@ -15,7 +15,7 @@
 #include "IAnimation.h"
 #include "RotateAnimation.h"
 #include "Camera.h"
-
+#include "GraphicStructures.h"
 
 class GraphicsEnvironment :
     public BaseObject
@@ -25,6 +25,9 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
     std::shared_ptr<ObjectManager> objManager;
     std::shared_ptr<Camera> camera;   //is this how to include camera to graphics environment?
+    static GraphicsEnvironment* self;
+    MouseParams mouse;
+
 public:
     GraphicsEnvironment();
     ~GraphicsEnvironment();
@@ -47,5 +50,6 @@ public:
     void AddObject(const std::string name, std::shared_ptr<GraphicsObject>
         object);
     std::shared_ptr<Camera> GetCamera();
+    static void OnMouseMove(GLFWwindow* window, double mouseX, double mouseY);
 };
 
