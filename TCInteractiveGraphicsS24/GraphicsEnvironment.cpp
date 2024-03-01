@@ -354,9 +354,10 @@ void GraphicsEnvironment::Run3D()
 
 		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
 
-		// is this supposed to be the camera reference frame at this point?
-		camera->SetLookFrame(referenceFrame); 
+		// set camera look frame to be mouse speherical
+		camera->SetLookFrame(self->mouse.spherical.ToMat4());
 		view = camera->LookForward();
+		//view = camera->LookAtTarget(glm::vec3(self->mouse.spherical.ToMat4()[3]));
 
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
@@ -431,14 +432,14 @@ std::shared_ptr<Camera> GraphicsEnvironment::GetCamera()
 
 void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
 {
-	mouse.x = mouseX;
-	mouse.y = mouseY;
+	self->mouse.x = mouseX;
+	self->mouse.y = mouseY;
 
-	float xPercent = static_cast<float>(mouse.x / mouse.windowWidth);
-	float yPercent = static_cast<float>(mouse.y / mouse.windowHeight);
+	float xPercent = static_cast<float>(self->mouse.x / self->mouse.windowWidth);
+	float yPercent = static_cast<float>(self->mouse.y / self->mouse.windowHeight);
 
-	mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
-	mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
+	self->mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
+	self->mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
 }
 
 

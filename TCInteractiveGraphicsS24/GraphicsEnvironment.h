@@ -24,9 +24,9 @@ private:
     GLFWwindow* window;
     std::unordered_map<std::string, std::shared_ptr<Renderer>> rendererMap;
     std::shared_ptr<ObjectManager> objManager;
-    std::shared_ptr<Camera> camera;   //is this how to include camera to graphics environment?
+    std::shared_ptr<Camera> camera;  
+    GraphicStructures::MouseParams mouse;
     static GraphicsEnvironment* self;
-    MouseParams mouse;
 
 public:
     GraphicsEnvironment();
@@ -36,6 +36,7 @@ public:
     bool SetWindow(unsigned int width, unsigned int height, const std::string&
         title);
     bool InitGlad();
+    void ProcessInput(GLFWwindow* window, double elapsedSeconds);
     void SetUpGraphics();
     static void OnWindowSizeChanged(GLFWwindow* window, int width, int height);
     void CreateRenderer(const std::string& name, std::shared_ptr<Shader>
@@ -43,7 +44,6 @@ public:
     std::shared_ptr<Renderer> GetRenderer(const std::string& name);
     void StaticAllocate();
     void Render();
-    void ProcessInput(GLFWwindow* window, double elapsedSeconds);
     glm::mat4 CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up);
     void Run2D();
     void Run3D();

@@ -2,6 +2,7 @@
 #include "glm/glm.hpp"
 class GraphicStructures
 {
+public:
     struct SphericalCoordinate {
         float phi = 0.0f, theta = 0.0f, rho = 1.0f;
 
