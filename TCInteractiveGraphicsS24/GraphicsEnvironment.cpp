@@ -5,6 +5,9 @@
 #include <string>
 #include <iterator> 
 
+
+GraphicsEnvironment* GraphicsEnvironment::self;
+
 struct VertexData {
 	glm::vec3 position, color;
 	glm::vec2 tex;
@@ -14,6 +17,13 @@ struct VertexData {
 GraphicsEnvironment::~GraphicsEnvironment()
 {
     glfwTerminate();
+}
+
+GraphicsEnvironment::GraphicsEnvironment()
+{
+	objManager = std::make_shared<ObjectManager>();
+	camera = std::make_shared<Camera>();
+	self = this;
 }
 
 GLFWwindow* GraphicsEnvironment::GetWindow()
@@ -58,6 +68,8 @@ void GraphicsEnvironment::SetUpGraphics()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// on mouse move callback
+	glfwSetCursorPosCallback(window, OnMouseMove);
 	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -100,8 +112,8 @@ void GraphicsEnvironment::StaticAllocate()
 {
 	// unordered_map iterator created 
 	// iterator pointing to start of unordered_map 
-	std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
-		= rendererMap.begin();
+	//std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
+	//	= rendererMap.begin();
 
 	for (const auto& pair : rendererMap) {
 		std::string key = pair.first;
@@ -130,11 +142,42 @@ void GraphicsEnvironment::Render()
 	}
 }
 
-void GraphicsEnvironment::ProcessInput(GLFWwindow* window)
+void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		camera->MoveForward(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		camera->MoveLeft(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		camera->MoveBackward(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		camera->MoveRight(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		camera->MoveUp(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		camera->MoveDown(elapsedSeconds);
+		return;
+	}
+
 }
 
 glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
@@ -168,9 +211,13 @@ void GraphicsEnvironment::Run2D()
 	float cameraX = -10, cameraY = 0;
 	glm::mat4 view;
 
+	Timer timer;
+	double elapsedSeconds;
+
 
 	while (!glfwWindowShouldClose(window)) {
-		ProcessInput(window);
+		elapsedSeconds = timer.GetElapsedTimeInSeconds();
+		ProcessInput(window, elapsedSeconds);
 
 		// moved projection matrix calc to here
 		int width, height;
@@ -267,18 +314,36 @@ void GraphicsEnvironment::Run3D()
 	float farPlane = 100.0f;
 	float fieldOfView = 60;
 
-	glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
+	//glm::vec3 cameraPosition(15.0f, 15.0f, 20.0f);
 	glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+	//glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
 	glm::mat4 view;
 	glm::mat4 projection;
 	glm::mat4 referenceFrame(1.0f);
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
+	camera->SetPosition(glm::vec3(0.0f, 3.0f, 30.0f));
+
+
+	bool lookWithMouse = false;
+	bool resetCameraPosition = false;
+	double elapsedSeconds;
+	Timer timer;
+
+	// add animation
+	std::shared_ptr<RotateAnimation> rotateAnimation =
+		std::make_shared<RotateAnimation>();
+	rotateAnimation->SetObject(objManager->GetObject("Crate"));
+	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
+
 
 	while (!glfwWindowShouldClose(window)) {
-		ProcessInput(window);
+		elapsedSeconds = timer.GetElapsedTimeInSeconds();
+		ProcessInput(window, elapsedSeconds);
 		glfwGetWindowSize(window, &width, &height);
+		// set mouse parameters
+		mouse.windowWidth = width;
+		mouse.windowHeight = height;
 
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -287,7 +352,25 @@ void GraphicsEnvironment::Run3D()
 		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+
+		// mouse settings
+		if (resetCameraPosition) {
+			camera->SetLookFrame(glm::mat4(1.0f));
+			camera->SetPosition(glm::vec4(0.0f, 3.0f, 20.0f, 1.0f));
+			resetCameraPosition = false;
+			lookWithMouse = false;
+		}
+		if (lookWithMouse) {
+			camera->SetLookFrame(mouse.spherical.ToMat4());
+		}
+
+
+		// set camera look frame to be mouse speherical
+		//camera->SetLookFrame(self->mouse.spherical.ToMat4());
+
+		view = camera->LookForward();
+		//view = camera->LookAtTarget(glm::vec3(self->mouse.spherical.ToMat4()[3]));
 
 		if (width >= height) {
 			aspectRatio = width / (height * 1.0f);
@@ -299,20 +382,21 @@ void GraphicsEnvironment::Run3D()
 			glm::radians(fieldOfView), aspectRatio, nearPlane, farPlane);
 
 		// Update the objects in the scene
-		// should the update objects be in the render class?
+		// commenting this out so the animation works correctly
+		/*
 		for (auto& object : GetRenderer("renderer3d")->GetScene()->GetObjects()) {
 			object->ResetOrientation();
 			object->RotateLocalX(cubeXAngle);
 			object->RotateLocalY(cubeYAngle);
 			object->RotateLocalZ(cubeZAngle);
-		}
+		}*/
 
 
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
 
-
-		//StaticAllocate();
+		// call update
+		objManager->Update(elapsedSeconds);
 
 		Render();
 
@@ -324,12 +408,16 @@ void GraphicsEnvironment::Run3D()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / io.Framerate, io.Framerate);
 		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
-		ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);
-		ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
-		ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
-		ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
-		ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
-		ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
+		//ImGui::SliderFloat("X Angle", &cubeXAngle, 0, 360);  // commenting these out so the animation works correctly
+		//ImGui::SliderFloat("Y Angle", &cubeYAngle, 0, 360);
+		//ImGui::SliderFloat("Z Angle", &cubeZAngle, 0, 360);
+
+		//ImGui::SliderFloat("Camera X", &cameraPosition.x, left, right);
+		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
+		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
+
+		ImGui::Checkbox("Use mouse to look", &lookWithMouse);
+		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -344,6 +432,29 @@ void GraphicsEnvironment::Run3D()
 
 	glfwTerminate();
 
+}
+
+void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<GraphicsObject> object)
+{
+	// does the objManager need to be declared as a shared pointer somewhere..?
+	objManager->SetObject(name, object);
+}
+
+std::shared_ptr<Camera> GraphicsEnvironment::GetCamera()
+{
+	return camera;
+}
+
+void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double mouseY)
+{
+	self->mouse.x = mouseX;
+	self->mouse.y = mouseY;
+
+	float xPercent = static_cast<float>(self->mouse.x / self->mouse.windowWidth);
+	float yPercent = static_cast<float>(self->mouse.y / self->mouse.windowHeight);
+
+	self->mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
+	self->mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
 }
 
 

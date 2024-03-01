@@ -1,5 +1,6 @@
 #include "GraphicsObject.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "IAnimation.h"
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
@@ -85,4 +86,19 @@ void GraphicsObject::RotateLocalZ(float degrees)
 void GraphicsObject::SetReferenceFrame(glm::mat4 newReferenceFrame)
 {
 	referenceFrame = newReferenceFrame;
+}
+
+void GraphicsObject::Update(double elapsedSeconds)
+{
+	// needs stuff
+	if (this->animation != nullptr)
+	{
+		// call animation's update
+		animation->Update(elapsedSeconds);
+	}
+}
+
+void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
+{
+	this->animation = animation;
 }

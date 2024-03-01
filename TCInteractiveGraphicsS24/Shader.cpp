@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "TextFile.h"
+#include "GraphicsObject.h"
 
 Shader::Shader(const std::string& vertexSource, const std::string& fragmentSource)
 {
@@ -54,19 +55,6 @@ void Shader::SetDefaultSource()
 		" color = uColor;\n"
 		"}\n";
 
-	/*
-	// need to comment out this code and use the default source code again
-	std::shared_ptr<TextFile> textFile = std::make_shared<TextFile>();
-	// relative path 
-	textFile->ReadFile("basic.vert.glsl");
-
-	vertexSource = textFile->GetString();
-
-	// relative path
-	textFile->ReadFile("basic.frag.glsl");
-
-	fragmentSource = textFile->GetString();
-	*/
 }
 
 void Shader::Init()
@@ -171,5 +159,5 @@ void Shader::CreateShaderProgram()
 
 void Shader::SendIntUniform(const std::string& uniformName, int value)
 {
-	glUniform1i(uniformMap[uniformName], value);  //is this right for the uniform map?
+	glUniform1i(uniformMap[uniformName], value); 
 }
