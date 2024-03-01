@@ -68,6 +68,8 @@ void GraphicsEnvironment::SetUpGraphics()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// on mouse move callback
+	glfwSetCursorPosCallback(window, OnMouseMove);
 	glfwSetFramebufferSizeCallback(window, OnWindowSizeChanged);
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -88,9 +90,6 @@ void GraphicsEnvironment::SetUpGraphics()
     glDepthRange(0.0f, 1.0f);
 
 	glEnable(GL_MULTISAMPLE);
-
-	// on mouse move callback
-	glfwSetCursorPosCallback(window, OnMouseMove);
 }
 
 void GraphicsEnvironment::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
@@ -356,7 +355,6 @@ void GraphicsEnvironment::Run3D()
 		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
 
 		// mouse settings
-		/*
 		if (resetCameraPosition) {
 			camera->SetLookFrame(glm::mat4(1.0f));
 			camera->SetPosition(glm::vec4(0.0f, 3.0f, 20.0f, 1.0f));
@@ -366,11 +364,10 @@ void GraphicsEnvironment::Run3D()
 		if (lookWithMouse) {
 			camera->SetLookFrame(mouse.spherical.ToMat4());
 		}
-		*/
 
 
 		// set camera look frame to be mouse speherical
-		camera->SetLookFrame(self->mouse.spherical.ToMat4());
+		//camera->SetLookFrame(self->mouse.spherical.ToMat4());
 
 		view = camera->LookForward();
 		//view = camera->LookAtTarget(glm::vec3(self->mouse.spherical.ToMat4()[3]));
@@ -419,10 +416,8 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 
-		//ImGui::Checkbox("Use mouse to look", &lookWithMouse);
-		//ImGui::Checkbox("Reset camera position", &resetCameraPosition);
-		// IMGui seems to be broken right now?
-
+		ImGui::Checkbox("Use mouse to look", &lookWithMouse);
+		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
