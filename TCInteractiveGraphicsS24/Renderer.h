@@ -4,6 +4,7 @@
 #include <glad/glad.h> 
 #include "GraphicsObject.h"
 #include "Scene.h"
+#include "Camera.h"
 
 
 class Renderer :
@@ -59,7 +60,7 @@ public:
         glBindVertexArray(0);
     }
     
-    void RenderScene()
+    void RenderScene(Camera camera)
     {
         if (shader->IsCreated()) {
             glUseProgram(shader->GetShaderProgram());

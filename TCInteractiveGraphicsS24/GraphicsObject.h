@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include "VertexBuffer.h"
+#include "GraphicStructures.h"
 
 class IAnimation; // Forward declaration
 
@@ -14,6 +15,8 @@ protected:
 	GraphicsObject* parent;
 	std::vector<std::shared_ptr<GraphicsObject>> children;
 	std::shared_ptr<IAnimation> animation = nullptr;
+	GraphicStructures::Material material{};
+
 
 public:
 	GraphicsObject();
@@ -41,5 +44,6 @@ public:
 	void Update(double elapsedSeconds);   //needs definition
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; };
+	GraphicStructures::Material& GetMaterial();
 };
 

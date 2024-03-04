@@ -190,6 +190,156 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 }
 
 
+static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
+	std::shared_ptr<Scene>& scene3d, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
+{
+
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("lighting.vert.glsl");
+
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	// relative path 
+	fragFile->ReadFile("lighting.frag.glsl");
+
+
+	shader3d = std::make_shared<Shader>(vertFile, fragFile);
+
+	shader3d->AddUniform("projection");
+	shader3d->AddUniform("world");
+	shader3d->AddUniform("view");
+	shader3d->AddUniform("materialAmbientIntensity");
+	shader3d->AddUniform("materialSpecularIntensity");
+	shader3d->AddUniform("materialShininess");
+	shader3d->AddUniform("globalLightPosition");
+	shader3d->AddUniform("globalLightColor");
+	shader3d->AddUniform("globalLightIntensity");
+	shader3d->AddUniform("localLightPosition");
+	shader3d->AddUniform("localLightColor");
+	shader3d->AddUniform("localLightIntensity");
+	shader3d->AddUniform("localLightAttenuationCoef");
+	shader3d->AddUniform("viewPosition");
+	shader3d->AddUniform("texUnit");
+
+	unsigned int shaderProgram = shader3d->GetShaderProgram();
+
+
+	// Get the uniform locations
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+	unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
+
+
+	std::shared_ptr<Texture> texture3d = std::make_shared<Texture>();
+	texture3d->SetHeight(4);
+	texture3d->SetWidth(4);
+
+	// Create the texture data
+	unsigned char* textureData = new unsigned char[] {
+		0, 0, 0, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 0, 255,
+			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+			0, 255, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 0, 255,
+			0, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 0, 0, 0, 255
+		};
+
+	texture3d->SetTextureData(64, textureData);
+
+
+	scene3d = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
+
+	buffer->AddVertexAttribute("position", 0, 3, 0);
+	buffer->AddVertexAttribute("vertexColor", 1, 4, 3);
+	buffer->AddVertexAttribute("normal", 2, 3, 7);
+	buffer->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	texture3d->SetWrapS(GL_REPEAT);
+	texture3d->SetWrapT(GL_REPEAT);
+	texture3d->SetMagFilter(GL_NEAREST);
+	texture3d->SetMinFilter(GL_NEAREST);
+
+	buffer->SetTexture(texture3d);
+
+
+
+	graphicsObject3d->SetVertexBuffer(buffer);
+
+	graphicsObject3d->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3d);
+
+
+	// new crate code here
+	std::shared_ptr<Texture> texture3dNew = std::make_shared<Texture>();
+
+	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
+	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
+
+
+	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferNew = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+
+	bufferNew->AddVertexAttribute("position", 0, 3, 0);
+	bufferNew->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferNew->AddVertexAttribute("normal", 2, 3, 7);
+	bufferNew->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	texture3d->SetWrapS(GL_REPEAT);
+	texture3d->SetWrapT(GL_REPEAT);
+	texture3d->SetMagFilter(GL_NEAREST);
+	texture3d->SetMinFilter(GL_NEAREST);
+
+	bufferNew->SetTexture(texture3dNew);
+
+
+
+	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
+
+	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dCrate);
+
+
+	// new Floor code here
+	std::shared_ptr<Texture> texture3dFloor = std::make_shared<Texture>();
+
+	texture3dFloor->LoadTextureDataFromFile("..\\3rdparty\\FloorTex.jpg");
+
+
+	std::shared_ptr<GraphicsObject> graphicsObject3dFloor = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferFloor = Generate::XZPlaneNorm(60, 60, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f }, glm::vec2{ 5.0f, 5.0f });
+
+	bufferFloor->AddVertexAttribute("position", 0, 3, 0);
+	bufferFloor->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferFloor->AddVertexAttribute("normal", 2, 3, 7);
+	bufferFloor->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	texture3dFloor->SetWrapS(GL_REPEAT);
+	texture3dFloor->SetWrapT(GL_REPEAT);
+	texture3dFloor->SetMagFilter(GL_NEAREST);
+	texture3dFloor->SetMinFilter(GL_NEAREST);
+
+	bufferFloor->SetTexture(texture3dFloor);
+
+
+
+	graphicsObject3dFloor->SetVertexBuffer(bufferFloor);
+
+	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dFloor);
+
+	graphicsEnviron->AddObject("cube", graphicsObject3d);
+	graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
+	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
+
+
+
+}
+
+
+
 
 static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	textureShader, std::shared_ptr<Scene>& textureScene)

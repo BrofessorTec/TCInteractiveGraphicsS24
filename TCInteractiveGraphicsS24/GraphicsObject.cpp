@@ -4,6 +4,9 @@
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
+	material.ambientIntensity = 1;
+	material.shininess = 1;
+	material.specularIntensity = 1;
 }
 
 GraphicsObject::~GraphicsObject()
@@ -101,4 +104,9 @@ void GraphicsObject::Update(double elapsedSeconds)
 void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 {
 	this->animation = animation;
+}
+
+GraphicStructures::Material& GraphicsObject::GetMaterial()
+{
+	return material;
 }
