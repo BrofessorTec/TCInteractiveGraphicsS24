@@ -37,7 +37,7 @@ glm::mat4 Camera::LookAtTarget(glm::vec3 target)
 	//Use the look frame.
 
 	glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraForward;
+	glm::vec3 cameraForward; // camera forward isnt used at all here?
 
 	cameraForward = -lookFrame[2];
 	cameraUp = lookFrame[1];

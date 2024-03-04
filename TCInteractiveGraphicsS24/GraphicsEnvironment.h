@@ -27,6 +27,7 @@ private:
     std::shared_ptr<Camera> camera;  
     GraphicStructures::MouseParams mouse;
     static GraphicsEnvironment* self;
+    bool lookWithMouse = false;
 
 public:
     GraphicsEnvironment();
