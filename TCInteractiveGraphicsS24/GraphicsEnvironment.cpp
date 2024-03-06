@@ -23,6 +23,7 @@ GraphicsEnvironment::~GraphicsEnvironment()
 
 GraphicsEnvironment::GraphicsEnvironment()
 {
+	window = nullptr;
 	objManager = std::make_shared<ObjectManager>();
 	camera = std::make_shared<Camera>();
 	self = this;
@@ -146,7 +147,7 @@ void GraphicsEnvironment::Render()
 	}*/
 
 	for (const auto& [name, renderer] : rendererMap) {
-		renderer->RenderScene();
+		renderer->RenderScene(*camera);  //is this the right syntax?
 	}
 
 }

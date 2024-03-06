@@ -541,7 +541,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// new 3d code created here
 	std::shared_ptr<Shader> shader3d;
 	std::shared_ptr<Scene> scene3d;
-	SetUp3DScene1(shader3d, scene3d, graphicsEnviron);
+	//SetUp3DScene1(shader3d, scene3d, graphicsEnviron);
+	SetUp3DScene2(shader3d, scene3d, graphicsEnviron);
 
 
 	graphicsEnviron->CreateRenderer("renderer3d", shader3d);

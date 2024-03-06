@@ -20,6 +20,8 @@ private:
 public:
     Renderer(std::shared_ptr<Shader> shader2)
     {
+        view = glm::mat4(1.0f);
+        projection = glm::mat4(1.0f);
         shader = shader2;
         glGenVertexArrays(1, &vaoId);
     }
