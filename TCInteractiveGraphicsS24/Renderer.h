@@ -60,7 +60,7 @@ public:
         glBindVertexArray(0);
     }
     
-    void RenderScene(Camera camera)
+    void RenderScene(Camera const &camera)
     {
         if (shader->IsCreated()) {
             glUseProgram(shader->GetShaderProgram());

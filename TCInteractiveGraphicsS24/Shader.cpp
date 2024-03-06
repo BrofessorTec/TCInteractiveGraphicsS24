@@ -161,3 +161,15 @@ void Shader::SendIntUniform(const std::string& uniformName, int value)
 {
 	glUniform1i(uniformMap[uniformName], value); 
 }
+
+void Shader::SendVec3Uniform(const std::string& uniformName, const glm::vec3& vec)
+{
+	glUniform3fv(uniformMap[uniformName], 1, glm::value_ptr(vec));
+	// is this right?
+}
+
+void Shader::SendFloatUniform(const std::string& uniformName, float value)
+{
+	glUniform1f(uniformMap[uniformName], value);
+	// is this right?
+}

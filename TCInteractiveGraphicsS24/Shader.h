@@ -27,6 +27,8 @@ public:
 	void SendMat4Uniform(const std::string& uniformName, const glm::mat4&
 		mat);
 	void SendIntUniform(const std::string& uniformName, int value);
+	void SendVec3Uniform(const std::string& uniformName, const glm::vec3& vec);
+	void SendFloatUniform(const std::string& uniformName, float value);
 private:
 	void SetDefaultSource();
 	void Init();
