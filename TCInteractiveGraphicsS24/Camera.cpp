@@ -98,3 +98,8 @@ void Camera::MoveDown(double elapsedSeconds)
 	position = position + up;
 	refFrame[3] = glm::vec4(position, 1.0f);
 }
+
+glm::vec3 Camera::GetPosition()
+{
+	return refFrame[3];
+}

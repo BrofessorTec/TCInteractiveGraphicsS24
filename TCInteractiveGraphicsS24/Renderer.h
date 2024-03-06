@@ -68,7 +68,7 @@ public:
             //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
             shader->SendMat4Uniform("view", view);
             shader->SendMat4Uniform("projection", projection);
-            shader->SendVec3Uniform("cameraPos", glm::value_ptr(camera)->GetPosition());  // need to fix this
+            shader->SendVec3Uniform("cameraPos", camera.GetPosition());  // had to create a GetPosition() method for this?
             shader->SendFloatUniform("globalLightAttenuation", scene->GetGlobalLight().attenuationCoef);
             shader->SendFloatUniform("localLightAttenuation", scene->GetLocalLight().attenuationCoef);
             shader->SendFloatUniform("globalLightIntensity", scene->GetGlobalLight().intensity);

@@ -22,5 +22,6 @@ public:
 	void MoveRight(double elapsedSeconds);
 	void MoveUp(double elapsedSeconds);
 	void MoveDown(double elapsedSeconds);
+	glm::vec3 GetPosition();
 };
 
