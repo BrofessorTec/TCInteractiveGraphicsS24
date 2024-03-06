@@ -104,9 +104,20 @@ public:
         }
     }
 private:
-    void RenderObject(const GraphicsObject& object)
+    void RenderObject(GraphicsObject& object)
     {
         shader->SendMat4Uniform("world", object.GetReferenceFrame());
+        shader->SendFloatUniform("matAmbient", object.GetMaterial().ambientIntensity);
+        shader->SendFloatUniform("matSpecular", object.GetMaterial().specularIntensity);
+        shader->SendFloatUniform("matShininess", object.GetMaterial().shininess);
+
+
+        /* uniforms needed from notes
+            glUniform1f(ambientLoc, material.ambientIntensity);
+            glUniform1f(specularLoc, material.specularIntensity);
+            glUniform1f(shininessLoc, material.shininess);
+        */
+
 
         auto& buffer = object.GetVertexBuffer();
         buffer->Select();

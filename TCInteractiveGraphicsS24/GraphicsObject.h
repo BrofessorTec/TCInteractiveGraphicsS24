@@ -21,7 +21,7 @@ protected:
 public:
 	GraphicsObject();
 	virtual ~GraphicsObject();
-
+	GraphicStructures::Material& GetMaterial();
 	const glm::mat4 GetReferenceFrame() const;
 	void CreateVertexBuffer(unsigned int numberOfElementsPerVertex);
 	void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer);
@@ -44,6 +44,5 @@ public:
 	void Update(double elapsedSeconds);   //needs definition
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; };
-	GraphicStructures::Material& GetMaterial();
 };
 
