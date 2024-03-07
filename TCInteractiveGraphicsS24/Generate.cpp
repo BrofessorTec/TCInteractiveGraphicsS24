@@ -112,7 +112,7 @@ std::shared_ptr<VertexBuffer> Generate::CuboidNorm(float width, float height, fl
     vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], 0, tex[1]);
     vertexBuffer3d->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], 0, 0);
     vertexBuffer3d->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, normal[0], normal[1], normal[2], tex[1]);
+    vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], 0, tex[1]);
     vertexBuffer3d->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], tex[0], 0);
     vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], normal[1], normal[2], tex[0], tex[1]);
 
@@ -120,7 +120,7 @@ std::shared_ptr<VertexBuffer> Generate::CuboidNorm(float width, float height, fl
     vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], 0, tex[1]);
     vertexBuffer3d->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], 0, 0);
     vertexBuffer3d->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], tex[0], 0);
-    vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, normal[0], normal[1], normal[2], tex[1]);
+    vertexBuffer3d->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], 0, tex[1]);
     vertexBuffer3d->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], tex[0], 0);
     vertexBuffer3d->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, normal[0], normal[1], normal[2], tex[0], tex[1]);
 

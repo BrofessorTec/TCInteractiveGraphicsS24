@@ -214,6 +214,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	shader3d->AddUniform("globalLightPosition");
 	shader3d->AddUniform("globalLightColor");
 	shader3d->AddUniform("globalLightIntensity");
+	shader3d->AddUniform("globalLightAttenuationCoef");
 	shader3d->AddUniform("localLightPosition");
 	shader3d->AddUniform("localLightColor");
 	shader3d->AddUniform("localLightIntensity");
