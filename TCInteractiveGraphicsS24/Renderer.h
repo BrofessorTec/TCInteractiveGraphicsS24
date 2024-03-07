@@ -71,14 +71,14 @@ public:
             shader->SendMat4Uniform("view", view);
             shader->SendMat4Uniform("projection", projection);
             shader->SendVec3Uniform("cameraPos", camera.GetPosition());  // had to create a GetPosition() method for this?
-            shader->SendFloatUniform("globalLightAttenuation", scene->GetGlobalLight().attenuationCoef);
-            shader->SendFloatUniform("localLightAttenuation", scene->GetLocalLight().attenuationCoef);
+            shader->SendFloatUniform("globalLightAttenuationCoef", scene->GetGlobalLight().attenuationCoef);
+            shader->SendFloatUniform("localLightAttenuationCoef", scene->GetLocalLight().attenuationCoef);
             shader->SendFloatUniform("globalLightIntensity", scene->GetGlobalLight().intensity);
             shader->SendFloatUniform("localLightIntensity", scene->GetLocalLight().intensity);
             shader->SendVec3Uniform("globalLightColor", scene->GetGlobalLight().color);
             shader->SendVec3Uniform("localLightColor", scene->GetLocalLight().color);
-            shader->SendVec3Uniform("globalLightPos", scene->GetGlobalLight().position);
-            shader->SendVec3Uniform("localLightPos", scene->GetLocalLight().position);
+            shader->SendVec3Uniform("globalLightPosition", scene->GetGlobalLight().position);
+            shader->SendVec3Uniform("localLightPosition", scene->GetLocalLight().position);
 
 
             /* values needed from the notes
@@ -109,9 +109,9 @@ private:
     void RenderObject(GraphicsObject& object)
     {
         shader->SendMat4Uniform("world", object.GetReferenceFrame());
-        shader->SendFloatUniform("matAmbient", object.GetMaterial().ambientIntensity);
-        shader->SendFloatUniform("matSpecular", object.GetMaterial().specularIntensity);
-        shader->SendFloatUniform("matShininess", object.GetMaterial().shininess);
+        shader->SendFloatUniform("materialAmbientIntensity", object.GetMaterial().ambientIntensity);
+        shader->SendFloatUniform("materialSpecularIntensity", object.GetMaterial().specularIntensity);
+        shader->SendFloatUniform("materialShininess", object.GetMaterial().shininess);
 
 
         /* uniforms needed from notes

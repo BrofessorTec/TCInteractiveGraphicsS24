@@ -12,8 +12,7 @@ private:
 	unsigned int shaderProgram;
 	std::unordered_map<std::string, unsigned int> uniformMap;
 public:
-	Shader(const std::string& vertexSource, const std::string&
-		fragmentSource);
+	Shader(const std::string& vertexSource, const std::string& fragmentSource);
 	Shader();
 	~Shader() = default;
 	inline const std::string& GetVertexSource() const { return vertexSource; }

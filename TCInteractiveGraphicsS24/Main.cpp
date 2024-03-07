@@ -203,7 +203,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	fragFile->ReadFile("lighting.frag.glsl");
 
 
-	shader3d = std::make_shared<Shader>(vertFile, fragFile);
+	shader3d = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
 
 	shader3d->AddUniform("projection");
 	shader3d->AddUniform("world");
