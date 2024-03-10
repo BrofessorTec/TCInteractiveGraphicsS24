@@ -465,6 +465,19 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 
+		ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
+		//ImGui::SliderFloat("Local Attenuation ", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().attenuationCoef, 0, 1);
+		//ImGui::SliderFloat("Specular Cube", &objManager->GetObject("cube")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Cube", &objManager->GetObject("cube")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Cube", &objManager->GetObject("cube")->GetMaterial().ambientIntensity, 0, 1);
+		//ImGui::SliderFloat("Specular Crate", &objManager->GetObject("Crate")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Crate", &objManager->GetObject("Crate")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Crate", &objManager->GetObject("Crate")->GetMaterial().ambientIntensity, 0, 1);
+		//ImGui::SliderFloat("Specular Floor", &objManager->GetObject("floor")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Floor", &objManager->GetObject("floor")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Floor", &objManager->GetObject("floor")->GetMaterial().ambientIntensity, 0, 1);
+
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();

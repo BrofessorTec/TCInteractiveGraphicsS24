@@ -5,12 +5,12 @@ void Scene::AddObject(std::shared_ptr<GraphicsObject> object)
 	objects.push_back(object);
 }
 
-GraphicStructures::Light Scene::GetGlobalLight()
+GraphicStructures::Light& Scene::GetGlobalLight()
 {
 	return globalLight;
 }
 
-GraphicStructures::Light Scene::GetLocalLight()
+GraphicStructures::Light& Scene::GetLocalLight()
 {
 	return locaLight;
 }

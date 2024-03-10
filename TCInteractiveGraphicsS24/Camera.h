@@ -5,10 +5,9 @@
 class Camera
 {
 private:
-	glm::mat4 lookFrame = glm::mat4(1.0f);  // initialize these to the identity matrix?
+	glm::mat4 lookFrame = glm::mat4(1.0f); 
 	glm::mat4 refFrame = glm::mat4(1.0f);
 	int moveSpeed = 10;
-	//glm::vec3 position; // or is this supposed to update the postion of the refernce frame? probably
 
 public:
 	void SetLookFrame(glm::mat4 lookFrame);

@@ -4,9 +4,9 @@
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
-	material.ambientIntensity = 1;
-	material.shininess = 1;
-	material.specularIntensity = 1;
+	material.ambientIntensity = 0.5;
+	material.shininess = 0.5;
+	material.specularIntensity = 0.5;
 }
 
 GraphicsObject::~GraphicsObject()

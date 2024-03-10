@@ -19,7 +19,7 @@ public:
 		return objects;
 	}
 	void AddObject(std::shared_ptr<GraphicsObject> object);
-	GraphicStructures::Light GetGlobalLight();
-	GraphicStructures::Light GetLocalLight();
+	GraphicStructures::Light& GetGlobalLight();
+	GraphicStructures::Light& GetLocalLight();
 };
 
