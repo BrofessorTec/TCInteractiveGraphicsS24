@@ -478,6 +478,8 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Shininess Floor", &objManager->GetObject("floor")->GetMaterial().shininess, 0, 100);
 		//ImGui::SliderFloat("Ambient Intensity Floor", &objManager->GetObject("floor")->GetMaterial().ambientIntensity, 0, 1);
 
+		// add a slider for box animation speed 
+		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
