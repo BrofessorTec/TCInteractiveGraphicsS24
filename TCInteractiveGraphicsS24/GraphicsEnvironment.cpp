@@ -378,6 +378,7 @@ void GraphicsEnvironment::Run3D()
 	bool resetCameraPosition = false;
 	double elapsedSeconds;
 	Timer timer;
+	bool correctGamma = false;
 
 	// add animation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
@@ -412,6 +413,14 @@ void GraphicsEnvironment::Run3D()
 		}
 		if (lookWithMouse) {
 			camera->SetLookFrame(mouse.spherical.ToMat4());
+		}
+
+		// gamma correction
+		if (correctGamma) {
+			glEnable(GL_FRAMEBUFFER_SRGB);
+		}
+		else {
+			glDisable(GL_FRAMEBUFFER_SRGB);
 		}
 
 
@@ -478,6 +487,7 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Shininess Floor", &objManager->GetObject("floor")->GetMaterial().shininess, 0, 100);
 		//ImGui::SliderFloat("Ambient Intensity Floor", &objManager->GetObject("floor")->GetMaterial().ambientIntensity, 0, 1);
 
+		ImGui::Checkbox("Correct gamma", &correctGamma);
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
