@@ -12,4 +12,6 @@ public:
 		= 90.0f)
 		: IAnimation(), axis(axis), speed(speed) {}
 	void Update(double elapsedSeconds) override;
+	void SetSpeed(float newSpeed);
+	float& GetSpeed();
 };
