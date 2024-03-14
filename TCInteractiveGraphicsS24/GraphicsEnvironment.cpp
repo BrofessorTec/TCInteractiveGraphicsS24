@@ -452,6 +452,9 @@ void GraphicsEnvironment::Run3D()
 
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
+		// are these view and projection the same?
+		GetRenderer("rendererLight")->SetView(view);
+		GetRenderer("rendererLight")->SetProjection(projection);
 
 		// call update
 		objManager->Update(elapsedSeconds);

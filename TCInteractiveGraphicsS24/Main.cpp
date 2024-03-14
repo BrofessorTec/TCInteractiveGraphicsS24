@@ -339,6 +339,57 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 }
 
+static void SetUpLightScene(std::shared_ptr<Shader>&
+	lightShader, std::shared_ptr<Scene>& lightScene)
+{
+	//unsigned int shaderProgram;
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("texture.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("texture.frag.glsl");
+
+	// am i supposed to use the shader that was passed into the method?
+	lightShader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	lightShader->AddUniform("projection");
+	lightShader->AddUniform("world");
+	lightShader->AddUniform("view");
+	//shaderProgram = shader->GetShaderProgram();
+
+
+	// new textured object to scene
+	lightScene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> graphicsObject2 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> vertexBuffer2 = std::make_shared<VertexBuffer>(8);
+
+	vertexBuffer2->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, -2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	vertexBuffer2->AddVertexAttribute("position", 0, 3, 0);
+	vertexBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
+	vertexBuffer2->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
+	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
+	texture2->LoadTextureDataFromFile("..\\3rdparty\\lightbulb.png");
+
+
+	vertexBuffer2->SetTexture(texture2);
+	graphicsObject2->SetVertexBuffer(vertexBuffer2);
+	graphicsObject2->SetPosition(glm::vec3(0.0f, 3.0f, 4.0f));  //can adjust position if needed
+	lightScene->AddObject(graphicsObject2);
+
+
+}
+
+
 
 
 
@@ -548,6 +599,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	graphicsEnviron->CreateRenderer("renderer3d", shader3d);
 	graphicsEnviron->GetRenderer("renderer3d")->SetScene(scene3d);
+
+
+	// attempting to set up the second scene
+	std::shared_ptr<Shader> shaderLight;
+	std::shared_ptr<Scene> sceneLight;
+	SetUpLightScene(shaderLight, sceneLight);
+
+
+	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
+	graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
 
 
 	graphicsEnviron->StaticAllocate();
