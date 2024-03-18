@@ -44,6 +44,6 @@ public:
 	void Update(double elapsedSeconds);   //needs definition
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; };
-	void PointAtTarget(glm::vec3 position);
+	void PointAtTarget(glm::vec3 point);
 };
 
