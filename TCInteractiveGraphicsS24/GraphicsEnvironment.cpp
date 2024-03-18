@@ -451,7 +451,7 @@ void GraphicsEnvironment::Run3D()
 
 
 
-		// added this to point the lightbulb at the camera position, need to finish the actual method code..
+		// added this to point the lightbulb at the camera position and match the texture object to the light position
 		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
 			object->SetPosition(GetRenderer("rendererLight")->GetScene()->GetLocalLight().position);
 			object->PointAtTarget(camera->GetPosition());
