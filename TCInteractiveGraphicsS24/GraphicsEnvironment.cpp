@@ -468,6 +468,10 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("rendererLight")->SetView(view);
 		GetRenderer("rendererLight")->SetProjection(projection);
 
+		// added arrow scene
+		GetRenderer("rendererArrow")->SetView(view);
+		GetRenderer("rendererArrow")->SetProjection(projection);
+
 		// call update
 		objManager->Update(elapsedSeconds);
 
