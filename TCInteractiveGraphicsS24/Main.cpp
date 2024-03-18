@@ -363,6 +363,11 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 	// new textured object to scene
 	lightScene = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> lightbulb = std::make_shared<GraphicsObject>();
+
+	std::shared_ptr<VertexBuffer> lightbulbBuffer = Generate::XYPlane(4, 4);
+	//std::shared_ptr<VertexBuffer> lightbulbBuffer = Generate::Cuboid(4, 4, 0);
+
+/*
 	std::shared_ptr<VertexBuffer> lightbulbBuffer = std::make_shared<VertexBuffer>(8);
 
 	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
@@ -371,7 +376,7 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
 	lightbulbBuffer->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
 	lightbulbBuffer->AddVertexData(8, 2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-
+	*/
 	lightbulbBuffer->AddVertexAttribute("position", 0, 3, 0);
 	lightbulbBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
 	lightbulbBuffer->AddVertexAttribute("texCoord", 2, 2, 6);

@@ -90,6 +90,31 @@ std::shared_ptr<VertexBuffer> Generate::XZPlane(float width, float depth, glm::v
     return vertexBufferFloor;
 }
 
+std::shared_ptr<VertexBuffer> Generate::XYPlane(float width, float height, glm::vec3 color, glm::vec2 tex)
+{
+    std::shared_ptr<VertexBuffer> vertexBufferFloor = std::make_shared<VertexBuffer>(8);
+    float halfWidth = width / 2;
+    float halfHeight = height / 2;
+
+    // front face
+    vertexBufferFloor->AddVertexData(8, -halfWidth, halfHeight, 0, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, -halfHeight, 0, color.r, color.g, color.b, 0, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, -halfHeight, 0, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, halfHeight, 0, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, halfWidth, -halfHeight, 0, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, halfHeight, 0, color.r, color.g, color.b, tex.s, tex.t);
+
+    // back face
+    vertexBufferFloor->AddVertexData(8, halfWidth, halfHeight, 0, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, halfWidth, -halfHeight, 0, color.r, color.g, color.b, 0, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, -halfHeight, 0, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, halfWidth, halfHeight, 0, color.r, color.g, color.b, 0, tex.t);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, -halfHeight, 0, color.r, color.g, color.b, tex.s, 0);
+    vertexBufferFloor->AddVertexData(8, -halfWidth, halfHeight, 0, color.r, color.g, color.b, tex.s, tex.t);
+
+    return vertexBufferFloor;
+}
+
 std::shared_ptr<VertexBuffer> Generate::CuboidNorm(float width, float height, float depth, glm::vec4 color, glm::vec3 normal, glm::vec2 tex)
 {
 
@@ -176,4 +201,31 @@ std::shared_ptr<VertexBuffer> Generate::XZPlaneNorm(float width, float depth, gl
 
     return vertexBufferFloor;
 }
+
+
+std::shared_ptr<VertexBuffer> Generate::XYPlaneNorm(float width, float height, glm::vec4 color, glm::vec3 normal, glm::vec2 tex)
+{
+    std::shared_ptr<VertexBuffer> vertexBufferFloor = std::make_shared<VertexBuffer>(12);
+    float halfWidth = width / 2;
+    float halfHeight = height / 2;
+
+    // front face  with 6 vertices and no indexed buffer?
+    vertexBufferFloor->AddVertexData(12, -halfWidth, halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, tex.t);
+    vertexBufferFloor->AddVertexData(12, -halfWidth, -halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, 0);
+    vertexBufferFloor->AddVertexData(12, halfWidth, -halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, 0);
+    vertexBufferFloor->AddVertexData(12, -halfWidth, halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, tex.t);
+    vertexBufferFloor->AddVertexData(12, halfWidth, -halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, 0);
+    vertexBufferFloor->AddVertexData(12, halfWidth, halfHeight, 0, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, tex.t);
+
+    // back face  with 6 vertices and no indexed buffer?
+    vertexBufferFloor->AddVertexData(12, halfWidth, halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, tex[1]);
+    vertexBufferFloor->AddVertexData(12, halfWidth, -halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, 0);
+    vertexBufferFloor->AddVertexData(12, -halfWidth, -halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], 0);
+    vertexBufferFloor->AddVertexData(12, halfWidth, halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, tex[1]);
+    vertexBufferFloor->AddVertexData(12, -halfWidth, -halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], 0);
+    vertexBufferFloor->AddVertexData(12, -halfWidth, halfHeight, 0, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], tex[1]);
+
+    return vertexBufferFloor;
+}
+
 
