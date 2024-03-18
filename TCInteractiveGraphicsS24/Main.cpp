@@ -340,7 +340,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 }
 
 static void SetUpLightScene(std::shared_ptr<Shader>&
-	lightShader, std::shared_ptr<Scene>& lightScene)
+	lightShader, std::shared_ptr<Scene>& lightScene, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {
 	//unsigned int shaderProgram;
 	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
@@ -351,13 +351,12 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
 	fragFile->ReadFile("texture.frag.glsl");
 
-	// am i supposed to use the shader that was passed into the method?
 	lightShader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
 
 	lightShader->AddUniform("projection");
 	lightShader->AddUniform("world");
 	lightShader->AddUniform("view");
-	//shaderProgram = shader->GetShaderProgram();
+
 
 
 	// new textured object to scene
@@ -365,18 +364,7 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 	std::shared_ptr<GraphicsObject> lightbulb = std::make_shared<GraphicsObject>();
 
 	std::shared_ptr<VertexBuffer> lightbulbBuffer = Generate::XYPlane(4, 4);
-	//std::shared_ptr<VertexBuffer> lightbulbBuffer = Generate::Cuboid(4, 4, 0);
 
-/*
-	std::shared_ptr<VertexBuffer> lightbulbBuffer = std::make_shared<VertexBuffer>(8);
-
-	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	lightbulbBuffer->AddVertexData(8, -2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	lightbulbBuffer->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	lightbulbBuffer->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	lightbulbBuffer->AddVertexData(8, 2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-	*/
 	lightbulbBuffer->AddVertexAttribute("position", 0, 3, 0);
 	lightbulbBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
 	lightbulbBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
@@ -388,9 +376,9 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 
 	lightbulbBuffer->SetTexture(lightbulbTexture);
 	lightbulb->SetVertexBuffer(lightbulbBuffer);
-	//graphicsObject2->SetPosition(lightScene->GetLocalLight().position);
-	//graphicsObject2->SetPosition(glm::vec3(0.0f, 3.0f, 4.0f));  //can adjust position if needed
+
 	lightScene->AddObject(lightbulb);
+	graphicsEnviron->AddObject("lightbulb", lightbulb);
 
 
 }
@@ -610,7 +598,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// attempting to set up the second scene
 	std::shared_ptr<Shader> shaderLight;
 	std::shared_ptr<Scene> sceneLight;
-	SetUpLightScene(shaderLight, sceneLight);
+	SetUpLightScene(shaderLight, sceneLight, graphicsEnviron);
 
 
 	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
