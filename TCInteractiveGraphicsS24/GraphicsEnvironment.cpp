@@ -453,7 +453,7 @@ void GraphicsEnvironment::Run3D()
 
 		// added this to point the lightbulb at the camera position and match the texture object to the light position
 		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
-			object->SetPosition(GetRenderer("rendererLight")->GetScene()->GetLocalLight().position);
+			object->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 			object->PointAtTarget(camera->GetPosition());
 		}
 
@@ -500,7 +500,9 @@ void GraphicsEnvironment::Run3D()
 		// add a slider for box animation speed 
 		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
 		ImGui::Checkbox("Correct gamma", &correctGamma);
-		ImGui::DragFloat3("Local Light Position", &GetRenderer("rendererLight")->GetScene()->GetLocalLight().position.x); // numbers change but doesnt move light?
+		ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
+		ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);
+		ImGui::SliderFloat("Local Light Position Z", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.z, -40, 40); 
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
