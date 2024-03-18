@@ -450,6 +450,13 @@ void GraphicsEnvironment::Run3D()
 		}*/
 
 
+
+		// added this to point the lightbulb at the camera position, need to finish the actual method code..
+		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
+			object->SetPosition(GetRenderer("rendererLight")->GetScene()->GetLocalLight().position);
+			object->PointAtTarget(camera->GetPosition());
+		}
+
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
 		// are these view and projection the same?
@@ -493,6 +500,7 @@ void GraphicsEnvironment::Run3D()
 		// add a slider for box animation speed 
 		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
 		ImGui::Checkbox("Correct gamma", &correctGamma);
+		ImGui::DragFloat3("Local Light Position", &GetRenderer("rendererLight")->GetScene()->GetLocalLight().position.x); // numbers change but doesnt move light?
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();

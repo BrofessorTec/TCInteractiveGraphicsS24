@@ -106,6 +106,12 @@ void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 	this->animation = animation;
 }
 
+void GraphicsObject::PointAtTarget(glm::vec3 position)
+{
+	// TODO need to add code that uses the target position and adjusts the referece frame so that it is rotated to face the target?
+
+}
+
 GraphicStructures::Material& GraphicsObject::GetMaterial()
 {
 	return material;

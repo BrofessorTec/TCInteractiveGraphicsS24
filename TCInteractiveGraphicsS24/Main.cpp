@@ -383,7 +383,8 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 
 	vertexBuffer2->SetTexture(texture2);
 	graphicsObject2->SetVertexBuffer(vertexBuffer2);
-	graphicsObject2->SetPosition(glm::vec3(0.0f, 3.0f, 4.0f));  //can adjust position if needed
+	graphicsObject2->SetPosition(lightScene->GetLocalLight().position);
+	//graphicsObject2->SetPosition(glm::vec3(0.0f, 3.0f, 4.0f));  //can adjust position if needed
 	lightScene->AddObject(graphicsObject2);
 
 
