@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <iterator> 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 GraphicsEnvironment* GraphicsEnvironment::self;
@@ -21,6 +23,7 @@ GraphicsEnvironment::~GraphicsEnvironment()
 
 GraphicsEnvironment::GraphicsEnvironment()
 {
+	window = nullptr;
 	objManager = std::make_shared<ObjectManager>();
 	camera = std::make_shared<Camera>();
 	self = this;
@@ -110,11 +113,7 @@ std::shared_ptr<Renderer> GraphicsEnvironment::GetRenderer(const std::string& na
 
 void GraphicsEnvironment::StaticAllocate()
 {
-	// unordered_map iterator created 
-	// iterator pointing to start of unordered_map 
-	//std::unordered_map<std::string, std::shared_ptr<Renderer>>::iterator it
-	//	= rendererMap.begin();
-
+	/*
 	for (const auto& pair : rendererMap) {
 		std::string key = pair.first;
 		std::shared_ptr<Renderer> renderer = pair.second;
@@ -122,15 +121,21 @@ void GraphicsEnvironment::StaticAllocate()
 		// Process key and renderer
 
 		std::cout << "Key: " << key << ", Renderer: ";
-		//renderer->AllocateVertexBuffers(renderer->GetScene()->GetObjects());
 		renderer->AllocateVertexBuffers();
 		std::cout << std::endl;
+	}
+	*/
+
+
+	for (const auto& [name, renderer] : rendererMap) {
+		renderer->AllocateVertexBuffers();
 	}
 
 }
 
 void GraphicsEnvironment::Render()
 {
+	/*
 	for (const auto& pair : rendererMap) {
 		std::string key = pair.first;
 		std::shared_ptr<Renderer> renderer = pair.second;
@@ -139,7 +144,12 @@ void GraphicsEnvironment::Render()
 		std::cout << "Key: " << key << ", Renderer: ";
 		renderer->RenderScene();
 		std::cout << std::endl;
+	}*/
+
+	for (const auto& [name, renderer] : rendererMap) {
+		renderer->RenderScene(*camera);  //is this the right syntax?
 	}
+
 }
 
 void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds)
@@ -175,6 +185,45 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		camera->MoveDown(elapsedSeconds);
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS) {
+		lookWithMouse = !lookWithMouse;
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		camera->SetLookFrame(glm::mat4(1.0f));
+		camera->SetPosition(glm::vec3(0.0f, 5.0f, 30.0f));
+		lookWithMouse = false;
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		glm::mat4 look(1.0f);
+		look = glm::rotate(look, glm::radians(90.0f), { 0, 1, 0 });
+		camera->SetLookFrame(look);
+		camera->SetPosition(glm::vec3(30.0f, 5.0f, 0.0f));
+		lookWithMouse = false;
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		glm::mat4 look(1.0f);
+		look = glm::rotate(look, glm::radians(180.0f), { 0, 1, 0 });
+		camera->SetLookFrame(look);
+		camera->SetPosition(glm::vec3(0.0f, 5.0f, -30.0f));
+		lookWithMouse = false;
+		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		glm::mat4 look(1.0f);
+		look = glm::rotate(look, glm::radians(-90.0f), { 0, 1, 0 });
+		camera->SetLookFrame(look);
+		camera->SetPosition(glm::vec3(-30.0f, 5.0f, 0.0f));
+		lookWithMouse = false;
 		return;
 	}
 
@@ -325,10 +374,11 @@ void GraphicsEnvironment::Run3D()
 	camera->SetPosition(glm::vec3(0.0f, 3.0f, 30.0f));
 
 
-	bool lookWithMouse = false;
+	//bool lookWithMouse = false;
 	bool resetCameraPosition = false;
 	double elapsedSeconds;
 	Timer timer;
+	bool correctGamma = false;
 
 	// add animation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
@@ -365,6 +415,14 @@ void GraphicsEnvironment::Run3D()
 			camera->SetLookFrame(mouse.spherical.ToMat4());
 		}
 
+		// gamma correction
+		if (correctGamma) {
+			glEnable(GL_FRAMEBUFFER_SRGB);
+		}
+		else {
+			glDisable(GL_FRAMEBUFFER_SRGB);
+		}
+
 
 		// set camera look frame to be mouse speherical
 		//camera->SetLookFrame(self->mouse.spherical.ToMat4());
@@ -392,8 +450,23 @@ void GraphicsEnvironment::Run3D()
 		}*/
 
 
+
+		// added this to point the lightbulb at the camera position and match the texture object to the light position
+		/*
+		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
+			object->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
+			object->PointAtTarget(camera->GetPosition());
+		}*/
+
+		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
+		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
+
+
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
+		// are these view and projection the same?
+		GetRenderer("rendererLight")->SetView(view);
+		GetRenderer("rendererLight")->SetProjection(projection);
 
 		// call update
 		objManager->Update(elapsedSeconds);
@@ -416,7 +489,26 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 
-		ImGui::Checkbox("Use mouse to look", &lookWithMouse);
+		ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
+		//ImGui::SliderFloat("Local Attenuation ", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().attenuationCoef, 0, 1);
+		//ImGui::SliderFloat("Specular Cube", &objManager->GetObject("cube")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Cube", &objManager->GetObject("cube")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Cube", &objManager->GetObject("cube")->GetMaterial().ambientIntensity, 0, 1);
+		//ImGui::SliderFloat("Specular Crate", &objManager->GetObject("Crate")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Crate", &objManager->GetObject("Crate")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Crate", &objManager->GetObject("Crate")->GetMaterial().ambientIntensity, 0, 1);
+		//ImGui::SliderFloat("Specular Floor", &objManager->GetObject("floor")->GetMaterial().specularIntensity, 0, 1);
+		//ImGui::SliderFloat("Shininess Floor", &objManager->GetObject("floor")->GetMaterial().shininess, 0, 100);
+		//ImGui::SliderFloat("Ambient Intensity Floor", &objManager->GetObject("floor")->GetMaterial().ambientIntensity, 0, 1);
+
+		// add a slider for box animation speed 
+		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
+		ImGui::Checkbox("Correct gamma", &correctGamma);
+		ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
+		ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);
+		ImGui::SliderFloat("Local Light Position Z", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.z, -40, 40); 
+		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
 		ImGui::Render();

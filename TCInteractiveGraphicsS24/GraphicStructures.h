@@ -34,7 +34,19 @@ public:
         float fieldOfView = 60.0f;
     };
 
+    struct Material {
+        float ambientIntensity;  // 0 to 1
+        float specularIntensity; // 0 to 1
+        float shininess;         // 0 to infinity
+    };
+
+
+    struct Light {
+        glm::vec3 position;
+        glm::vec3 color;
+        float intensity;
+        float attenuationCoef;
+    };
 
 
 };
-

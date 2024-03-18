@@ -10,3 +10,13 @@ void RotateAnimation::Update(double elapsedSeconds)
 	referenceFrame = glm::rotate(referenceFrame, glm::radians(deltaSpeed),
 		axis);
 }
+
+void RotateAnimation::SetSpeed(float newSpeed)
+{
+	speed = newSpeed;
+}
+
+float& RotateAnimation::GetSpeed()
+{
+	return speed;
+}
