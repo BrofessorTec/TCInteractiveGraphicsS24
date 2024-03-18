@@ -362,30 +362,30 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 
 	// new textured object to scene
 	lightScene = std::make_shared<Scene>();
-	std::shared_ptr<GraphicsObject> graphicsObject2 = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> vertexBuffer2 = std::make_shared<VertexBuffer>(8);
+	std::shared_ptr<GraphicsObject> lightbulb = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> lightbulbBuffer = std::make_shared<VertexBuffer>(8);
 
-	vertexBuffer2->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer2->AddVertexData(8, -2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer2->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	lightbulbBuffer->AddVertexData(8, -2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
+	lightbulbBuffer->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	lightbulbBuffer->AddVertexData(8, -2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	lightbulbBuffer->AddVertexData(8, 2.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
+	lightbulbBuffer->AddVertexData(8, 2.0f, 2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
-	vertexBuffer2->AddVertexAttribute("position", 0, 3, 0);
-	vertexBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
-	vertexBuffer2->AddVertexAttribute("texCoord", 2, 2, 6);
-
-
-	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
-	texture2->LoadTextureDataFromFile("..\\3rdparty\\lightbulb.png");
+	lightbulbBuffer->AddVertexAttribute("position", 0, 3, 0);
+	lightbulbBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	lightbulbBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
 
 
-	vertexBuffer2->SetTexture(texture2);
-	graphicsObject2->SetVertexBuffer(vertexBuffer2);
-	graphicsObject2->SetPosition(lightScene->GetLocalLight().position);
+	std::shared_ptr<Texture> lightbulbTexture = std::make_shared<Texture>();
+	lightbulbTexture->LoadTextureDataFromFile("..\\3rdparty\\lightbulb.png");
+
+
+	lightbulbBuffer->SetTexture(lightbulbTexture);
+	lightbulb->SetVertexBuffer(lightbulbBuffer);
+	//graphicsObject2->SetPosition(lightScene->GetLocalLight().position);
 	//graphicsObject2->SetPosition(glm::vec3(0.0f, 3.0f, 4.0f));  //can adjust position if needed
-	lightScene->AddObject(graphicsObject2);
+	lightScene->AddObject(lightbulb);
 
 
 }
