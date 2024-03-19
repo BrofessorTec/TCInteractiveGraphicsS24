@@ -416,7 +416,8 @@ static void SetUpArrowScene(std::shared_ptr<Shader>&
 
 
 	std::shared_ptr<Texture> arrowTexture = std::make_shared<Texture>();
-	arrowTexture->LoadTextureDataFromFile("..\\3rdparty\\ArrowTex2.jpg");
+	// this texture is breaking now for some reason
+	//arrowTexture->LoadTextureDataFromFile("..\\3rdparty\\ArrowTex2.jpg");
 
 
 	arrowBuffer->SetTexture(arrowTexture);
