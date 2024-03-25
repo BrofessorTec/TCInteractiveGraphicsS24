@@ -57,7 +57,7 @@ public:
         std::vector<std::shared_ptr<GraphicsObject>> objects = scene->GetObjects();
         glBindVertexArray(vaoId);
         for (auto& object : objects) {
-            object->StaticAllocateVertexBuffer();
+            object->StaticAllocateBuffers();
         }
         glBindVertexArray(0);
     }
@@ -119,8 +119,6 @@ private:
             glUniform1f(specularLoc, material.specularIntensity);
             glUniform1f(shininessLoc, material.shininess);
         */
-
-
         auto& buffer = object.GetVertexBuffer();
         buffer->Select();
         if (buffer->HasTexture())
@@ -129,7 +127,16 @@ private:
             buffer->GetTexture()->SelectToRender();
         }
         buffer->SetUpAttributeInterpretration();
-        glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
+        if (object.IsIndexed())
+        {
+            auto& indexBuffer = object.GetIndexBuffer();
+            glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetIndexCount(),
+                GL_UNSIGNED_SHORT, (void*)0);
+        }
+        else
+        {
+            glDrawArrays(buffer->GetPrimitiveType(), 0, buffer->GetNumberOfVertices());
+        }
 
         // Recursively render the children
         auto& children = object.GetChildren();

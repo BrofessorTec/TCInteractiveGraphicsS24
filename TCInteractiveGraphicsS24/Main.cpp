@@ -339,6 +339,37 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 }
 
+// new ray scene here
+static void SetUpPCObjectsScene(
+	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
+	GraphicsEnvironment& env)
+{
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("basic.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("basic.frag.glsl");
+
+	shader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+
+	// create object
+	scene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
+	pcLinesCircle->CreateVertexBuffer(3);
+	pcLinesCircle->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNew = std::make_shared<VertexBuffer>();
+	Generate::GenerateXZCircle(6, glm::vec3(1.0f), 6, bufferNew);  //no idea if this is right
+
+
+}
+
+
 static void SetUpLightScene(std::shared_ptr<Shader>&
 	lightShader, std::shared_ptr<Scene>& lightScene, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {

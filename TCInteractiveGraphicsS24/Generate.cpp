@@ -228,4 +228,15 @@ std::shared_ptr<VertexBuffer> Generate::XYPlaneNorm(float width, float height, g
     return vertexBufferFloor;
 }
 
+void Generate::GenerateXZCircle(double radius, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill)
+{
+    // std::shared_ptr<VertexBuffer> buffer = std::make_shared<VertexBuffer>(6);
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(x, 0, z, color.r, color.g, color.b);
+    }
+}
+
 

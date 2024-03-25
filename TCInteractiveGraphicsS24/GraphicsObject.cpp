@@ -7,6 +7,7 @@ GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 	material.ambientIntensity = 0.4;
 	material.shininess = 0.5;
 	material.specularIntensity = 0.5;
+	indexBuffer = nullptr;
 }
 
 GraphicsObject::~GraphicsObject()
@@ -31,13 +32,19 @@ void GraphicsObject::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 	this->buffer = buffer;
 }
 
-void GraphicsObject::StaticAllocateVertexBuffer()
+void GraphicsObject::StaticAllocateBuffers()
 {
 	buffer->Select();
 	buffer->StaticAllocate();
 	buffer->Deselect();
 	for (auto& child : children) {
-		child->StaticAllocateVertexBuffer();
+		child->StaticAllocateBuffers();
+	}
+	if (indexBuffer != nullptr)
+	{
+		indexBuffer->Select();
+		indexBuffer->StaticAllocate();
+		indexBuffer->Deselect();
 	}
 }
 
@@ -116,6 +123,25 @@ void GraphicsObject::PointAtTarget(glm::vec3 point)
 	referenceFrame[0] = glm::vec4(xAxis, 0.0f);
 	referenceFrame[1] = glm::vec4(yAxis, 0.0f);
 	referenceFrame[2] = glm::vec4(zAxis, 0.0f);
+}
+
+void GraphicsObject::CreateIndexBuffer()
+{
+	indexBuffer = std::shared_ptr<IndexBuffer>();
+}
+
+std::shared_ptr<IndexBuffer>& GraphicsObject::GetIndexBuffer()
+{
+	return indexBuffer;
+}
+
+bool GraphicsObject::IsIndexed() const
+{
+	if (indexBuffer != nullptr)
+	{
+		return true;
+	}
+	return false;
 }
 
 GraphicStructures::Material& GraphicsObject::GetMaterial()
