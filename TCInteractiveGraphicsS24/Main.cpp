@@ -409,10 +409,14 @@ static void SetUpArrowScene(std::shared_ptr<Shader>&
 	std::shared_ptr<GraphicsObject> arrow = std::make_shared<GraphicsObject>();
 
 	std::shared_ptr<VertexBuffer> arrowBuffer = Generate::Cuboid(4, 4, 10);
+	std::shared_ptr<VertexBuffer> arrowBuffer2 = Generate::ArrowNorm(4, 4, 10);
+
 
 	arrowBuffer->AddVertexAttribute("position", 0, 3, 0);
 	arrowBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
 	arrowBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
 
 
 	std::shared_ptr<Texture> arrowTexture = std::make_shared<Texture>();

@@ -228,4 +228,122 @@ std::shared_ptr<VertexBuffer> Generate::XYPlaneNorm(float width, float height, g
     return vertexBufferFloor;
 }
 
+std::shared_ptr<VertexBuffer> Generate::Arrow(float width, float height, float depth, glm::vec4 color, glm::vec2 tex)
+{
+    std::shared_ptr<VertexBuffer> arrowBuffer = std::make_shared<VertexBuffer>(8);
+    float halfWidth = width / 2;
+    float halfHeight = height / 2;
+    float halfDepth = depth / 2;
 
+
+    // front face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex.t);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex.t);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, tex.s, 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, tex.s, tex.t);
+
+    // right face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, tex[0], tex[1]);
+
+    // back face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, tex[0], tex[1]);
+
+    // left face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, tex[0], tex[1]);
+
+    // top face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, tex[0], tex[1]);
+
+    // bottom face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, 0, 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, 0, tex[1]);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, tex[0], 0);
+    arrowBuffer->AddVertexData(8, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, tex[0], tex[1]);
+
+
+    return arrowBuffer;
+}
+
+std::shared_ptr<VertexBuffer> Generate::ArrowNorm(float width, float height, float depth, glm::vec4 color, glm::vec3 normal, glm::vec2 tex)
+{
+    std::shared_ptr<VertexBuffer> arrowBuffer = std::make_shared<VertexBuffer>(12);
+    float halfWidth = width / 2;
+    float halfHeight = height / 2;
+    float halfDepth = depth / 2;
+
+
+    // front face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, tex.t);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, 0);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], 0, tex.t);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, 0, 0, normal[2], tex.s, tex.t);
+
+    // right face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, 0, 0);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color.r, color.g, color.b, color.a, normal[0], 0, 0, tex[0], tex[1]);
+
+    // back face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, tex[1]);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], 0, tex[1]);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, 0, -normal[2], tex[0], tex[1]);
+
+    // left face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, 0, 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, color.a, -normal[0], 0, 0, tex[0], tex[1]);
+
+    // top face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, 0, 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, halfWidth, halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, normal[1], 0, tex[0], tex[1]);
+
+    // bottom face  with 6 vertices and no indexed buffer?
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, 0, 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, 0, tex[1]);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, tex[0], 0);
+    arrowBuffer->AddVertexData(12, -halfWidth, -halfHeight, -halfDepth, color[0], color[1], color.b, color.a, 0, -normal[1], 0, tex[0], tex[1]);
+
+
+    return arrowBuffer;
+}
