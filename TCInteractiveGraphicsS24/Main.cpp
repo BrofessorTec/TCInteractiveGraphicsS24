@@ -363,9 +363,11 @@ static void SetUpPCObjectsScene(
 	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
 	pcLinesCircle->CreateVertexBuffer(6);  //should this be 3? 6?
 	pcLinesCircle->CreateIndexBuffer();
-	std::shared_ptr<VertexBuffer> bufferNew = std::make_shared<VertexBuffer>();
+	std::shared_ptr<VertexBuffer> bufferNew = pcLinesCircle->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNew = pcLinesCircle->GetIndexBuffer();
 	bufferNew->SetPrimitiveType(GL_LINES); // is this setting for both vertex and index buffer?
-	Generate::GenerateXZCircle(6, glm::vec3(1.0f), 6, bufferNew);  //no idea if this is right
+	Generate::GenerateXZCircle(6, glm::vec3(1.0f), 10, bufferNew);  //no idea if this is right
+	Generate::LineCircleIndexes(indexBufferNew, 36, true);  // using 6 for the line segments right now
 	bufferNew->AddVertexAttribute("position", 0, 3, 0); // these look like the only attributes for basic files
 	bufferNew->AddVertexAttribute("color", 1, 3, 3);
 	bufferNew->SetUpAttributeInterpretration();

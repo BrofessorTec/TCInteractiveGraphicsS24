@@ -18,7 +18,7 @@ protected:
 	unsigned int vioId;
 	std::vector<unsigned short> indexData;
 	//unsigned int numberOfElementsPerVertex; //needed?
-	unsigned int numberOfIndexes;
+	//unsigned int numberOfIndexes;
 	//int primitiveType;
 public:
 	IndexBuffer(); //removed numberofelementspervertex
@@ -30,9 +30,9 @@ public:
 	void AddIndexData(unsigned int count, ...);
 	void AddIndexData(unsigned short index);
 	void StaticAllocate();
-	static void LineCircleIndexes(
+	/*static void LineCircleIndexes(
 		std::shared_ptr<IndexBuffer>& bufferToFill,
-		int numberOfLineSegments, bool isClosed = true);
+		int numberOfLineSegments, bool isClosed = true); */
 	//int GetPrimitiveType();
 };
 

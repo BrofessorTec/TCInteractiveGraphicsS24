@@ -1,10 +1,9 @@
 #include "IndexBuffer.h"
 #include <cstdarg>
 
-IndexBuffer::IndexBuffer() //unsigned int numElementsPerVertex removed from input parameter
+IndexBuffer::IndexBuffer():indexData() //unsigned int numElementsPerVertex removed from input parameter
 {
-	//numberOfElementsPerVertex = numElementsPerVertex;
-	numberOfIndexes = 0;
+	//numberOfIndexes = 0;
 	//primitiveType = GL_LINES;
 	glGenBuffers(1, &vioId);
 }
@@ -22,12 +21,12 @@ std::vector<unsigned short>& IndexBuffer::GetIndexData()
 
 int IndexBuffer::GetIndexCount()
 {
-    return numberOfIndexes;  //is this correct?
+    return indexData.size();  //is this correct?
 }
 
 void IndexBuffer::AddIndexData(unsigned int count, ...)
 {
-	indexData.clear();
+	//indexData.clear();
 	/*if (count != numberOfElementsPerVertex) {
 		throw "Invalid index data count!";
 	}
@@ -37,10 +36,10 @@ void IndexBuffer::AddIndexData(unsigned int count, ...)
 	while (count > 0) {
 		// The default is double, so accept as double and then cast to
 		// unsigned short.
-		indexData.push_back(static_cast<unsigned short>(va_arg(args, double)));
+		indexData.push_back(static_cast<unsigned short>(va_arg(args, int)));
 		count--;
 	}
-	numberOfIndexes++;
+	//numberOfIndexes++;
 	va_end(args);
 }
 
@@ -48,7 +47,7 @@ void IndexBuffer::AddIndexData(unsigned short index)
 {
 	//is this code completed?
 	indexData.push_back(index);
-	numberOfIndexes++;
+	//numberOfIndexes++;
 }
 
 void IndexBuffer::StaticAllocate()
@@ -58,6 +57,7 @@ void IndexBuffer::StaticAllocate()
 		GL_ELEMENT_ARRAY_BUFFER, bytesToAllocate, indexData.data(), GL_STATIC_DRAW);
 }
 
+/*
 void IndexBuffer::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
 {
 	unsigned short nextIndex;
@@ -79,6 +79,7 @@ void IndexBuffer::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, 
 		}
 	}
 }
+*/
 
 /*
 int IndexBuffer::GetPrimitiveType()

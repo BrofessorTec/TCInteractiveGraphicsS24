@@ -130,6 +130,7 @@ private:
         if (object.IsIndexed())
         {
             auto& indexBuffer = object.GetIndexBuffer();
+            indexBuffer->Select(); // selecting buffer
             glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetIndexCount(),
                 GL_UNSIGNED_SHORT, (void*)0);
         }

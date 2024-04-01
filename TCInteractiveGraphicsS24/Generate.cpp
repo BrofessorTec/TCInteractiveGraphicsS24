@@ -239,4 +239,33 @@ void Generate::GenerateXZCircle(double radius, glm::vec3 color, int steps, std::
     }
 }
 
+void Generate::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
+{
+    // finish this
+    /*
+    * 4.1.It fills the index buffer with indexes for a line circle. There are two indexes per line
+        segment. If the circle is closed, then the last line segment includes the starting index
+    */
+
+    unsigned short nextIndex;
+    if (isClosed)
+    {
+        for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+            bufferToFill->AddIndexData(index);
+            nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+            bufferToFill->AddIndexData(nextIndex);
+        }
+    }
+    else 
+    {
+        for (unsigned short index = 0; index < numberOfLineSegments - 1; index++) {
+            bufferToFill->AddIndexData(index);
+            nextIndex = index + 1;
+            bufferToFill->AddIndexData(nextIndex);
+        }
+    }
+}
+
+
+
 

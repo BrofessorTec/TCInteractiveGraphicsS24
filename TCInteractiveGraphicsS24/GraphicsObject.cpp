@@ -127,7 +127,7 @@ void GraphicsObject::PointAtTarget(glm::vec3 point)
 
 void GraphicsObject::CreateIndexBuffer()
 {
-	indexBuffer = std::shared_ptr<IndexBuffer>();
+	indexBuffer = std::make_shared<IndexBuffer>();
 }
 
 std::shared_ptr<IndexBuffer>& GraphicsObject::GetIndexBuffer()

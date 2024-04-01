@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseObject.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 class Generate :
     public BaseObject
 {
@@ -40,6 +41,9 @@ public:
 
     static void GenerateXZCircle(double radius, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill);
 
+    static void LineCircleIndexes(
+        std::shared_ptr<IndexBuffer>& bufferToFill,
+        int numberOfLineSegments, bool isClosed = true);
 
 
 };
