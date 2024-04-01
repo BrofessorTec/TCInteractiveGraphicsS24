@@ -3,14 +3,14 @@
 #include <iostream>
 #include <vector>
 
-struct VertexAttribute {   //might need to change this
+/*struct VertexAttribute {   //might need to change this
 	unsigned int index;
 	unsigned int numberOfComponents;
 	int type;
 	int isNormalized;
 	unsigned int bytesToNext;
 	void* byteOffset;
-};
+};*/
 
 class IndexBuffer
 {

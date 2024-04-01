@@ -467,6 +467,9 @@ void GraphicsEnvironment::Run3D()
 		// are these view and projection the same?
 		GetRenderer("rendererLight")->SetView(view);
 		GetRenderer("rendererLight")->SetProjection(projection);
+		// should add a way to just od this for every scene
+		GetRenderer("rendererCircle")->SetView(view);
+		GetRenderer("rendererCircle")->SetProjection(projection);
 
 		// call update
 		objManager->Update(elapsedSeconds);

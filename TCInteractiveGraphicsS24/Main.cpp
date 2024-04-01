@@ -342,7 +342,7 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 // new ray scene here
 static void SetUpPCObjectsScene(
 	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
-	GraphicsEnvironment& env)
+	std::shared_ptr<GraphicsEnvironment>& env)
 {
 	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
 	// relative path 
@@ -361,10 +361,17 @@ static void SetUpPCObjectsScene(
 	// create object
 	scene = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
-	pcLinesCircle->CreateVertexBuffer(3);
+	pcLinesCircle->CreateVertexBuffer(6);  //should this be 3? 6?
 	pcLinesCircle->CreateIndexBuffer();
 	std::shared_ptr<VertexBuffer> bufferNew = std::make_shared<VertexBuffer>();
+	bufferNew->SetPrimitiveType(GL_LINES); // is this setting for both vertex and index buffer?
 	Generate::GenerateXZCircle(6, glm::vec3(1.0f), 6, bufferNew);  //no idea if this is right
+	bufferNew->AddVertexAttribute("position", 0, 3, 0); // these look like the only attributes for basic files
+	bufferNew->AddVertexAttribute("color", 1, 3, 3);
+	bufferNew->SetUpAttributeInterpretration();
+	pcLinesCircle->SetPosition({ 0.0f, 1.0f, 7.0f }); // set initial position
+	scene->AddObject(pcLinesCircle);
+	env->AddObject("pcLinesCircle", pcLinesCircle);
 
 
 }
@@ -638,6 +645,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
 	graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
+
+
+	// attempting to set up the pc circle scene
+	std::shared_ptr<Shader> shaderCircle;
+	std::shared_ptr<Scene> sceneCircle;
+	SetUpPCObjectsScene(shaderCircle, sceneCircle, graphicsEnviron);
+
+
+	graphicsEnviron->CreateRenderer("rendererCircle", shaderCircle);
+	graphicsEnviron->GetRenderer("rendererCircle")->SetScene(sceneCircle);
 
 
 	graphicsEnviron->StaticAllocate();

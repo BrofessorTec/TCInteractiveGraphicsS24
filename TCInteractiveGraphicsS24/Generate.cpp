@@ -235,7 +235,7 @@ void Generate::GenerateXZCircle(double radius, glm::vec3 color, int steps, std::
         double radians = glm::radians(theta);
         double x = radius * std::cosf(radians);
         double z = radius * std::sinf(radians);
-        bufferToFill->AddVertexData(x, 0, z, color.r, color.g, color.b);
+        bufferToFill->AddVertexData(6, x, 0, z, color.r, color.g, color.b);
     }
 }
 
