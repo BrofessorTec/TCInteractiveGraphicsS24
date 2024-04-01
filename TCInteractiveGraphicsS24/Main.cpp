@@ -376,6 +376,23 @@ static void SetUpPCObjectsScene(
 	scene->AddObject(pcLinesCircle);
 	env->AddObject("pcLinesCircle", pcLinesCircle);
 
+	//cylinder 
+	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();
+	pcLinesCylinder->CreateVertexBuffer(6);
+	pcLinesCylinder->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNewCylinder = pcLinesCylinder->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNewCylinder = pcLinesCylinder->GetIndexBuffer();
+	int steps2 = 10;  // can change this if we want to change the number of steps
+	bufferNewCylinder->SetPrimitiveType(GL_LINES);
+	Generate::GenerateXZCylinder(6, 10, glm::vec3(1.0f), steps2, bufferNewCylinder);  //10 steps used here
+	Generate::LineCylinderIndexes(indexBufferNewCylinder, (360 / steps2));  // 36 used here because 360 degrees and 10 steps
+	bufferNewCylinder->AddVertexAttribute("position", 0, 3, 0);
+	bufferNewCylinder->AddVertexAttribute("color", 1, 3, 3);
+	bufferNewCylinder->SetUpAttributeInterpretration();
+	pcLinesCylinder->SetPosition({ 15.0f, 1.0f, 10.0f }); // set initial position
+	scene->AddObject(pcLinesCylinder);
+	env->AddObject("pcLinesCylinder", pcLinesCylinder);
+
 
 }
 

@@ -266,6 +266,53 @@ void Generate::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int
     }
 }
 
+void Generate::GenerateXZCylinder(double radius, double height, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill)
+{
+    int halfHeight = height / 2;
+
+    // top ring
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(6, x, halfHeight, z, color.r, color.g, color.b);
+    }
+
+    // bottom ring
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(6, x, -halfHeight, z, color.r, color.g, color.b);
+    }
+}
+
+void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments)
+{
+    unsigned short nextIndex;
+
+    // connect top ring
+    for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+        bufferToFill->AddIndexData(nextIndex);
+    }
+
+    //connect bottom ring?
+    for (unsigned short index = numberOfLineSegments; index < numberOfLineSegments; index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = (index + 1 + numberOfLineSegments) % static_cast<unsigned short>(numberOfLineSegments);
+        bufferToFill->AddIndexData(nextIndex);
+    }
+
+    //connect the two rings?
+    for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = (index + numberOfLineSegments) % static_cast<unsigned short>(numberOfLineSegments);
+        bufferToFill->AddIndexData(nextIndex);
+    }
+}
+
 
 
 

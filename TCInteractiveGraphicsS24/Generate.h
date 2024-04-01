@@ -45,6 +45,10 @@ public:
         std::shared_ptr<IndexBuffer>& bufferToFill,
         int numberOfLineSegments, bool isClosed = true);
 
+    static void GenerateXZCylinder(double radius, double height, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill);
+    static void LineCylinderIndexes(
+        std::shared_ptr<IndexBuffer>& bufferToFill,
+        int numberOfLineSegments);
 
 };
 
