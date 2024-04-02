@@ -56,34 +56,3 @@ void IndexBuffer::StaticAllocate()
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER, bytesToAllocate, indexData.data(), GL_STATIC_DRAW);
 }
-
-/*
-void IndexBuffer::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
-{
-	unsigned short nextIndex;
-	if (isClosed)
-	{
-		for (unsigned short index = 0; index < numberOfLineSegments; index++) {
-			bufferToFill->AddIndexData(index);
-			nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
-			bufferToFill->AddIndexData(nextIndex);
-		}
-	}
-	else
-	{
-		unsigned short nextIndex;
-		for (unsigned short index = 0; index < numberOfLineSegments - 1; index++) {
-			bufferToFill->AddIndexData(index);
-			nextIndex = index + 1;
-			bufferToFill->AddIndexData(nextIndex);
-		}
-	}
-}
-*/
-
-/*
-int IndexBuffer::GetPrimitiveType()
-{
-	return primitiveType;
-}
-*/

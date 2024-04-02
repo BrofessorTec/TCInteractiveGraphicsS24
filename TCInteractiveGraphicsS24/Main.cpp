@@ -382,14 +382,14 @@ static void SetUpPCObjectsScene(
 	pcLinesCylinder->CreateIndexBuffer();
 	std::shared_ptr<VertexBuffer> bufferNewCylinder = pcLinesCylinder->GetVertexBuffer();
 	std::shared_ptr<IndexBuffer> indexBufferNewCylinder = pcLinesCylinder->GetIndexBuffer();
-	int steps2 = 10;  // can change this if we want to change the number of steps
+	int steps2 = 60;  // can change this if we want to change the number of steps
 	bufferNewCylinder->SetPrimitiveType(GL_LINES);
-	Generate::GenerateXZCylinder(6, 10, glm::vec3(1.0f), steps2, bufferNewCylinder);  //10 steps used here
-	Generate::LineCylinderIndexes(indexBufferNewCylinder, (360 / steps2));  // 36 used here because 360 degrees and 10 steps
+	Generate::GenerateXZCylinder(6, 10, glm::vec3(1.0f), steps2, bufferNewCylinder); 
+	Generate::LineCylinderIndexes(indexBufferNewCylinder, (360 / steps2)); 
 	bufferNewCylinder->AddVertexAttribute("position", 0, 3, 0);
 	bufferNewCylinder->AddVertexAttribute("color", 1, 3, 3);
 	bufferNewCylinder->SetUpAttributeInterpretration();
-	pcLinesCylinder->SetPosition({ 15.0f, 1.0f, 10.0f }); // set initial position
+	pcLinesCylinder->SetPosition({ 15.0f, 5.0f, 10.0f }); // set initial position
 	scene->AddObject(pcLinesCylinder);
 	env->AddObject("pcLinesCylinder", pcLinesCylinder);
 

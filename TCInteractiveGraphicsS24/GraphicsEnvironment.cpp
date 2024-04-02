@@ -452,12 +452,6 @@ void GraphicsEnvironment::Run3D()
 
 
 		// added this to point the lightbulb at the camera position and match the texture object to the light position
-		/*
-		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
-			object->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
-			object->PointAtTarget(camera->GetPosition());
-		}*/
-
 		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
@@ -531,7 +525,6 @@ void GraphicsEnvironment::Run3D()
 
 void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<GraphicsObject> object)
 {
-	// does the objManager need to be declared as a shared pointer somewhere..?
 	objManager->SetObject(name, object);
 }
 

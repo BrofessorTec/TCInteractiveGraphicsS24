@@ -42,16 +42,7 @@ public:
     {
         projection = projection2;
     }
-    /*void AllocateVertexBuffers(const auto& objects)
-    {
-        glBindVertexArray(vaoId);
-        for (auto& object : objects) {
-            object->StaticAllocateVertexBuffer();
-        }
-        glBindVertexArray(0);
-    }*/
-    
-    // testing this to remove the need to pass in the objects parameter but still getting a crash
+
     void AllocateVertexBuffers() 
     {
         std::vector<std::shared_ptr<GraphicsObject>> objects = scene->GetObjects();
@@ -80,21 +71,6 @@ public:
             shader->SendVec3Uniform("globalLightPosition", scene->GetGlobalLight().position);
             shader->SendVec3Uniform("localLightPosition", scene->GetLocalLight().position);
 
-
-            /* values needed from the notes
-            glUniform3fv(globalLightPosLoc, 1, glm::value_ptr(globalLight.position));
-            glUniform3fv(globalLightColorLoc, 1, glm::value_ptr(globalLight.color));
-            glUniform1f(globalLightIntensityLoc, globalLight.intensity);
-            glUniform3fv(localLightPosLoc, 1, glm::value_ptr(localLight.position));
-            glUniform3fv(localLightColorLoc, 1, glm::value_ptr(localLight.color));
-            glUniform1f(localLightIntensityLoc, localLight.intensity);
-            glUniform1f(localLightAttentuationLoc, localLight.attenuationCoef);
-            glUniform3fv(viewPositionLoc, 1, glm::value_ptr(cameraPosition));
-            
-            
-            */
-
-
             // Render the objects in the scene
             for (auto& object : scene->GetObjects()) {
                 RenderObject(*object);
@@ -113,12 +89,6 @@ private:
         shader->SendFloatUniform("materialSpecularIntensity", object.GetMaterial().specularIntensity);
         shader->SendFloatUniform("materialShininess", object.GetMaterial().shininess);
 
-
-        /* uniforms needed from notes
-            glUniform1f(ambientLoc, material.ambientIntensity);
-            glUniform1f(specularLoc, material.specularIntensity);
-            glUniform1f(shininessLoc, material.shininess);
-        */
         auto& buffer = object.GetVertexBuffer();
         buffer->Select();
         if (buffer->HasTexture())

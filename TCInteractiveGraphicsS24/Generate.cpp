@@ -299,16 +299,16 @@ void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, i
     }
 
     //connect bottom ring?
-    for (unsigned short index = numberOfLineSegments; index < numberOfLineSegments; index++) {
+    for (unsigned short index = numberOfLineSegments; index < (numberOfLineSegments+ numberOfLineSegments); index++) {
         bufferToFill->AddIndexData(index);
-        nextIndex = (index + 1 + numberOfLineSegments) % static_cast<unsigned short>(numberOfLineSegments);
+        nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments) + +numberOfLineSegments;
         bufferToFill->AddIndexData(nextIndex);
     }
 
     //connect the two rings?
     for (unsigned short index = 0; index < numberOfLineSegments; index++) {
         bufferToFill->AddIndexData(index);
-        nextIndex = (index + numberOfLineSegments) % static_cast<unsigned short>(numberOfLineSegments);
+        nextIndex = (index) % static_cast<unsigned short>(numberOfLineSegments) + numberOfLineSegments;
         bufferToFill->AddIndexData(nextIndex);
     }
 }
