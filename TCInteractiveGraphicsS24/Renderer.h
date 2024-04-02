@@ -103,6 +103,8 @@ private:
             indexBuffer->Select(); // selecting buffer
             glDrawElements(buffer->GetPrimitiveType(), indexBuffer->GetIndexCount(),
                 GL_UNSIGNED_SHORT, (void*)0);
+            // deselect missing?
+            indexBuffer->Deselect();
         }
         else
         {

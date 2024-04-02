@@ -389,7 +389,7 @@ static void SetUpPCObjectsScene(
 	bufferNewCylinder->AddVertexAttribute("position", 0, 3, 0);
 	bufferNewCylinder->AddVertexAttribute("color", 1, 3, 3);
 	bufferNewCylinder->SetUpAttributeInterpretration();
-	pcLinesCylinder->SetPosition({ 15.0f, 5.0f, 10.0f }); // set initial position
+	pcLinesCylinder->SetPosition({ 15.0f, 10.0f, 10.0f }); // set initial position
 	scene->AddObject(pcLinesCylinder);
 	env->AddObject("pcLinesCylinder", pcLinesCylinder);
 

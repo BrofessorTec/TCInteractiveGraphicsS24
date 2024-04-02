@@ -274,16 +274,18 @@ void Generate::GenerateXZCylinder(double radius, double height, glm::vec3 color,
     for (double theta = 0.0; theta < 360.0; theta += steps) {
         double radians = glm::radians(theta);
         double x = radius * std::cosf(radians);
+        double y = (double)halfHeight;
         double z = radius * std::sinf(radians);
-        bufferToFill->AddVertexData(6, x, halfHeight, z, color.r, color.g, color.b);
+        bufferToFill->AddVertexData(6, x, y, z, color.r, color.g, color.b);
     }
 
     // bottom ring
     for (double theta = 0.0; theta < 360.0; theta += steps) {
         double radians = glm::radians(theta);
         double x = radius * std::cosf(radians);
+        double y = -(double)halfHeight;
         double z = radius * std::sinf(radians);
-        bufferToFill->AddVertexData(6, x, -halfHeight, z, color.r, color.g, color.b);
+        bufferToFill->AddVertexData(6, x, y, z, color.r, color.g, color.b);
     }
 }
 
@@ -299,16 +301,16 @@ void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, i
     }
 
     //connect bottom ring?
-    for (unsigned short index = numberOfLineSegments; index < (numberOfLineSegments+ numberOfLineSegments); index++) {
+    for (unsigned short index = numberOfLineSegments; index < (numberOfLineSegments + numberOfLineSegments); index++) {
         bufferToFill->AddIndexData(index);
-        nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments) + +numberOfLineSegments;
+        nextIndex = ((index + 1) % static_cast<unsigned short>(numberOfLineSegments)) + numberOfLineSegments;
         bufferToFill->AddIndexData(nextIndex);
     }
 
     //connect the two rings?
     for (unsigned short index = 0; index < numberOfLineSegments; index++) {
         bufferToFill->AddIndexData(index);
-        nextIndex = (index) % static_cast<unsigned short>(numberOfLineSegments) + numberOfLineSegments;
+        nextIndex = ((index) % static_cast<unsigned short>(numberOfLineSegments)) + numberOfLineSegments;
         bufferToFill->AddIndexData(nextIndex);
     }
 }

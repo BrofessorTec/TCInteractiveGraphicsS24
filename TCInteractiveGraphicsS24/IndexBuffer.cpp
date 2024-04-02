@@ -1,7 +1,7 @@
 #include "IndexBuffer.h"
 #include <cstdarg>
 
-IndexBuffer::IndexBuffer():indexData() //unsigned int numElementsPerVertex removed from input parameter
+IndexBuffer::IndexBuffer()//:indexData() //unsigned int numElementsPerVertex removed from input parameter
 {
 	//numberOfIndexes = 0;
 	//primitiveType = GL_LINES;
