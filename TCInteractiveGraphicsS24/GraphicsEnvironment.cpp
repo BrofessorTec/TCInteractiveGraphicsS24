@@ -573,7 +573,7 @@ Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat
 	// Set up the ray
 	Ray ray;
 	ray.Create((float)mouse.nsx, (float)mouse.nsy, projection, view);
-	return Ray();
+	return ray;
 }
 
 
