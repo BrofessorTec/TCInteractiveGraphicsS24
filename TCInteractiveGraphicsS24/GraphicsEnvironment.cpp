@@ -468,7 +468,7 @@ void GraphicsEnvironment::Run3D()
 
 		// testing new intersection code here
 		if (intersection.isIntersecting) {
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)intersection.point.x, (float)objManager->GetObject("floor")->GetReferenceFrame()[3].y, (float)intersection.point.z });
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)intersection.point.x, (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)intersection.point.z });
 		}
 		else
 		{
