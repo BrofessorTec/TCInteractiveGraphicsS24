@@ -144,6 +144,26 @@ bool GraphicsObject::IsIndexed() const
 	return false;
 }
 
+void GraphicsObject::CreateBoundingBox(float width, float height, float depth)
+{
+	boundingBox = std::make_shared<BoundingBox>();
+	boundingBox->SetReferenceFrame(referenceFrame);
+	boundingBox->Create(width, height, depth);
+}
+
+const BoundingBox& GraphicsObject::GetBoundingBox() const
+{
+	// is the * how you are supposed to do this?
+	return *boundingBox;
+	// return boundingBox;
+}
+
+bool GraphicsObject::IsIntersectingWithRay(const Ray& ray) const
+{
+	boundingBox->SetReferenceFrame(referenceFrame);
+	return boundingBox->IsIntersectingWithRay(ray);
+}
+
 GraphicStructures::Material& GraphicsObject::GetMaterial()
 {
 	return material;

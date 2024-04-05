@@ -4,6 +4,7 @@
 #include "VertexBuffer.h"
 #include "GraphicStructures.h"
 #include "IndexBuffer.h"
+#include "BoundingBox.h"
 
 class IAnimation; // Forward declaration
 
@@ -17,6 +18,7 @@ protected:
 	std::vector<std::shared_ptr<GraphicsObject>> children;
 	std::shared_ptr<IAnimation> animation = nullptr;
 	GraphicStructures::Material material{};
+	std::shared_ptr<BoundingBox> boundingBox = nullptr;
 
 
 public:
@@ -50,5 +52,8 @@ public:
 	void CreateIndexBuffer();
 	std::shared_ptr<IndexBuffer>& GetIndexBuffer();
 	bool IsIndexed() const;
+	void CreateBoundingBox(float width, float height, float depth);
+	const BoundingBox& GetBoundingBox() const;
+	bool IsIntersectingWithRay(const Ray& ray) const;
 };
 

@@ -36,8 +36,8 @@ public:
     };
 
     struct Material {
-        float ambientIntensity;  // 0 to 1
-        float specularIntensity; // 0 to 1
+        float ambientIntensity;  // 0 to 1.0f
+        float specularIntensity; // 0 to 1.0f
         float shininess;         // 0 to infinity
     };
 

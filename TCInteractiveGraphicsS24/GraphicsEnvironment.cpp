@@ -489,6 +489,15 @@ void GraphicsEnvironment::Run3D()
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
 		}
 
+		// adding ray intersection to max ambient intensity
+		if (objManager->GetObject("crate")->IsIntersectingWithRay(ray))
+		{
+			objManager->GetObject("crate")->GetMaterial().ambientIntensity = 1.0f;
+		}
+
+		// can also add this for the textured cube here if it works
+
+
 
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);

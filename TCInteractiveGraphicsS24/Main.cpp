@@ -129,9 +129,11 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
 	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
 
-
+	float crateWidth = 5.0f;
+	float crateHeight = 5.0f;
+	float crateDepth = 5.0f;
 	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bufferNew = Generate::Cuboid(5.0f, 5.0f, 5.0f);
+	std::shared_ptr<VertexBuffer> bufferNew = Generate::Cuboid(crateWidth, crateHeight, crateDepth);
 
 	bufferNew->AddVertexAttribute("position", 0, 3, 0);
 	bufferNew->AddVertexAttribute("vertexColor", 1, 3, 3);
@@ -148,6 +150,9 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 
 
 	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
+	// add bounding box here?
+	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);
