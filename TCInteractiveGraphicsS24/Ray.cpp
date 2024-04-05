@@ -1,4 +1,6 @@
 #include "Ray.h"
+#include "GraphicsObject.h"
+#include "BoundingBox.h"
 
 void Ray::Create(
 	float screenX, float screenY,
@@ -29,3 +31,24 @@ Intersection Ray::GetIntersectionWithPlane(const GeometricPlane& plane) const
 	line.SetStartPoint(rayStart);
 	return plane.GetIntersectionWithLine(line);
 }
+
+Intersection Ray::GetIntersectionWithBoundingBox(
+	const BoundingBox& boundingBox) const
+{
+	return Intersection();
+}
+
+bool Ray::IsIntersectingObject(
+	GraphicsObject& object)
+{
+	if (object.HasBoundingBox() == false) return false;
+	auto& boundingBox = object.GetBoundingBox();
+	return boundingBox.IsIntersectingWithRay(*this);
+}
+
+//bool Ray::IsPointAlongRay(glm::vec3 point) const
+//{
+//	glm::vec3 dirToPoint = glm::normalize(point - rayStart);
+//	glm::bvec3 bv = glm::equal(rayDir, dirToPoint);
+//	return bv.x == true && bv.y == true && bv.z == true;
+//}

@@ -4,9 +4,9 @@
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
-	material.ambientIntensity = 0.4;
-	material.shininess = 0.5;
-	material.specularIntensity = 0.5;
+	material.ambientIntensity = 0.4f;
+	material.shininess = 0.5f;
+	material.specularIntensity = 0.5f;
 	indexBuffer = nullptr;
 }
 
@@ -151,7 +151,7 @@ void GraphicsObject::CreateBoundingBox(float width, float height, float depth)
 	boundingBox->Create(width, height, depth);
 }
 
-const BoundingBox& GraphicsObject::GetBoundingBox() const
+BoundingBox& GraphicsObject::GetBoundingBox()
 {
 	// is the * how you are supposed to do this?
 	return *boundingBox;
@@ -162,6 +162,15 @@ bool GraphicsObject::IsIntersectingWithRay(const Ray& ray) const
 {
 	boundingBox->SetReferenceFrame(referenceFrame);
 	return boundingBox->IsIntersectingWithRay(ray);
+}
+
+bool GraphicsObject::HasBoundingBox()
+{
+	if (boundingBox != nullptr)
+	{
+		return true;
+	}
+	return false;
 }
 
 GraphicStructures::Material& GraphicsObject::GetMaterial()

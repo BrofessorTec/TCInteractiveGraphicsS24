@@ -53,7 +53,8 @@ public:
 	std::shared_ptr<IndexBuffer>& GetIndexBuffer();
 	bool IsIndexed() const;
 	void CreateBoundingBox(float width, float height, float depth);
-	const BoundingBox& GetBoundingBox() const;
+	BoundingBox& GetBoundingBox();
 	bool IsIntersectingWithRay(const Ray& ray) const;
+	bool HasBoundingBox();
 };
 

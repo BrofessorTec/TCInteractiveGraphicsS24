@@ -149,9 +149,13 @@ static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 
 
 
-	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
+	graphicsObject3dCrate->SetVertexBuffer(bufferNew);\
+	// should be in scene 2
 	// add bounding box here?
-	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+	//graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+	//graphicsObject3dCrate->GetReferenceFrame();  // for testing
+	//graphicsObject3dCrate->GetBoundingBox();  // for testing
+
 
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
@@ -250,10 +254,14 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 	texture3d->SetTextureData(64, textureData);
 
+	float cubeWidth = 10.0f;
+	float cubeHeight = 5.0f;
+	float cubeDepth = 5.0f;
+
 
 	scene3d = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> graphicsObject3d = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(10.0f, 5.0f, 5.0f);
+	std::shared_ptr<VertexBuffer> buffer = Generate::CuboidNorm(cubeWidth, cubeHeight, cubeDepth);
 
 	buffer->AddVertexAttribute("position", 0, 3, 0);
 	buffer->AddVertexAttribute("vertexColor", 1, 4, 3);
@@ -272,6 +280,8 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 	graphicsObject3d->SetVertexBuffer(buffer);
 
+	graphicsObject3d->CreateBoundingBox(cubeWidth, cubeHeight, cubeDepth);
+
 	graphicsObject3d->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3d);
 
@@ -283,8 +293,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
 
 
+	float crateWidth = 5.0f;
+	float crateHeight = 5.0f;
+	float crateDepth = 5.0f;
+
 	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bufferNew = Generate::CuboidNorm(5.0f, 5.0f, 5.0f);
+	std::shared_ptr<VertexBuffer> bufferNew = Generate::CuboidNorm(crateWidth, crateHeight, crateDepth);
 
 	bufferNew->AddVertexAttribute("position", 0, 3, 0);
 	bufferNew->AddVertexAttribute("vertexColor", 1, 4, 3);
@@ -300,8 +314,9 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	bufferNew->SetTexture(texture3dNew);
 
 
-
 	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
+	// add bounding box here?
+	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);
@@ -727,10 +742,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<Scene> sceneArrow;
 	SetUpArrowScene(shaderArrow, sceneArrow, graphicsEnviron);
 
-
+	/* removing arrow code for now
 	graphicsEnviron->CreateRenderer("rendererArrow", shaderArrow);
 	graphicsEnviron->GetRenderer("rendererArrow")->SetScene(sceneArrow);
-
+	*/
 
 	// attempting to set up the pc circle scene
 	std::shared_ptr<Shader> shaderCircle;

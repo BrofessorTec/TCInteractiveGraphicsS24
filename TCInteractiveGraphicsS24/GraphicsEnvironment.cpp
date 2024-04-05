@@ -397,6 +397,10 @@ void GraphicsEnvironment::Run3D()
 	glm::vec3 rayDir{};
 	GeometricPlane plane;
 	Intersection intersection;
+	glm::vec3 floorIntersectionPoint{};
+	float crateDefaultAmbient = objManager->GetObject("Crate")->GetMaterial().ambientIntensity;
+	float cubeDefaultAmbient = objManager->GetObject("cube")->GetMaterial().ambientIntensity;
+
 
 	// add animation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
@@ -482,7 +486,15 @@ void GraphicsEnvironment::Run3D()
 
 		// testing new intersection code here
 		if (intersection.isIntersecting) {
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)intersection.point.x, (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)intersection.point.z });
+			floorIntersectionPoint = ray.GetPosition(intersection.offset);
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
+			
+			/*floorIntersectionPoint = ray.GetPosition(intersection.offset);
+			localLight.position.x = floorIntersectionPoint.x;
+			localLight.position.y = -3.0f;
+			localLight.position.z = floorIntersectionPoint.z;
+			*/
+		
 		}
 		else
 		{
@@ -490,13 +502,25 @@ void GraphicsEnvironment::Run3D()
 		}
 
 		// adding ray intersection to max ambient intensity
-		if (objManager->GetObject("crate")->IsIntersectingWithRay(ray))
+		if (objManager->GetObject("Crate")->IsIntersectingWithRay(ray))
 		{
-			objManager->GetObject("crate")->GetMaterial().ambientIntensity = 1.0f;
+			objManager->GetObject("Crate")->GetMaterial().ambientIntensity = 1.0f;
+		}
+		else
+		{
+			objManager->GetObject("Crate")->GetMaterial().ambientIntensity = crateDefaultAmbient;
 		}
 
 		// can also add this for the textured cube here if it works
-
+		// adding ray intersection to max ambient intensity
+		if (objManager->GetObject("cube")->IsIntersectingWithRay(ray))
+		{
+			objManager->GetObject("cube")->GetMaterial().ambientIntensity = 1.0f;
+		}
+		else
+		{
+			objManager->GetObject("cube")->GetMaterial().ambientIntensity = cubeDefaultAmbient;
+		}
 
 
 		GetRenderer("renderer3d")->SetView(view);
@@ -508,9 +532,11 @@ void GraphicsEnvironment::Run3D()
 		GetRenderer("rendererCircle")->SetView(view);
 		GetRenderer("rendererCircle")->SetProjection(projection);
 
+		/* removing arrow code for now
 		// added arrow scene
 		GetRenderer("rendererArrow")->SetView(view);
 		GetRenderer("rendererArrow")->SetProjection(projection);
+		*/
 
 		// call update
 		objManager->Update(elapsedSeconds);

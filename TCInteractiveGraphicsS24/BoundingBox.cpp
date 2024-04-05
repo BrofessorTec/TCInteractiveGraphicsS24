@@ -1,4 +1,11 @@
 #include "BoundingBox.h"
+#include "Ray.h"
+
+BoundingBox::BoundingBox()
+{
+	frame = glm::mat4(1.0f);
+	Create(1.0f, 1.0f, 1.0f);
+}
 
 void BoundingBox::Create(float width, float height, float depth)
 {
@@ -8,10 +15,9 @@ void BoundingBox::Create(float width, float height, float depth)
 	float hw = this->width / 2;
 	float hh = this->height / 2;
 	float hd = this->depth / 2;
-	glm::vec3 xAxis = frame[0];
-	glm::vec3 yAxis = frame[1];
-	glm::vec3 zAxis = frame[2];
-	// what is set? there is a SetNormal
+	glm::vec3 xAxis = glm::vec3(frame[0]);
+	glm::vec3 yAxis = glm::vec3(frame[1]);
+	glm::vec3 zAxis = glm::vec3(frame[2]);
 	planes[FRONT].Set(-zAxis, hd);
 	planes[BACK].Set(zAxis, hd);
 	planes[RIGHT].Set(-xAxis, hw);
@@ -23,26 +29,31 @@ void BoundingBox::Create(float width, float height, float depth)
 bool BoundingBox::IsIntersectingWithRay(const Ray& ray)
 {
 	intersections.clear();
-	float intersection;
+	Intersection intersection;
 	Ray localRay;
 	glm::vec3 localStart = glm::vec3(
-		invFrame * glm::vec4(ray.GetStartPoint(), 1.0f));
-	localRay.SetStartPoint(localStart);
+		invFrame * glm::vec4(ray.GetStart(), 1.0f));
+	localRay.SetStart(localStart);
 	glm::vec3 localDir = glm::vec3(
 		invFrame * glm::vec4(ray.GetDirection(), 0.0f));
 	localRay.SetDirection(localDir);
 	for (int i = FRONT; i <= BOTTOM; i++) {
-		intersection = planes[i].GetIntersectionOffset(localRay);
+		intersection = localRay.GetIntersectionWithPlane(planes[i]);
 		intersections.push_back(intersection);
 	}
+
+	// Special case - check if the ray is pointing at the origin
+	// of the object
+	//if (localRay.IsPointAlongRay({ 0.0f, 0.0f, 0.0f })) return true;
+
 	// Test intersection with the 2 planes perpendicular to the OBB's X axis
-	float nearestFarI = intersections[BoundingBox::BACK];
-	float farthestNearI = intersections[BoundingBox::FRONT];
+	float nearestFarI = intersections[BoundingBox::BACK].offset;
+	float farthestNearI = intersections[BoundingBox::FRONT].offset;
 	if (nearestFarI < farthestNearI) {
 		std::swap(nearestFarI, farthestNearI);
 	}
-	float nearI = intersections[BoundingBox::LEFT];
-	float farI = intersections[BoundingBox::RIGHT];
+	float nearI = intersections[BoundingBox::LEFT].offset;
+	float farI = intersections[BoundingBox::RIGHT].offset;
 	if (nearI > farI) {
 		std::swap(nearI, farI);
 	}
@@ -51,9 +62,10 @@ bool BoundingBox::IsIntersectingWithRay(const Ray& ray)
 		if (nearI > farthestNearI) farthestNearI = nearI;
 		if (nearestFarI < farthestNearI) return false;
 	}
+
 	// Test intersection with the 2 planes perpendicular to the OBB's Y axis
-	nearI = intersections[BoundingBox::FRONT];
-	farI = intersections[BoundingBox::BACK];
+	nearI = intersections[BoundingBox::FRONT].offset;
+	farI = intersections[BoundingBox::BACK].offset;
 	if (nearI > farI) {
 		std::swap(nearI, farI);
 	}
@@ -62,9 +74,10 @@ bool BoundingBox::IsIntersectingWithRay(const Ray& ray)
 		if (nearI > farthestNearI) farthestNearI = nearI;
 		if (nearestFarI < farthestNearI) return false;
 	}
+
 	// Test intersection with the 2 planes perpendicular to the OBB's Z axis
-	nearI = intersections[BoundingBox::TOP];
-	farI = intersections[BoundingBox::BOTTOM];
+	nearI = intersections[BoundingBox::TOP].offset;
+	farI = intersections[BoundingBox::BOTTOM].offset;
 	if (nearI > farI) {
 		std::swap(nearI, farI);
 	}
@@ -73,7 +86,7 @@ bool BoundingBox::IsIntersectingWithRay(const Ray& ray)
 		if (nearI > farthestNearI) farthestNearI = nearI;
 		if (nearestFarI < farthestNearI) return false;
 	}
-	intersectionPoint = ray.GetPoint(farthestNearI);
+
+	intersectionPoint = ray.GetPosition(farthestNearI);
 	return true;
-}
 }
