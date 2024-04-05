@@ -339,6 +339,64 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 }
 
+// new ray scene here
+static void SetUpPCObjectsScene(
+	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
+	std::shared_ptr<GraphicsEnvironment>& env)
+{
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("basic.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("basic.frag.glsl");
+
+	shader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+
+	// create object
+	scene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
+	pcLinesCircle->CreateVertexBuffer(6);  
+	pcLinesCircle->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNew = pcLinesCircle->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNew = pcLinesCircle->GetIndexBuffer();
+	int steps = 10;  // can change this if we want to change the number of steps
+	bufferNew->SetPrimitiveType(GL_LINES); 
+	Generate::GenerateXZCircle(6, glm::vec3(1.0f), steps, bufferNew);  //10 steps used here
+	Generate::LineCircleIndexes(indexBufferNew, (360/steps), true);  // 36 used here because 360 degrees and 10 steps
+	bufferNew->AddVertexAttribute("position", 0, 3, 0); 
+	bufferNew->AddVertexAttribute("color", 1, 3, 3);
+	bufferNew->SetUpAttributeInterpretration();
+	pcLinesCircle->SetPosition({ 0.0f, 1.0f, 10.0f }); // set initial position
+	scene->AddObject(pcLinesCircle);
+	env->AddObject("pcLinesCircle", pcLinesCircle);
+
+	//cylinder 
+	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();
+	pcLinesCylinder->CreateVertexBuffer(6);
+	pcLinesCylinder->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNewCylinder = pcLinesCylinder->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNewCylinder = pcLinesCylinder->GetIndexBuffer();
+	int steps2 = 10;  // can change this if we want to change the number of steps
+	bufferNewCylinder->SetPrimitiveType(GL_LINES);
+	Generate::GenerateXZCylinder(6, 10, glm::vec3(1.0f), steps2, bufferNewCylinder); 
+	Generate::LineCylinderIndexes(indexBufferNewCylinder, (360 / steps2)); 
+	bufferNewCylinder->AddVertexAttribute("position", 0, 3, 0);
+	bufferNewCylinder->AddVertexAttribute("color", 1, 3, 3);
+	bufferNewCylinder->SetUpAttributeInterpretration();
+	pcLinesCylinder->SetPosition({ 15.0f, 10.0f, 10.0f }); // set initial position
+	scene->AddObject(pcLinesCylinder);
+	env->AddObject("pcLinesCylinder", pcLinesCylinder);
+
+
+}
+
+
 static void SetUpLightScene(std::shared_ptr<Shader>&
 	lightShader, std::shared_ptr<Scene>& lightScene, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {
@@ -607,6 +665,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
 	graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
+
+
+	// attempting to set up the pc circle scene
+	std::shared_ptr<Shader> shaderCircle;
+	std::shared_ptr<Scene> sceneCircle;
+	SetUpPCObjectsScene(shaderCircle, sceneCircle, graphicsEnviron);
+
+
+	graphicsEnviron->CreateRenderer("rendererCircle", shaderCircle);
+	graphicsEnviron->GetRenderer("rendererCircle")->SetScene(sceneCircle);
 
 
 	graphicsEnviron->StaticAllocate();

@@ -16,6 +16,7 @@
 #include "RotateAnimation.h"
 #include "Camera.h"
 #include "GraphicStructures.h"
+#include "Ray.h"
 
 class GraphicsEnvironment :
     public BaseObject
@@ -52,5 +53,7 @@ public:
         object);
     std::shared_ptr<Camera> GetCamera();
     static void OnMouseMove(GLFWwindow* window, double mouseX, double mouseY);
+    Ray GetMouseRay(const glm::mat4& projection, const glm::mat4&
+        view);
 };
 

@@ -1,10 +1,11 @@
 #pragma once
 #include "BaseObject.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 class Generate :
     public BaseObject
 {
-public: 
+public:
     static std::shared_ptr<VertexBuffer> Cuboid(
         float width, float height, float depth,
         glm::vec3 color = { 1.0f, 1.0f, 1.0f },
@@ -28,7 +29,7 @@ public:
 
     static std::shared_ptr<VertexBuffer> XZPlaneNorm(
         float width, float depth,
-        glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f},
+        glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f },
         glm::vec3 normal = { 1.0f, 1.0f, 1.0f },
         glm::vec2 tex = { 1.0f, 1.0 });
 
@@ -37,5 +38,17 @@ public:
         glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f },
         glm::vec3 normal = { 1.0f, 1.0f, 1.0f },
         glm::vec2 tex = { 1.0f, 1.0 });
+
+    static void GenerateXZCircle(double radius, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill);
+
+    static void LineCircleIndexes(
+        std::shared_ptr<IndexBuffer>& bufferToFill,
+        int numberOfLineSegments, bool isClosed = true);
+
+    static void GenerateXZCylinder(double radius, double height, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill);
+    static void LineCylinderIndexes(
+        std::shared_ptr<IndexBuffer>& bufferToFill,
+        int numberOfLineSegments);
+
 };
 

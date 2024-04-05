@@ -379,6 +379,10 @@ void GraphicsEnvironment::Run3D()
 	double elapsedSeconds;
 	Timer timer;
 	bool correctGamma = false;
+	glm::vec3 rayStart{};
+	glm::vec3 rayDir{};
+	GeometricPlane plane;
+	Intersection intersection;
 
 	// add animation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
@@ -452,14 +456,24 @@ void GraphicsEnvironment::Run3D()
 
 
 		// added this to point the lightbulb at the camera position and match the texture object to the light position
-		/*
-		for (auto& object : GetRenderer("rendererLight")->GetScene()->GetObjects()) {
-			object->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
-			object->PointAtTarget(camera->GetPosition());
-		}*/
-
 		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
+
+		// is this getting the floor correctly?
+		plane.SetDistanceFromOrigin(objManager->GetObject("floor")->GetReferenceFrame()[3].y);
+		Ray ray = GetMouseRay(projection, view);
+		rayStart = ray.GetStart();
+		rayDir = ray.GetDirection();
+		intersection = ray.GetIntersectionWithPlane(plane);
+
+		// testing new intersection code here
+		if (intersection.isIntersecting) {
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)intersection.point.x, (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)intersection.point.z });
+		}
+		else
+		{
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
+		}
 
 
 		GetRenderer("renderer3d")->SetView(view);
@@ -467,6 +481,9 @@ void GraphicsEnvironment::Run3D()
 		// are these view and projection the same?
 		GetRenderer("rendererLight")->SetView(view);
 		GetRenderer("rendererLight")->SetProjection(projection);
+		// should add a way to just od this for every scene
+		GetRenderer("rendererCircle")->SetView(view);
+		GetRenderer("rendererCircle")->SetProjection(projection);
 
 		// call update
 		objManager->Update(elapsedSeconds);
@@ -528,7 +545,6 @@ void GraphicsEnvironment::Run3D()
 
 void GraphicsEnvironment::AddObject(const std::string name, std::shared_ptr<GraphicsObject> object)
 {
-	// does the objManager need to be declared as a shared pointer somewhere..?
 	objManager->SetObject(name, object);
 }
 
@@ -547,6 +563,17 @@ void GraphicsEnvironment::OnMouseMove(GLFWwindow* window, double mouseX, double 
 
 	self->mouse.spherical.theta = 90.0f - (xPercent * 180); // left/right
 	self->mouse.spherical.phi = 180.0f - (yPercent * 180); // up/down
+
+	self->mouse.nsx = xPercent * 2.0 - 1.0;
+	self->mouse.nsy = -(yPercent * 2.0 - 1.0);
+}
+
+Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat4& view)
+{
+	// Set up the ray
+	Ray ray;
+	ray.Create((float)mouse.nsx, (float)mouse.nsy, projection, view);
+	return ray;
 }
 
 

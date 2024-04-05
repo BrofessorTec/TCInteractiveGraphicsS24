@@ -228,4 +228,93 @@ std::shared_ptr<VertexBuffer> Generate::XYPlaneNorm(float width, float height, g
     return vertexBufferFloor;
 }
 
+void Generate::GenerateXZCircle(double radius, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill)
+{
+    // std::shared_ptr<VertexBuffer> buffer = std::make_shared<VertexBuffer>(6);
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(6, x, 0, z, color.r, color.g, color.b);
+    }
+}
+
+void Generate::LineCircleIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments, bool isClosed)
+{
+    // finish this
+    /*
+    * 4.1.It fills the index buffer with indexes for a line circle. There are two indexes per line
+        segment. If the circle is closed, then the last line segment includes the starting index
+    */
+
+    unsigned short nextIndex;
+    if (isClosed)
+    {
+        for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+            bufferToFill->AddIndexData(index);
+            nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+            bufferToFill->AddIndexData(nextIndex);
+        }
+    }
+    else 
+    {
+        for (unsigned short index = 0; index < numberOfLineSegments - 1; index++) {
+            bufferToFill->AddIndexData(index);
+            nextIndex = index + 1;
+            bufferToFill->AddIndexData(nextIndex);
+        }
+    }
+}
+
+void Generate::GenerateXZCylinder(double radius, double height, glm::vec3 color, int steps, std::shared_ptr<VertexBuffer> bufferToFill)
+{
+    int halfHeight = height / 2;
+
+    // top ring
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double y = (double)halfHeight;
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(6, x, y, z, color.r, color.g, color.b);
+    }
+
+    // bottom ring
+    for (double theta = 0.0; theta < 360.0; theta += steps) {
+        double radians = glm::radians(theta);
+        double x = radius * std::cosf(radians);
+        double y = -(double)halfHeight;
+        double z = radius * std::sinf(radians);
+        bufferToFill->AddVertexData(6, x, y, z, color.r, color.g, color.b);
+    }
+}
+
+void Generate::LineCylinderIndexes(std::shared_ptr<IndexBuffer>& bufferToFill, int numberOfLineSegments)
+{
+    unsigned short nextIndex;
+
+    // connect top ring
+    for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = (index + 1) % static_cast<unsigned short>(numberOfLineSegments);
+        bufferToFill->AddIndexData(nextIndex);
+    }
+
+    //connect bottom ring?
+    for (unsigned short index = numberOfLineSegments; index < (numberOfLineSegments + numberOfLineSegments); index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = ((index + 1) % static_cast<unsigned short>(numberOfLineSegments)) + numberOfLineSegments;
+        bufferToFill->AddIndexData(nextIndex);
+    }
+
+    //connect the two rings?
+    for (unsigned short index = 0; index < numberOfLineSegments; index++) {
+        bufferToFill->AddIndexData(index);
+        nextIndex = ((index) % static_cast<unsigned short>(numberOfLineSegments)) + numberOfLineSegments;
+        bufferToFill->AddIndexData(nextIndex);
+    }
+}
+
+
+
 
