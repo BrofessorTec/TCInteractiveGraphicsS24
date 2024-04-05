@@ -5,6 +5,7 @@
 #include <string>
 #include "Texture.h"
 
+
 struct VertexAttribute {
 	unsigned int index;
 	unsigned int numberOfComponents;
@@ -13,6 +14,7 @@ struct VertexAttribute {
 	unsigned int bytesToNext;
 	void* byteOffset;
 };
+
 
 class VertexBuffer
 {
@@ -27,7 +29,7 @@ protected:
 	std::shared_ptr<Texture> texture = nullptr;
 
 public:
-	VertexBuffer(unsigned int numElementsPerVertex = 3);
+	VertexBuffer(unsigned int numElementsPerVertex = 6);
 	~VertexBuffer();
 
 	inline void Select() { glBindBuffer(GL_ARRAY_BUFFER, vboId); }

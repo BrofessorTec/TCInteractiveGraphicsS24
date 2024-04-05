@@ -339,6 +339,64 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 }
 
+// new ray scene here
+static void SetUpPCObjectsScene(
+	std::shared_ptr<Shader>& shader, std::shared_ptr<Scene>& scene,
+	std::shared_ptr<GraphicsEnvironment>& env)
+{
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("basic.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("basic.frag.glsl");
+
+	shader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	shader->AddUniform("projection");
+	shader->AddUniform("world");
+	shader->AddUniform("view");
+
+	// create object
+	scene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> pcLinesCircle = std::make_shared<GraphicsObject>();
+	pcLinesCircle->CreateVertexBuffer(6);  
+	pcLinesCircle->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNew = pcLinesCircle->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNew = pcLinesCircle->GetIndexBuffer();
+	int steps = 10;  // can change this if we want to change the number of steps
+	bufferNew->SetPrimitiveType(GL_LINES); 
+	Generate::GenerateXZCircle(6, glm::vec3(1.0f), steps, bufferNew);  //10 steps used here
+	Generate::LineCircleIndexes(indexBufferNew, (360/steps), true);  // 36 used here because 360 degrees and 10 steps
+	bufferNew->AddVertexAttribute("position", 0, 3, 0); 
+	bufferNew->AddVertexAttribute("color", 1, 3, 3);
+	bufferNew->SetUpAttributeInterpretration();
+	pcLinesCircle->SetPosition({ 0.0f, 1.0f, 10.0f }); // set initial position
+	scene->AddObject(pcLinesCircle);
+	env->AddObject("pcLinesCircle", pcLinesCircle);
+
+	//cylinder 
+	std::shared_ptr<GraphicsObject> pcLinesCylinder = std::make_shared<GraphicsObject>();
+	pcLinesCylinder->CreateVertexBuffer(6);
+	pcLinesCylinder->CreateIndexBuffer();
+	std::shared_ptr<VertexBuffer> bufferNewCylinder = pcLinesCylinder->GetVertexBuffer();
+	std::shared_ptr<IndexBuffer> indexBufferNewCylinder = pcLinesCylinder->GetIndexBuffer();
+	int steps2 = 10;  // can change this if we want to change the number of steps
+	bufferNewCylinder->SetPrimitiveType(GL_LINES);
+	Generate::GenerateXZCylinder(6, 10, glm::vec3(1.0f), steps2, bufferNewCylinder); 
+	Generate::LineCylinderIndexes(indexBufferNewCylinder, (360 / steps2)); 
+	bufferNewCylinder->AddVertexAttribute("position", 0, 3, 0);
+	bufferNewCylinder->AddVertexAttribute("color", 1, 3, 3);
+	bufferNewCylinder->SetUpAttributeInterpretration();
+	pcLinesCylinder->SetPosition({ 15.0f, 10.0f, 10.0f }); // set initial position
+	scene->AddObject(pcLinesCylinder);
+	env->AddObject("pcLinesCylinder", pcLinesCylinder);
+
+
+}
+
+
 static void SetUpLightScene(std::shared_ptr<Shader>&
 	lightShader, std::shared_ptr<Scene>& lightScene, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {
@@ -486,10 +544,10 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	vertexBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
 
 	// adjusting the texture settings here
-	texture->SetWrapS(GL_CLAMP_TO_EDGE);
-	texture->SetWrapT(GL_CLAMP_TO_EDGE);
-	texture->SetMagFilter(GL_LINEAR);
-	texture->SetMinFilter(GL_LINEAR);
+	texture->SetWrapS(GL_REPEAT);
+	texture->SetWrapT(GL_REPEAT);
+	texture->SetMagFilter(GL_NEAREST);
+	texture->SetMinFilter(GL_NEAREST);
 
 	vertexBuffer->SetTexture(texture);
 	graphicsObject->SetVertexBuffer(vertexBuffer);
@@ -500,12 +558,12 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 	// new textured object to scene
 	std::shared_ptr<GraphicsObject> graphicsObject2 = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> vertexBuffer2 = std::make_shared<VertexBuffer>(8);
-	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
 	vertexBuffer2->AddVertexData(8, -10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f);
-	vertexBuffer2->AddVertexData(8, 10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, -10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 3.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, -10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 0.0f);
+	vertexBuffer2->AddVertexData(8, 10.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f);
 
 	vertexBuffer2->AddVertexAttribute("position", 0, 3, 0);
 	vertexBuffer2->AddVertexAttribute("vertexColor", 1, 3, 3);
@@ -514,6 +572,10 @@ static void SetUpTexturedScene(std::shared_ptr<Shader>&
 
 	std::shared_ptr<Texture> texture2 = std::make_shared<Texture>();
 	texture2->LoadTextureDataFromFile("..\\3rdparty\\texture\\Default\\Tiles\\tile_0122.png");
+	texture2->SetWrapS(GL_REPEAT);
+	texture2->SetWrapT(GL_REPEAT);
+	texture2->SetMagFilter(GL_NEAREST);
+	texture2->SetMinFilter(GL_NEAREST);
 
 
 	vertexBuffer2->SetTexture(texture2);
@@ -663,6 +725,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	graphicsEnviron->CreateRenderer("rendererArrow", shaderArrow);
 	graphicsEnviron->GetRenderer("rendererArrow")->SetScene(sceneArrow);
+
+
+	// attempting to set up the pc circle scene
+	std::shared_ptr<Shader> shaderCircle;
+	std::shared_ptr<Scene> sceneCircle;
+	SetUpPCObjectsScene(shaderCircle, sceneCircle, graphicsEnviron);
+
+
+	graphicsEnviron->CreateRenderer("rendererCircle", shaderCircle);
+	graphicsEnviron->GetRenderer("rendererCircle")->SetScene(sceneCircle);
 
 
 	graphicsEnviron->StaticAllocate();
