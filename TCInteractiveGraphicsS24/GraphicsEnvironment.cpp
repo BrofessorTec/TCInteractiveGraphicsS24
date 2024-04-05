@@ -227,6 +227,20 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		return;
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		// raycast and pickup item to use as ammo?
+	}
+
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		// starts the animation and a timer for how long it is pressed down
+		// releasing mouse button will fire the item
+	}
+
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+		// reset back to normal animation
+		// fires the item based on how long the left mouse button was held down
+	}
+
 }
 
 glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& up)
@@ -484,6 +498,10 @@ void GraphicsEnvironment::Run3D()
 		// should add a way to just od this for every scene
 		GetRenderer("rendererCircle")->SetView(view);
 		GetRenderer("rendererCircle")->SetProjection(projection);
+
+		// added arrow scene
+		GetRenderer("rendererArrow")->SetView(view);
+		GetRenderer("rendererArrow")->SetProjection(projection);
 
 		// call update
 		objManager->Update(elapsedSeconds);

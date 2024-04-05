@@ -442,6 +442,57 @@ static void SetUpLightScene(std::shared_ptr<Shader>&
 }
 
 
+static void SetUpArrowScene(std::shared_ptr<Shader>&
+	arrowShader, std::shared_ptr<Scene>& arrowScene, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
+{
+	//unsigned int shaderProgram;
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("texture.vert.glsl");
+
+	// relative path
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	fragFile->ReadFile("texture.frag.glsl");
+
+	arrowShader = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	arrowShader->AddUniform("projection");
+	arrowShader->AddUniform("world");
+	arrowShader->AddUniform("view");
+
+
+
+	// new textured object to scene
+	arrowScene = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> arrow = std::make_shared<GraphicsObject>();
+
+	std::shared_ptr<VertexBuffer> arrowBuffer = Generate::Cuboid(4, 4, 10);
+	std::shared_ptr<VertexBuffer> arrowBuffer2 = Generate::ArrowNorm(4, 4, 10);
+
+
+	arrowBuffer->AddVertexAttribute("position", 0, 3, 0);
+	arrowBuffer->AddVertexAttribute("vertexColor", 1, 3, 3);
+	arrowBuffer->AddVertexAttribute("texCoord", 2, 2, 6);
+
+
+
+
+	std::shared_ptr<Texture> arrowTexture = std::make_shared<Texture>();
+	// this texture is breaking now for some reason
+	//arrowTexture->LoadTextureDataFromFile("..\\3rdparty\\ArrowTex2.jpg");
+
+
+	arrowBuffer->SetTexture(arrowTexture);
+	arrow->SetVertexBuffer(arrowBuffer);
+	arrow->SetPosition(glm::vec3(10.0f, 10.0f, 0.0f));
+
+	arrowScene->AddObject(arrow);
+	graphicsEnviron->AddObject("arrow", arrow);
+
+
+}
+
+
 
 
 
@@ -665,6 +716,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
 	graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
+
+	// attempting to set up the arrow scene
+	std::shared_ptr<Shader> shaderArrow;
+	std::shared_ptr<Scene> sceneArrow;
+	SetUpArrowScene(shaderArrow, sceneArrow, graphicsEnviron);
+
+
+	graphicsEnviron->CreateRenderer("rendererArrow", shaderArrow);
+	graphicsEnviron->GetRenderer("rendererArrow")->SetScene(sceneArrow);
 
 
 	// attempting to set up the pc circle scene
