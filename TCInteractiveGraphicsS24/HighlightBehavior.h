@@ -10,7 +10,7 @@ protected:
 
 public:
 	void StoreDefaults() override;
-	void SetParameter(GraphicStructures::IParams& param) override;
+	void SetParameter(GraphicStructures::IParams& params) override;
 	void Update(double elapsedSeconds) override;
 };
 
