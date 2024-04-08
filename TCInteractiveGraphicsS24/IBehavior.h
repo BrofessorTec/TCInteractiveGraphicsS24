@@ -16,6 +16,6 @@ public:
 	virtual void SetObject(std::shared_ptr<GraphicsObject> object);
 	virtual void SetParameter(GraphicStructures::IParams& params) {};
 	virtual void StoreDefaults() {};
-	virtual void Update(double elapsedSeconds) = 0; //needed?
+	virtual void Update(double elapsedSeconds) = 0; 
 };
 

@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "GraphicsEnvironment.h"
 #include "Generate.h"
+#include "HighlightBehavior.h"
 
 
 static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
@@ -282,6 +283,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 
 	graphicsObject3d->CreateBoundingBox(cubeWidth, cubeHeight, cubeDepth);
 
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> cubeHighlight = std::make_shared<HighlightBehavior>();
+	cubeHighlight->SetObject(graphicsObject3d);
+	graphicsObject3d->AddBehavior("highlight", cubeHighlight);
+
+
 	graphicsObject3d->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3d);
 
@@ -317,6 +324,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
 	// add bounding box here?
 	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> crateHighlight = std::make_shared<HighlightBehavior>();
+	crateHighlight->SetObject(graphicsObject3dCrate);
+	graphicsObject3dCrate->AddBehavior("highlight", crateHighlight);
+
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);

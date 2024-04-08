@@ -2,7 +2,7 @@
 #include "IBehavior.h"
 #include "GraphicStructures.h"
 
-class HighlightBehavior : IBehavior
+class HighlightBehavior : public IBehavior
 {
 protected:
 	GraphicStructures::HighlightParams params;
@@ -10,7 +10,7 @@ protected:
 
 public:
 	void StoreDefaults() override;
-	void SetParameter(GraphicStructures::IParams& param) override;
-
+	void SetParameter(GraphicStructures::IParams& params) override;
+	void Update(double elapsedSeconds) override;
 };
 
