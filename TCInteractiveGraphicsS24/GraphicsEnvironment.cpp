@@ -559,6 +559,7 @@ void GraphicsEnvironment::Run3D()
 
 		// add a slider for box animation speed 
 		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
+		ImGui::SliderFloat("Sliding Speed", &slideAnimation->GetSpeed(), 0, 120);
 		ImGui::Checkbox("Correct gamma", &correctGamma);
 		ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
 		ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);

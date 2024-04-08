@@ -12,7 +12,7 @@ private:
 	bool isMoving = true;
 public:
 	SlidingAnimation(glm::vec3 direction = glm::vec3(0.0f, 0.0f, -1.0f), float speed
-		= 5.0f)
+		= 10.0f)
 		: IAnimation(), direction(direction), speed(speed) {}
 	void Update(double elapsedSeconds) override;
 	void SetSpeed(float newSpeed);
