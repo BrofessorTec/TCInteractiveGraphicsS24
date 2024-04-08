@@ -8,7 +8,7 @@ void HighlightBehavior::StoreDefaults()
 	// how to fix this pointer?
 }
 
-void HighlightBehavior::SetParameter(GraphicStructures::IParams& param)
+void HighlightBehavior::SetParameter(GraphicStructures::IParams& params)
 {
 	this->params = reinterpret_cast<GraphicStructures::HighlightParams&>(params);
 }
