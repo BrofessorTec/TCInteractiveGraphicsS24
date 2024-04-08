@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "BoundingBox.h"
 #include "IBehavior.h"
+#include "IAnimation.h"
 
 class IAnimation; // Forward declaration
 
@@ -48,6 +49,7 @@ public:
 	void SetReferenceFrame(glm::mat4 newReferenceFrame);
 	void Update(double elapsedSeconds);   //needs definition
 	void SetAnimation(std::shared_ptr<IAnimation> animation);
+	std::shared_ptr<IAnimation> GetAnimation();
 	glm::mat4& GetLocalReferenceFrame() { return referenceFrame; };
 	void PointAtTarget(glm::vec3 point);
 	std::shared_ptr<IndexBuffer> indexBuffer;

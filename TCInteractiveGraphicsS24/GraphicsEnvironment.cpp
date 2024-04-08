@@ -6,6 +6,7 @@
 #include <iterator> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 
 
 GraphicsEnvironment* GraphicsEnvironment::self;
@@ -234,6 +235,11 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		// starts the animation and a timer for how long it is pressed down
 		// releasing mouse button will fire the item
+		if (objManager->GetObject("globe")->IsIntersectingWithRay(mouseRayVar)) {
+			bool isMoving = std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->GetMove();
+			std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->SetMove(!isMoving);
+		}
+		
 	}
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
@@ -408,6 +414,13 @@ void GraphicsEnvironment::Run3D()
 	rotateAnimation->SetObject(objManager->GetObject("Crate"));
 	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
 
+	std::shared_ptr<SlidingAnimation> slideAnimation =
+		std::make_shared<SlidingAnimation>();
+	slideAnimation->SetObject(objManager->GetObject("globe"));
+	objManager->GetObject("globe")->SetAnimation(slideAnimation);
+	slideAnimation->SetMove(true);
+
+
 	// Set the behavior defaults for all objects
 	for (auto& [name, object] : objManager->GetObjectMap()) {
 		object->SetBehaviorDefaults();
@@ -490,6 +503,7 @@ void GraphicsEnvironment::Run3D()
 
 		// before update set behavior params
 		Ray mouseRay = GetMouseRay(projection, view);
+		mouseRayVar = mouseRay;
 		float offset = plane.GetIntersectionOffset(mouseRay);
 		if (offset > 0) {
 			floorIntersectionPoint = mouseRay.GetIntersectionPoint(offset);

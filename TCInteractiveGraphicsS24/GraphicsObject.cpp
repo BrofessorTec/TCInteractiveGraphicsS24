@@ -1,6 +1,5 @@
 #include "GraphicsObject.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "IAnimation.h"
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
@@ -115,6 +114,14 @@ void GraphicsObject::Update(double elapsedSeconds)
 void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 {
 	this->animation = animation;
+}
+
+std::shared_ptr<IAnimation> GraphicsObject::GetAnimation()
+{
+	if (this->animation != nullptr)
+	{
+		return animation;
+	}
 }
 
 void GraphicsObject::PointAtTarget(glm::vec3 point)
