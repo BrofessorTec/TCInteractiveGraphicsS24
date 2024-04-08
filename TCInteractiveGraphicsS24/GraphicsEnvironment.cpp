@@ -393,8 +393,8 @@ void GraphicsEnvironment::Run3D()
 	double elapsedSeconds;
 	Timer timer;
 	bool correctGamma = false;
-	glm::vec3 rayStart{};
-	glm::vec3 rayDir{};
+	glm::vec3 mouseRayStart{};
+	glm::vec3 mouseRayDir{};
 	GeometricPlane plane;
 	Intersection intersection;
 	glm::vec3 floorIntersectionPoint{};
@@ -408,6 +408,10 @@ void GraphicsEnvironment::Run3D()
 	rotateAnimation->SetObject(objManager->GetObject("Crate"));
 	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
 
+	// Set the behavior defaults for all objects
+	for (auto& [name, object] : objManager->GetObjectMap()) {
+		object->SetBehaviorDefaults();
+	}
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -477,24 +481,18 @@ void GraphicsEnvironment::Run3D()
 		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
-		// is this getting the floor correctly?
+		/*
+		* using the new HighlightBehavior now
 		plane.SetDistanceFromOrigin(objManager->GetObject("floor")->GetReferenceFrame()[3].y);
-		Ray ray = GetMouseRay(projection, view);
-		rayStart = ray.GetStart();
-		rayDir = ray.GetDirection();
-		intersection = ray.GetIntersectionWithPlane(plane);
+		Ray mouseRay = GetMouseRay(projection, view);
+		mouseRayStart = mouseRay.GetStart();
+		mouseRayDir = mouseRay.GetDirection();
+		intersection = mouseRay.GetIntersectionWithPlane(plane);
 
 		// testing new intersection code here
 		if (intersection.isIntersecting) {
-			floorIntersectionPoint = ray.GetPosition(intersection.offset);
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
-			
-			/*floorIntersectionPoint = ray.GetPosition(intersection.offset);
-			localLight.position.x = floorIntersectionPoint.x;
-			localLight.position.y = -3.0f;
-			localLight.position.z = floorIntersectionPoint.z;
-			*/
-		
+			floorIntersectionPoint = mouseRay.GetPosition(intersection.offset);
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });		
 		}
 		else
 		{
@@ -502,7 +500,7 @@ void GraphicsEnvironment::Run3D()
 		}
 
 		// adding ray intersection to max ambient intensity
-		if (objManager->GetObject("Crate")->IsIntersectingWithRay(ray))
+		if (objManager->GetObject("Crate")->IsIntersectingWithRay(mouseRay))
 		{
 			objManager->GetObject("Crate")->GetMaterial().ambientIntensity = 1.0f;
 		}
@@ -513,7 +511,7 @@ void GraphicsEnvironment::Run3D()
 
 		// can also add this for the textured cube here if it works
 		// adding ray intersection to max ambient intensity
-		if (objManager->GetObject("cube")->IsIntersectingWithRay(ray))
+		if (objManager->GetObject("cube")->IsIntersectingWithRay(mouseRay))
 		{
 			objManager->GetObject("cube")->GetMaterial().ambientIntensity = 1.0f;
 		}
@@ -521,8 +519,15 @@ void GraphicsEnvironment::Run3D()
 		{
 			objManager->GetObject("cube")->GetMaterial().ambientIntensity = cubeDefaultAmbient;
 		}
+		*/
 
+		// this should work for all renderers now
+		for (auto& [name, renderer] : rendererMap) {
+			renderer->SetView(view);
+			renderer->SetProjection(projection);
+		}
 
+		/*
 		GetRenderer("renderer3d")->SetView(view);
 		GetRenderer("renderer3d")->SetProjection(projection);
 		// are these view and projection the same?
@@ -531,11 +536,36 @@ void GraphicsEnvironment::Run3D()
 		// should add a way to just od this for every scene
 		GetRenderer("rendererCircle")->SetView(view);
 		GetRenderer("rendererCircle")->SetProjection(projection);
+		*/
 
 		/* removing arrow code for now
 		// added arrow scene
 		GetRenderer("rendererArrow")->SetView(view);
 		GetRenderer("rendererArrow")->SetProjection(projection);
+		*/
+
+		// before update set behavior params
+		Ray mouseRay = GetMouseRay(projection, view);
+		mouseRayStart = mouseRay.GetStart();
+		mouseRayDir = mouseRay.GetDirection();
+		intersection = mouseRay.GetIntersectionWithPlane(plane);
+
+		// testing new intersection code here
+		/*
+		if (intersection.isIntersecting) {
+			floorIntersectionPoint = mouseRay.GetPosition(intersection.offset);
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
+		}
+		else
+		{
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
+		}*/
+
+		GraphicStructures::HighlightParams hp = { {}, &mouseRay };
+		objManager->GetObject("cube")->
+			SetBehaviorParameters("highlight", hp);
+		/*objManager->GetObject("Crate")->
+			SetBehaviorParameters("highlight", hp);
 		*/
 
 		// call update

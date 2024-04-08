@@ -106,6 +106,10 @@ void GraphicsObject::Update(double elapsedSeconds)
 		// call animation's update
 		animation->Update(elapsedSeconds);
 	}
+
+	for (auto& [name, behavior] : behaviorMap) {
+		behavior->Update(elapsedSeconds);
+	}
 }
 
 void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
@@ -176,6 +180,20 @@ bool GraphicsObject::HasBoundingBox()
 void GraphicsObject::AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior)
 {
 	behaviorMap.emplace(name, behavior);
+}
+
+void GraphicsObject::SetBehaviorDefaults()
+{
+	//It loops through all the behaviors storing their defaults
+	//is this done correctly?
+	for (auto& [name, behavior] : behaviorMap) {
+		behavior->StoreDefaults();
+	}
+}
+
+void GraphicsObject::SetBehaviorParameters(std::string name, GraphicStructures::IParams& params)
+{
+	behaviorMap[name]->SetParameter(params);
 }
 
 GraphicStructures::Material& GraphicsObject::GetMaterial()

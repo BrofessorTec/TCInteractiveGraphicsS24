@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "GraphicsEnvironment.h"
 #include "Generate.h"
+#include "HighlightBehavior.h"
 
 
 static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
@@ -281,6 +282,13 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3d->SetVertexBuffer(buffer);
 
 	graphicsObject3d->CreateBoundingBox(cubeWidth, cubeHeight, cubeDepth);
+
+	// adding highlight behavior here
+	// this is still an IBehavior.. how to make it the HighlightBehavior?
+	std::shared_ptr<HighlightBehavior> cubeHighlight = std::make_shared<HighlightBehavior>();
+	cubeHighlight->SetObject(graphicsObject3d);
+	graphicsObject3d->AddBehavior("highlight", cubeHighlight);
+
 
 	graphicsObject3d->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3d);
