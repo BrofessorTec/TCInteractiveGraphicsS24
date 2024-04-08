@@ -5,6 +5,7 @@
 #include "GraphicStructures.h"
 #include "IndexBuffer.h"
 #include "BoundingBox.h"
+#include "IBehavior.h"
 
 class IAnimation; // Forward declaration
 
@@ -19,6 +20,7 @@ protected:
 	std::shared_ptr<IAnimation> animation = nullptr;
 	GraphicStructures::Material material{};
 	std::shared_ptr<BoundingBox> boundingBox = nullptr;
+	std::unordered_map<std::string, std::shared_ptr<IBehavior>> behaviorMap;
 
 
 public:
@@ -56,5 +58,6 @@ public:
 	BoundingBox& GetBoundingBox();
 	bool IsIntersectingWithRay(const Ray& ray) const;
 	bool HasBoundingBox();
+	void AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior);
 };
 

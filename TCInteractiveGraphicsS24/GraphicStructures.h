@@ -49,5 +49,11 @@ public:
         float attenuationCoef;
     };
 
+    struct IParams {};
+
+    struct HighlightParams : IParams {
+        Ray* ray;
+    };
+
 
 };

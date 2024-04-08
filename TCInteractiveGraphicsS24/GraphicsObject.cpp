@@ -173,6 +173,11 @@ bool GraphicsObject::HasBoundingBox()
 	return false;
 }
 
+void GraphicsObject::AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior)
+{
+	behaviorMap.emplace(name, behavior);
+}
+
 GraphicStructures::Material& GraphicsObject::GetMaterial()
 {
 	return material;

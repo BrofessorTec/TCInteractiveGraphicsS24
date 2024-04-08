@@ -29,7 +29,9 @@
     <ClInclude Include="GraphicsEnvironment.h" />
     <ClInclude Include="GraphicsObject.h" />
     <ClInclude Include="GraphicStructures.h" />
+    <ClInclude Include="HighlightBehavior.h" />
     <ClInclude Include="IAnimation.h" />
+    <ClInclude Include="IBehavior.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Ray.h" />
@@ -59,7 +61,9 @@
     <ClCompile Include="GeometricPlane.cpp" />
     <ClCompile Include="GraphicsEnvironment.cpp" />
     <ClCompile Include="GraphicsObject.cpp" />
+    <ClCompile Include="HighlightBehavior.cpp" />
     <ClCompile Include="IAnimation.cpp" />
+    <ClCompile Include="IBehavior.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
