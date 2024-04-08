@@ -505,6 +505,8 @@ void GraphicsEnvironment::Run3D()
 			SetBehaviorParameters("highlight", hp);
 		objManager->GetObject("Crate")->
 			SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("globe")->
+			SetBehaviorParameters("highlight", hp);
 		
 
 		// call update

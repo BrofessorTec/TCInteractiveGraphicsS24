@@ -23,9 +23,9 @@ Intersection GeometricPlane::GetIntersectionWithLine(
 float GeometricPlane::GetIntersectionOffset(Ray ray)
 {
 	float offset = -1.0f;
-	float nRayProjection = glm::dot(normal, ray.direction);
-	if (nRayProjection == 0) return offset;
-	float nStartProjection = glm::dot(normal, ray.startPoint);
-	offset = -(nStartProjection + distanceFromOrigin) / nRayProjection;
+	float nRayProj = glm::dot(normal, ray.direction);
+	if (nRayProj == 0) return offset;
+	float nStartProj = glm::dot(normal, ray.startPoint);
+	offset = -(nStartProj + distanceFromOrigin) / nRayProj;
 	return offset;
 }

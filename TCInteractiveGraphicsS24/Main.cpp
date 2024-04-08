@@ -364,9 +364,54 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dFloor);
 
+
+	// new globe code here
+	std::shared_ptr<Texture> textureGlobe = std::make_shared<Texture>();
+
+	textureGlobe->LoadTextureDataFromFile("..\\3rdparty\\GlobeTex.jpg");
+
+
+	float globeWidth = 5.0f;
+	float globeHeight = 5.0f;
+	float globeDepth = 5.0f;
+
+	std::shared_ptr<GraphicsObject> globe = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferGlobe = Generate::CuboidNorm(globeWidth, globeHeight, globeDepth);
+
+	bufferGlobe->AddVertexAttribute("position", 0, 3, 0);
+	bufferGlobe->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferGlobe->AddVertexAttribute("normal", 2, 3, 7);
+	bufferGlobe->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	textureGlobe->SetWrapS(GL_REPEAT);
+	textureGlobe->SetWrapT(GL_REPEAT);
+	textureGlobe->SetMagFilter(GL_NEAREST);
+	textureGlobe->SetMinFilter(GL_NEAREST);
+
+	bufferGlobe->SetTexture(textureGlobe);
+
+
+	globe->SetVertexBuffer(bufferGlobe);
+	// add bounding box here?
+	globe->CreateBoundingBox(globeWidth, globeHeight, globeDepth);
+
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> globeHighlight = std::make_shared<HighlightBehavior>();
+	globeHighlight->SetObject(globe);
+	globe->AddBehavior("highlight", globeHighlight);
+
+
+	globe->SetPosition(glm::vec3(27.5f, 2.5f, 27.5f));  //need to adjust to south east corner of plane
+	scene3d->AddObject(globe);
+
+
+
+
 	graphicsEnviron->AddObject("cube", graphicsObject3d);
 	graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
+	graphicsEnviron->AddObject("globe", globe);
 
 
 
