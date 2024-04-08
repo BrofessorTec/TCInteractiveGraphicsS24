@@ -14,6 +14,7 @@
 #include <vector>
 #include "IAnimation.h"
 #include "RotateAnimation.h"
+#include "SlidingAnimation.h"
 #include "Camera.h"
 #include "GraphicStructures.h"
 #include "Ray.h"
@@ -29,6 +30,7 @@ private:
     GraphicStructures::MouseParams mouse;
     static GraphicsEnvironment* self;
     bool lookWithMouse = false;
+    Ray mouseRayVar;
 
 public:
     GraphicsEnvironment();

@@ -6,6 +6,7 @@
 #include <iterator> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 
 
 GraphicsEnvironment* GraphicsEnvironment::self;
@@ -234,6 +235,11 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		// starts the animation and a timer for how long it is pressed down
 		// releasing mouse button will fire the item
+		if (objManager->GetObject("globe")->IsIntersectingWithRay(mouseRayVar)) {
+			bool isMoving = std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->GetMove();
+			std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->SetMove(!isMoving);
+		}
+		
 	}
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
@@ -393,10 +399,14 @@ void GraphicsEnvironment::Run3D()
 	double elapsedSeconds;
 	Timer timer;
 	bool correctGamma = false;
-	glm::vec3 rayStart{};
-	glm::vec3 rayDir{};
+	glm::vec3 mouseRayStart{};
+	glm::vec3 mouseRayDir{};
 	GeometricPlane plane;
 	Intersection intersection;
+	glm::vec3 floorIntersectionPoint{};
+	float crateDefaultAmbient = objManager->GetObject("Crate")->GetMaterial().ambientIntensity;
+	float cubeDefaultAmbient = objManager->GetObject("cube")->GetMaterial().ambientIntensity;
+
 
 	// add animation
 	std::shared_ptr<RotateAnimation> rotateAnimation =
@@ -404,6 +414,17 @@ void GraphicsEnvironment::Run3D()
 	rotateAnimation->SetObject(objManager->GetObject("Crate"));
 	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
 
+	std::shared_ptr<SlidingAnimation> slideAnimation =
+		std::make_shared<SlidingAnimation>();
+	slideAnimation->SetObject(objManager->GetObject("globe"));
+	objManager->GetObject("globe")->SetAnimation(slideAnimation);
+	slideAnimation->SetMove(true);
+
+
+	// Set the behavior defaults for all objects
+	for (auto& [name, object] : objManager->GetObjectMap()) {
+		object->SetBehaviorDefaults();
+	}
 
 	while (!glfwWindowShouldClose(window)) {
 		elapsedSeconds = timer.GetElapsedTimeInSeconds();
@@ -473,35 +494,34 @@ void GraphicsEnvironment::Run3D()
 		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
-		// is this getting the floor correctly?
-		plane.SetDistanceFromOrigin(objManager->GetObject("floor")->GetReferenceFrame()[3].y);
-		Ray ray = GetMouseRay(projection, view);
-		rayStart = ray.GetStart();
-		rayDir = ray.GetDirection();
-		intersection = ray.GetIntersectionWithPlane(plane);
 
-		// testing new intersection code here
-		if (intersection.isIntersecting) {
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)intersection.point.x, (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)intersection.point.z });
+		// this should work for all renderers now
+		for (auto& [name, renderer] : rendererMap) {
+			renderer->SetView(view);
+			renderer->SetProjection(projection);
+		}
+
+		// before update set behavior params
+		Ray mouseRay = GetMouseRay(projection, view);
+		mouseRayVar = mouseRay;
+		float offset = plane.GetIntersectionOffset(mouseRay);
+		if (offset > 0) {
+			floorIntersectionPoint = mouseRay.GetIntersectionPoint(offset);
+			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
 		}
 		else
 		{
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
 		}
 
-
-		GetRenderer("renderer3d")->SetView(view);
-		GetRenderer("renderer3d")->SetProjection(projection);
-		// are these view and projection the same?
-		GetRenderer("rendererLight")->SetView(view);
-		GetRenderer("rendererLight")->SetProjection(projection);
-		// should add a way to just od this for every scene
-		GetRenderer("rendererCircle")->SetView(view);
-		GetRenderer("rendererCircle")->SetProjection(projection);
-
-		// added arrow scene
-		GetRenderer("rendererArrow")->SetView(view);
-		GetRenderer("rendererArrow")->SetProjection(projection);
+		GraphicStructures::HighlightParams hp = { {}, &mouseRay };
+		objManager->GetObject("cube")->
+			SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("Crate")->
+			SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("globe")->
+			SetBehaviorParameters("highlight", hp);
+		
 
 		// call update
 		objManager->Update(elapsedSeconds);
@@ -539,6 +559,7 @@ void GraphicsEnvironment::Run3D()
 
 		// add a slider for box animation speed 
 		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
+		ImGui::SliderFloat("Sliding Speed", &slideAnimation->GetSpeed(), 0, 120);
 		ImGui::Checkbox("Correct gamma", &correctGamma);
 		ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
 		ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);
@@ -590,7 +611,18 @@ Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat
 {
 	// Set up the ray
 	Ray ray;
-	ray.Create((float)mouse.nsx, (float)mouse.nsy, projection, view);
+	glm::mat4 projInv = glm::inverse(projection);
+	glm::mat4 viewInv = glm::inverse(view);
+	glm::vec4 rayDirClip = glm::vec4(mouse.nsx, mouse.nsy, -1, 1);
+	glm::vec4 rayDirEye = projInv * rayDirClip;
+	rayDirEye.z = -1;
+	rayDirEye.w = 0;
+	ray.direction = glm::normalize(viewInv * rayDirEye);
+	glm::vec4 rayStartClip = glm::vec4(mouse.nsx, mouse.nsy, 1, 1);
+	glm::vec4 rayStartEye = projInv * rayStartClip;
+	rayStartEye.z = 1;
+	rayStartEye.w = 1;
+	ray.startPoint = viewInv * rayStartEye;
 	return ray;
 }
 

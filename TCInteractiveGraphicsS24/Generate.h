@@ -52,7 +52,7 @@ public:
 
     static std::shared_ptr<VertexBuffer> Arrow(
         float width = 2, float height = 2, float depth = 8,
-        glm::vec4 color = { 1.0f, 1.0f, 1.0f},
+        glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f},
         glm::vec2 tex = { 1.0f, 1.0f });
 
 

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\3rdparty\stb_image.h" />
     <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Generate.h" />
     <ClInclude Include="GeometricLine.h" />
@@ -28,7 +29,9 @@
     <ClInclude Include="GraphicsEnvironment.h" />
     <ClInclude Include="GraphicsObject.h" />
     <ClInclude Include="GraphicStructures.h" />
+    <ClInclude Include="HighlightBehavior.h" />
     <ClInclude Include="IAnimation.h" />
+    <ClInclude Include="IBehavior.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Ray.h" />
@@ -36,6 +39,7 @@
     <ClInclude Include="RotateAnimation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SlidingAnimation.h" />
     <ClInclude Include="TextFile.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
@@ -51,13 +55,16 @@
     <ClCompile Include="..\3rdparty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdparty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Generate.cpp" />
     <ClCompile Include="GeometricLine.cpp" />
     <ClCompile Include="GeometricPlane.cpp" />
     <ClCompile Include="GraphicsEnvironment.cpp" />
     <ClCompile Include="GraphicsObject.cpp" />
+    <ClCompile Include="HighlightBehavior.cpp" />
     <ClCompile Include="IAnimation.cpp" />
+    <ClCompile Include="IBehavior.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -66,6 +73,7 @@
     <ClCompile Include="RotateAnimation.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SlidingAnimation.cpp" />
     <ClCompile Include="TextFile.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />

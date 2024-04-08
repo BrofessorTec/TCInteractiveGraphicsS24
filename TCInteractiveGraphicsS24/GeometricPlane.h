@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Ray.h"
 
 class GeometricLine;
 
@@ -7,7 +8,7 @@ class GeometricLine;
 
 struct Intersection {
 	bool isIntersecting = false;
-	glm::vec3 point{};
+	float offset = -1.0f;
 };
 
 class GeometricPlane
@@ -24,7 +25,12 @@ public:
 	void SetDistanceFromOrigin(float distance) {
 		distanceFromOrigin = fabs(distance);
 	}
+	void Set(glm::vec3 normal, float distance) {
+		SetNormal(normal);
+		SetDistanceFromOrigin(distance);
+	}
 
 	Intersection GetIntersectionWithLine(const GeometricLine& line) const;
+	float GetIntersectionOffset(Ray ray);
 };
 

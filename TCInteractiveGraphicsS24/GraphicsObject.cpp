@@ -1,12 +1,11 @@
 #include "GraphicsObject.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "IAnimation.h"
 
 GraphicsObject::GraphicsObject() : referenceFrame(1.0f), parent(nullptr)
 {
-	material.ambientIntensity = 0.4;
-	material.shininess = 0.5;
-	material.specularIntensity = 0.5;
+	material.ambientIntensity = 0.4f;
+	material.shininess = 0.5f;
+	material.specularIntensity = 0.5f;
 	indexBuffer = nullptr;
 }
 
@@ -106,11 +105,23 @@ void GraphicsObject::Update(double elapsedSeconds)
 		// call animation's update
 		animation->Update(elapsedSeconds);
 	}
+
+	for (auto& [name, behavior] : behaviorMap) {
+		behavior->Update(elapsedSeconds);
+	}
 }
 
 void GraphicsObject::SetAnimation(std::shared_ptr<IAnimation> animation)
 {
 	this->animation = animation;
+}
+
+std::shared_ptr<IAnimation> GraphicsObject::GetAnimation()
+{
+	if (this->animation != nullptr)
+	{
+		return animation;
+	}
 }
 
 void GraphicsObject::PointAtTarget(glm::vec3 point)
@@ -142,6 +153,54 @@ bool GraphicsObject::IsIndexed() const
 		return true;
 	}
 	return false;
+}
+
+void GraphicsObject::CreateBoundingBox(float width, float height, float depth)
+{
+	boundingBox = std::make_shared<BoundingBox>();
+	boundingBox->SetReferenceFrame(referenceFrame);
+	boundingBox->Create(width, height, depth);
+}
+
+BoundingBox& GraphicsObject::GetBoundingBox()
+{
+	// is the * how you are supposed to do this?
+	return *boundingBox;
+	// return boundingBox;
+}
+
+bool GraphicsObject::IsIntersectingWithRay(const Ray& ray) const
+{
+	boundingBox->SetReferenceFrame(referenceFrame);
+	return boundingBox->IsIntersectingWithRay(ray);
+}
+
+bool GraphicsObject::HasBoundingBox()
+{
+	if (boundingBox != nullptr)
+	{
+		return true;
+	}
+	return false;
+}
+
+void GraphicsObject::AddBehavior(std::string name, std::shared_ptr<IBehavior> behavior)
+{
+	behaviorMap.emplace(name, behavior);
+}
+
+void GraphicsObject::SetBehaviorDefaults()
+{
+	//It loops through all the behaviors storing their defaults
+	//is this done correctly?
+	for (auto& [name, behavior] : behaviorMap) {
+		behavior->StoreDefaults();
+	}
+}
+
+void GraphicsObject::SetBehaviorParameters(std::string name, GraphicStructures::IParams& params)
+{
+	behaviorMap[name]->SetParameter(params);
 }
 
 GraphicStructures::Material& GraphicsObject::GetMaterial()
