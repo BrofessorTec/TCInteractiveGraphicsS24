@@ -481,45 +481,6 @@ void GraphicsEnvironment::Run3D()
 		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
 		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
-		/*
-		* using the new HighlightBehavior now
-		plane.SetDistanceFromOrigin(objManager->GetObject("floor")->GetReferenceFrame()[3].y);
-		Ray mouseRay = GetMouseRay(projection, view);
-		mouseRayStart = mouseRay.GetStart();
-		mouseRayDir = mouseRay.GetDirection();
-		intersection = mouseRay.GetIntersectionWithPlane(plane);
-
-		// testing new intersection code here
-		if (intersection.isIntersecting) {
-			floorIntersectionPoint = mouseRay.GetPosition(intersection.offset);
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });		
-		}
-		else
-		{
-			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
-		}
-
-		// adding ray intersection to max ambient intensity
-		if (objManager->GetObject("Crate")->IsIntersectingWithRay(mouseRay))
-		{
-			objManager->GetObject("Crate")->GetMaterial().ambientIntensity = 1.0f;
-		}
-		else
-		{
-			objManager->GetObject("Crate")->GetMaterial().ambientIntensity = crateDefaultAmbient;
-		}
-
-		// can also add this for the textured cube here if it works
-		// adding ray intersection to max ambient intensity
-		if (objManager->GetObject("cube")->IsIntersectingWithRay(mouseRay))
-		{
-			objManager->GetObject("cube")->GetMaterial().ambientIntensity = 1.0f;
-		}
-		else
-		{
-			objManager->GetObject("cube")->GetMaterial().ambientIntensity = cubeDefaultAmbient;
-		}
-		*/
 
 		// this should work for all renderers now
 		for (auto& [name, renderer] : rendererMap) {
@@ -527,46 +488,24 @@ void GraphicsEnvironment::Run3D()
 			renderer->SetProjection(projection);
 		}
 
-		/*
-		GetRenderer("renderer3d")->SetView(view);
-		GetRenderer("renderer3d")->SetProjection(projection);
-		// are these view and projection the same?
-		GetRenderer("rendererLight")->SetView(view);
-		GetRenderer("rendererLight")->SetProjection(projection);
-		// should add a way to just od this for every scene
-		GetRenderer("rendererCircle")->SetView(view);
-		GetRenderer("rendererCircle")->SetProjection(projection);
-		*/
-
-		/* removing arrow code for now
-		// added arrow scene
-		GetRenderer("rendererArrow")->SetView(view);
-		GetRenderer("rendererArrow")->SetProjection(projection);
-		*/
-
 		// before update set behavior params
 		Ray mouseRay = GetMouseRay(projection, view);
-		mouseRayStart = mouseRay.GetStart();
-		mouseRayDir = mouseRay.GetDirection();
-		intersection = mouseRay.GetIntersectionWithPlane(plane);
-
-		// testing new intersection code here
-		/*
-		if (intersection.isIntersecting) {
-			floorIntersectionPoint = mouseRay.GetPosition(intersection.offset);
+		float offset = plane.GetIntersectionOffset(mouseRay);
+		if (offset > 0) {
+			floorIntersectionPoint = mouseRay.GetIntersectionPoint(offset);
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
 		}
 		else
 		{
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
-		}*/
+		}
 
 		GraphicStructures::HighlightParams hp = { {}, &mouseRay };
 		objManager->GetObject("cube")->
 			SetBehaviorParameters("highlight", hp);
-		/*objManager->GetObject("Crate")->
+		objManager->GetObject("Crate")->
 			SetBehaviorParameters("highlight", hp);
-		*/
+		
 
 		// call update
 		objManager->Update(elapsedSeconds);
@@ -655,7 +594,18 @@ Ray GraphicsEnvironment::GetMouseRay(const glm::mat4& projection, const glm::mat
 {
 	// Set up the ray
 	Ray ray;
-	ray.Create((float)mouse.nsx, (float)mouse.nsy, projection, view);
+	glm::mat4 projInv = glm::inverse(projection);
+	glm::mat4 viewInv = glm::inverse(view);
+	glm::vec4 rayDirClip = glm::vec4(mouse.nsx, mouse.nsy, -1, 1);
+	glm::vec4 rayDirEye = projInv * rayDirClip;
+	rayDirEye.z = -1;
+	rayDirEye.w = 0;
+	ray.direction = glm::normalize(viewInv * rayDirEye);
+	glm::vec4 rayStartClip = glm::vec4(mouse.nsx, mouse.nsy, 1, 1);
+	glm::vec4 rayStartEye = projInv * rayStartClip;
+	rayStartEye.z = 1;
+	rayStartEye.w = 1;
+	ray.startPoint = viewInv * rayStartEye;
 	return ray;
 }
 

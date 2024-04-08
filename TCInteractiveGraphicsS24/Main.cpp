@@ -284,7 +284,6 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3d->CreateBoundingBox(cubeWidth, cubeHeight, cubeDepth);
 
 	// adding highlight behavior here
-	// this is still an IBehavior.. how to make it the HighlightBehavior?
 	std::shared_ptr<HighlightBehavior> cubeHighlight = std::make_shared<HighlightBehavior>();
 	cubeHighlight->SetObject(graphicsObject3d);
 	graphicsObject3d->AddBehavior("highlight", cubeHighlight);
@@ -325,6 +324,12 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
 	// add bounding box here?
 	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> crateHighlight = std::make_shared<HighlightBehavior>();
+	crateHighlight->SetObject(graphicsObject3dCrate);
+	graphicsObject3dCrate->AddBehavior("highlight", crateHighlight);
+
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);

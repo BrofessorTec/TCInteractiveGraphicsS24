@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Ray.h"
 
 class GeometricLine;
 
@@ -30,5 +31,6 @@ public:
 	}
 
 	Intersection GetIntersectionWithLine(const GeometricLine& line) const;
+	float GetIntersectionOffset(Ray ray);
 };
 
