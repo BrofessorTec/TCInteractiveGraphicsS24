@@ -129,14 +129,78 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	poke2->CreateBoundingBox(poke2Width, poke2Height, 0.5f);
 
 
+	//attack button here
+	std::shared_ptr<Texture> attackBtnTex = std::make_shared<Texture>();
+	std::string attackBtnUrl = "Attack";
+	std::string url3 = "..\\3rdparty\\Poke\\" + attackBtnUrl;
+	url3 += ".png";
+	attackBtnTex->LoadTextureDataFromFile(url3);
 
+	float attackBtnWidth = 0.25f;
+	float attackBtnHeight = 0.2f;
+
+	std::shared_ptr<GraphicsObject> attackBtn = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferAttackBtn = Generate::XYPlaneNorm(attackBtnWidth, attackBtnHeight);
+
+	bufferAttackBtn->AddVertexAttribute("position", 0, 3, 0);
+	bufferAttackBtn->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferAttackBtn->AddVertexAttribute("normal", 2, 3, 7);
+	bufferAttackBtn->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	attackBtnTex->SetWrapS(GL_REPEAT);
+	attackBtnTex->SetWrapT(GL_REPEAT);
+	attackBtnTex->SetMagFilter(GL_NEAREST);
+	attackBtnTex->SetMinFilter(GL_NEAREST);
+
+	bufferAttackBtn->SetTexture(attackBtnTex);
+
+	attackBtn->SetVertexBuffer(bufferAttackBtn);
+
+	attackBtn->CreateBoundingBox(attackBtnWidth, attackBtnHeight, 0.5f);
 
 	// adding highlight behavior here
-	/*
-	std::shared_ptr<HighlightBehavior> cubeHighlight = std::make_shared<HighlightBehavior>();
-	cubeHighlight->SetObject(graphicsObject3d);
-	graphicsObject3d->AddBehavior("highlight", cubeHighlight);
-	*/
+	
+	std::shared_ptr<HighlightBehavior> attackBtnHighlight = std::make_shared<HighlightBehavior>();
+	attackBtnHighlight->SetObject(attackBtn);
+	attackBtn->AddBehavior("highlight", attackBtnHighlight);
+	
+
+	//catch button here
+	std::shared_ptr<Texture> catchBtnTex = std::make_shared<Texture>();
+	std::string catchBtnUrl = "Catch";
+	std::string url4 = "..\\3rdparty\\Poke\\" + catchBtnUrl;
+	url4 += ".png";
+	catchBtnTex->LoadTextureDataFromFile(url4);
+
+	float catchBtnWidth = 0.25f;
+	float catchBtnHeight = 0.2f;
+
+	std::shared_ptr<GraphicsObject> catchBtn = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferCatchBtn = Generate::XYPlaneNorm(catchBtnWidth, catchBtnHeight);
+
+	bufferCatchBtn->AddVertexAttribute("position", 0, 3, 0);
+	bufferCatchBtn->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferCatchBtn->AddVertexAttribute("normal", 2, 3, 7);
+	bufferCatchBtn->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	catchBtnTex->SetWrapS(GL_REPEAT);
+	catchBtnTex->SetWrapT(GL_REPEAT);
+	catchBtnTex->SetMagFilter(GL_NEAREST);
+	catchBtnTex->SetMinFilter(GL_NEAREST);
+
+	bufferCatchBtn->SetTexture(catchBtnTex);
+
+	catchBtn->SetVertexBuffer(bufferCatchBtn);
+
+	catchBtn->CreateBoundingBox(catchBtnWidth, catchBtnHeight, 0.5f);
+
+	// adding highlight behavior here
+
+	std::shared_ptr<HighlightBehavior> catchBtnHighlight = std::make_shared<HighlightBehavior>();
+	catchBtnHighlight->SetObject(catchBtn);
+	catchBtn->AddBehavior("highlight", catchBtnHighlight);
 
 
 	poke1->SetPosition(glm::vec3(-7.5f, 7.5f, 0.0f));  //can adjust position if needed
@@ -144,6 +208,9 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 	poke2->SetPosition(glm::vec3(7.5f, 7.5f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(poke2);
+
+	scene3d->AddObject(attackBtn);
+	scene3d->AddObject(catchBtn);
 
 
 	// new crate code here
@@ -265,6 +332,10 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 	graphicsEnviron->AddObject("poke1", poke1);
 	graphicsEnviron->AddObject("poke2", poke2);
+	graphicsEnviron->AddObject("attackBtn", attackBtn);
+	graphicsEnviron->AddObject("catchBtn", catchBtn);
+
+
 
 	//graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);

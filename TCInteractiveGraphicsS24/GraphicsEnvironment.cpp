@@ -491,6 +491,14 @@ void GraphicsEnvironment::Run3D()
 
 		// added this to point the lightbulb at the camera position and match the texture object to the light position
 		//objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
+		glm::vec3 attackBtnPos = camera->GetPosition();
+		attackBtnPos = { attackBtnPos.x - 0.5f, attackBtnPos.y -0.4f, attackBtnPos.z - 1.0f };
+		objManager->GetObject("attackBtn")->SetPosition(attackBtnPos);
+
+		glm::vec3 catchBtnPos = camera->GetPosition();
+		catchBtnPos = { catchBtnPos.x + 0.5f, catchBtnPos.y - 0.4f, catchBtnPos.z - 1.0f };
+		objManager->GetObject("catchBtn")->SetPosition(catchBtnPos);
+
 		//objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
 		// pointing the pokes at the camera
@@ -523,6 +531,8 @@ void GraphicsEnvironment::Run3D()
 		//objManager->GetObject("cube")->SetBehaviorParameters("highlight", hp);
 		//objManager->GetObject("Crate")->SetBehaviorParameters("highlight", hp);
 		//objManager->GetObject("globe")->SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("attackBtn")->SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("catchBtn")->SetBehaviorParameters("highlight", hp);
 		
 
 		// call update
