@@ -58,7 +58,7 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	shader3d->AddUniform("texUnit");
 
 	unsigned int shaderProgram = shader3d->GetShaderProgram();
-
+	scene3d = std::make_shared<Scene>();
 
 	// Get the uniform locations
 	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
@@ -67,14 +67,16 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 
 	std::shared_ptr<Texture> poke1Tex = std::make_shared<Texture>();
+	// texture sprites from https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png
+	// wiki files also look nice if they can work, https://pokemongo.fandom.com/wiki/Venusaur?file=Venusaur_female.png
+	std::string poke1Dex = "3";
+	std::string url1 = "..\\3rdparty\\Poke\\" + poke1Dex;
+	url1 += ".png";
+	poke1Tex->LoadTextureDataFromFile(url1);
 
-	poke1Tex->LoadTextureDataFromFile("..\\3rdparty\\Gengar.jpg");
+	float poke1Width = 10.0f;
+	float poke1Height = 10.0f;
 
-	float poke1Width = 5.0f;
-	float poke1Height = 5.0f;
-
-
-	scene3d = std::make_shared<Scene>();
 	std::shared_ptr<GraphicsObject> poke1 = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> bufferPoke1 = Generate::XYPlaneNorm(poke1Width, poke1Height);
 
@@ -84,18 +86,50 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	bufferPoke1->AddVertexAttribute("texCoord", 3, 2, 10);
 
 	// adjusting the texture settings here
-	poke1Tex->SetWrapS(GL_REPEAT);
-	poke1Tex->SetWrapT(GL_REPEAT);
+	//poke1Tex->SetWrapS(GL_REPEAT);
+	//poke1Tex->SetWrapT(GL_REPEAT);
 	poke1Tex->SetMagFilter(GL_NEAREST);
 	poke1Tex->SetMinFilter(GL_NEAREST);
 
 	bufferPoke1->SetTexture(poke1Tex);
 
-
-
 	poke1->SetVertexBuffer(bufferPoke1);
 
 	poke1->CreateBoundingBox(poke1Width, poke1Height, 0.5f);
+
+
+	//poke 2 here
+	std::shared_ptr<Texture> poke2Tex = std::make_shared<Texture>();
+	std::string poke2Dex = "6";
+	std::string url2 = "..\\3rdparty\\Poke\\" + poke2Dex;
+	url2 += ".png";
+	poke2Tex->LoadTextureDataFromFile(url2);
+
+	float poke2Width = 10.0f;
+	float poke2Height = 10.0f;
+
+	std::shared_ptr<GraphicsObject> poke2 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferPoke2 = Generate::XYPlaneNorm(poke2Width, poke2Height);
+
+	bufferPoke2->AddVertexAttribute("position", 0, 3, 0);
+	bufferPoke2->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferPoke2->AddVertexAttribute("normal", 2, 3, 7);
+	bufferPoke2->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	poke2Tex->SetWrapS(GL_REPEAT);
+	poke2Tex->SetWrapT(GL_REPEAT);
+	poke2Tex->SetMagFilter(GL_NEAREST);
+	poke2Tex->SetMinFilter(GL_NEAREST);
+
+	bufferPoke2->SetTexture(poke2Tex);
+
+	poke2->SetVertexBuffer(bufferPoke2);
+
+	poke2->CreateBoundingBox(poke2Width, poke2Height, 0.5f);
+
+
+
 
 	// adding highlight behavior here
 	/*
@@ -105,11 +139,15 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	*/
 
 
-	poke1->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
+	poke1->SetPosition(glm::vec3(-7.5f, 7.5f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(poke1);
+
+	poke2->SetPosition(glm::vec3(7.5f, 7.5f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(poke2);
 
 
 	// new crate code here
+	/*
 	std::shared_ptr<Texture> texture3dNew = std::make_shared<Texture>();
 
 	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
@@ -149,16 +187,16 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(graphicsObject3dCrate);
-
+	*/
 
 	// new Floor code here
 	std::shared_ptr<Texture> texture3dFloor = std::make_shared<Texture>();
 
-	texture3dFloor->LoadTextureDataFromFile("..\\3rdparty\\FloorTex.jpg");
+	texture3dFloor->LoadTextureDataFromFile("..\\3rdparty\\Poke\\floor.png");
 
 
 	std::shared_ptr<GraphicsObject> graphicsObject3dFloor = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bufferFloor = Generate::XZPlaneNorm(60, 60, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f }, glm::vec2{ 5.0f, 5.0f });
+	std::shared_ptr<VertexBuffer> bufferFloor = Generate::XZPlaneNorm(30, 40, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f }, glm::vec2{ 1.0f, 1.0f });
 
 	bufferFloor->AddVertexAttribute("position", 0, 3, 0);
 	bufferFloor->AddVertexAttribute("vertexColor", 1, 4, 3);
@@ -178,11 +216,12 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	graphicsObject3dFloor->SetVertexBuffer(bufferFloor);
 
 	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	graphicsObject3dFloor->RotateLocalY(90.0f);
 	scene3d->AddObject(graphicsObject3dFloor);
 
 
 	// new globe code here
-	std::shared_ptr<Texture> textureGlobe = std::make_shared<Texture>();
+	/*std::shared_ptr<Texture> textureGlobe = std::make_shared<Texture>();
 
 	textureGlobe->LoadTextureDataFromFile("..\\3rdparty\\GlobeTex.jpg");
 
@@ -220,14 +259,16 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 	globe->SetPosition(glm::vec3(27.5f, 2.5f, 27.5f));  //need to adjust to south east corner of plane
 	scene3d->AddObject(globe);
+	*/
 
 
 
+	graphicsEnviron->AddObject("poke1", poke1);
+	graphicsEnviron->AddObject("poke2", poke1);
 
-	graphicsEnviron->AddObject("cube", poke1);
-	graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
+	//graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
-	graphicsEnviron->AddObject("globe", globe);
+	//graphicsEnviron->AddObject("globe", globe);
 
 
 
@@ -1001,18 +1042,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	// attempting to set up the second scene
-	std::shared_ptr<Shader> shaderLight;
-	std::shared_ptr<Scene> sceneLight;
-	SetUpLightScene(shaderLight, sceneLight, graphicsEnviron);
+	//std::shared_ptr<Shader> shaderLight;
+	//std::shared_ptr<Scene> sceneLight;
+    //SetUpLightScene(shaderLight, sceneLight, graphicsEnviron);
 
-
-	graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
-	graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
+	//graphicsEnviron->CreateRenderer("rendererLight", shaderLight);
+	//graphicsEnviron->GetRenderer("rendererLight")->SetScene(sceneLight);
 
 	// attempting to set up the arrow scene
-	std::shared_ptr<Shader> shaderArrow;
-	std::shared_ptr<Scene> sceneArrow;
-	SetUpArrowScene(shaderArrow, sceneArrow, graphicsEnviron);
+	//std::shared_ptr<Shader> shaderArrow;
+	//std::shared_ptr<Scene> sceneArrow;
+	//SetUpArrowScene(shaderArrow, sceneArrow, graphicsEnviron);
 
 	/* removing arrow code for now
 	graphicsEnviron->CreateRenderer("rendererArrow", shaderArrow);
@@ -1020,13 +1060,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	*/
 
 	// attempting to set up the pc circle scene
-	std::shared_ptr<Shader> shaderCircle;
-	std::shared_ptr<Scene> sceneCircle;
-	SetUpPCObjectsScene(shaderCircle, sceneCircle, graphicsEnviron);
+	//std::shared_ptr<Shader> shaderCircle;
+	//std::shared_ptr<Scene> sceneCircle;
+	//SetUpPCObjectsScene(shaderCircle, sceneCircle, graphicsEnviron);
 
 
-	graphicsEnviron->CreateRenderer("rendererCircle", shaderCircle);
-	graphicsEnviron->GetRenderer("rendererCircle")->SetScene(sceneCircle);
+	//graphicsEnviron->CreateRenderer("rendererCircle", shaderCircle);
+	//graphicsEnviron->GetRenderer("rendererCircle")->SetScene(sceneCircle);
 
 
 	graphicsEnviron->StaticAllocate();

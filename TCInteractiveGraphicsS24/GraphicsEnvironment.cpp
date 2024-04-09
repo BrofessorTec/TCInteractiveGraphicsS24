@@ -196,7 +196,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		camera->SetLookFrame(glm::mat4(1.0f));
-		camera->SetPosition(glm::vec3(0.0f, 5.0f, 30.0f));
+		camera->SetPosition(glm::vec3(0.0f, 5.0f, 20.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -214,7 +214,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		glm::mat4 look(1.0f);
 		look = glm::rotate(look, glm::radians(180.0f), { 0, 1, 0 });
 		camera->SetLookFrame(look);
-		camera->SetPosition(glm::vec3(0.0f, 5.0f, -30.0f));
+		camera->SetPosition(glm::vec3(0.0f, 5.0f, -20.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -235,10 +235,10 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		// starts the animation and a timer for how long it is pressed down
 		// releasing mouse button will fire the item
-		if (objManager->GetObject("globe")->IsIntersectingWithRay(mouseRayVar)) {
+		/*if (objManager->GetObject("globe")->IsIntersectingWithRay(mouseRayVar)) {
 			bool isMoving = std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->GetMove();
 			std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->SetMove(!isMoving);
-		}
+		}*/
 		
 	}
 
@@ -391,7 +391,7 @@ void GraphicsEnvironment::Run3D()
 	glm::mat4 projection;
 	glm::mat4 referenceFrame(1.0f);
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
-	camera->SetPosition(glm::vec3(0.0f, 3.0f, 30.0f));
+	camera->SetPosition(glm::vec3(0.0f, 3.0f, 20.0f));
 
 
 	//bool lookWithMouse = false;
@@ -404,21 +404,20 @@ void GraphicsEnvironment::Run3D()
 	GeometricPlane plane;
 	Intersection intersection;
 	glm::vec3 floorIntersectionPoint{};
-	float crateDefaultAmbient = objManager->GetObject("Crate")->GetMaterial().ambientIntensity;
-	float cubeDefaultAmbient = objManager->GetObject("cube")->GetMaterial().ambientIntensity;
+	//float crateDefaultAmbient = objManager->GetObject("Crate")->GetMaterial().ambientIntensity;
+	//float cubeDefaultAmbient = objManager->GetObject("cube")->GetMaterial().ambientIntensity;
 
 
 	// add animation
-	std::shared_ptr<RotateAnimation> rotateAnimation =
-		std::make_shared<RotateAnimation>();
-	rotateAnimation->SetObject(objManager->GetObject("Crate"));
-	objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
+	std::shared_ptr<RotateAnimation> rotateAnimation = std::make_shared<RotateAnimation>();
+	//rotateAnimation->SetObject(objManager->GetObject("Crate"));
+	//objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
 
 	std::shared_ptr<SlidingAnimation> slideAnimation =
 		std::make_shared<SlidingAnimation>();
-	slideAnimation->SetObject(objManager->GetObject("globe"));
-	objManager->GetObject("globe")->SetAnimation(slideAnimation);
-	slideAnimation->SetMove(true);
+	//slideAnimation->SetObject(objManager->GetObject("globe"));
+	//objManager->GetObject("globe")->SetAnimation(slideAnimation);
+	//slideAnimation->SetMove(true);
 
 
 	// Set the behavior defaults for all objects
@@ -491,8 +490,13 @@ void GraphicsEnvironment::Run3D()
 
 
 		// added this to point the lightbulb at the camera position and match the texture object to the light position
-		objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
-		objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
+		//objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
+		//objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
+
+		// pointing the pokes at the camera
+		objManager->GetObject("poke1")->PointAtTarget(camera->GetPosition());
+		objManager->GetObject("poke2")->PointAtTarget(camera->GetPosition());
+
 
 
 		// this should work for all renderers now
@@ -505,7 +509,7 @@ void GraphicsEnvironment::Run3D()
 		Ray mouseRay = GetMouseRay(projection, view);
 		mouseRayVar = mouseRay;
 		float offset = plane.GetIntersectionOffset(mouseRay);
-		if (offset > 0) {
+		/*if (offset > 0) {
 			floorIntersectionPoint = mouseRay.GetIntersectionPoint(offset);
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ (float)floorIntersectionPoint.x , (float)objManager->GetObject("pcLinesCylinder")->GetReferenceFrame()[3].y, (float)floorIntersectionPoint.z });
 		}
@@ -513,11 +517,12 @@ void GraphicsEnvironment::Run3D()
 		{
 			objManager->GetObject("pcLinesCylinder")->SetPosition({ 10.0f, 10.0f, 10.0f });
 		}
+		*/
 
 		GraphicStructures::HighlightParams hp = { {}, &mouseRay };
 		//objManager->GetObject("cube")->SetBehaviorParameters("highlight", hp);
-		objManager->GetObject("Crate")->SetBehaviorParameters("highlight", hp);
-		objManager->GetObject("globe")->SetBehaviorParameters("highlight", hp);
+		//objManager->GetObject("Crate")->SetBehaviorParameters("highlight", hp);
+		//objManager->GetObject("globe")->SetBehaviorParameters("highlight", hp);
 		
 
 		// call update
@@ -541,8 +546,8 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 
-		ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
-		ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
+		//ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
+		//ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
 		//ImGui::SliderFloat("Local Attenuation ", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().attenuationCoef, 0, 1);
 		//ImGui::SliderFloat("Specular Cube", &objManager->GetObject("cube")->GetMaterial().specularIntensity, 0, 1);
 		//ImGui::SliderFloat("Shininess Cube", &objManager->GetObject("cube")->GetMaterial().shininess, 0, 100);
@@ -555,12 +560,12 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Ambient Intensity Floor", &objManager->GetObject("floor")->GetMaterial().ambientIntensity, 0, 1);
 
 		// add a slider for box animation speed 
-		ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
-		ImGui::SliderFloat("Sliding Speed", &slideAnimation->GetSpeed(), 0, 120);
+		//ImGui::SliderFloat("Animation Speed", &rotateAnimation->GetSpeed(), -360, 360);
+		//ImGui::SliderFloat("Sliding Speed", &slideAnimation->GetSpeed(), 0, 120);
 		ImGui::Checkbox("Correct gamma", &correctGamma);
-		ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
-		ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);
-		ImGui::SliderFloat("Local Light Position Z", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.z, -40, 40); 
+		//ImGui::SliderFloat("Local Light Position X", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.x, -40, 40); 
+		//ImGui::SliderFloat("Local Light Position Y", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.y, -40, 40);
+		//ImGui::SliderFloat("Local Light Position Z", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().position.z, -40, 40); 
 		ImGui::Checkbox("Use mouse to look", &this->lookWithMouse);
 		ImGui::Checkbox("Reset camera position", &resetCameraPosition);
 		ImGui::End();
