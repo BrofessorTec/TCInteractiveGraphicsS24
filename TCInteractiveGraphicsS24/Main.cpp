@@ -264,7 +264,7 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 
 	graphicsEnviron->AddObject("poke1", poke1);
-	graphicsEnviron->AddObject("poke2", poke1);
+	graphicsEnviron->AddObject("poke2", poke2);
 
 	//graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);

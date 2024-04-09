@@ -196,7 +196,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 		camera->SetLookFrame(glm::mat4(1.0f));
-		camera->SetPosition(glm::vec3(0.0f, 5.0f, 20.0f));
+		camera->SetPosition(glm::vec3(0.0f, 5.5f, 20.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -205,7 +205,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		glm::mat4 look(1.0f);
 		look = glm::rotate(look, glm::radians(90.0f), { 0, 1, 0 });
 		camera->SetLookFrame(look);
-		camera->SetPosition(glm::vec3(30.0f, 5.0f, 0.0f));
+		camera->SetPosition(glm::vec3(30.0f, 5.5f, 0.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -214,7 +214,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		glm::mat4 look(1.0f);
 		look = glm::rotate(look, glm::radians(180.0f), { 0, 1, 0 });
 		camera->SetLookFrame(look);
-		camera->SetPosition(glm::vec3(0.0f, 5.0f, -20.0f));
+		camera->SetPosition(glm::vec3(0.0f, 5.5f, -20.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -223,7 +223,7 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 		glm::mat4 look(1.0f);
 		look = glm::rotate(look, glm::radians(-90.0f), { 0, 1, 0 });
 		camera->SetLookFrame(look);
-		camera->SetPosition(glm::vec3(-30.0f, 5.0f, 0.0f));
+		camera->SetPosition(glm::vec3(-30.0f, 5.5f, 0.0f));
 		lookWithMouse = false;
 		return;
 	}
@@ -391,7 +391,7 @@ void GraphicsEnvironment::Run3D()
 	glm::mat4 projection;
 	glm::mat4 referenceFrame(1.0f);
 	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
-	camera->SetPosition(glm::vec3(0.0f, 3.0f, 20.0f));
+	camera->SetPosition(glm::vec3(0.0f, 5.5f, 20.0f));
 
 
 	//bool lookWithMouse = false;
@@ -436,16 +436,16 @@ void GraphicsEnvironment::Run3D()
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		referenceFrame = glm::rotate(glm::mat4(1.0f), glm::radians(cubeYAngle), glm::vec3(0.0f, 1.0f, 0.0f));
-		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
-		referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
+		//referenceFrame = glm::rotate(glm::mat4(1.0f), glm::radians(cubeYAngle), glm::vec3(0.0f, 1.0f, 0.0f));
+		//referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeXAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+		//referenceFrame = glm::rotate(referenceFrame, glm::radians(cubeZAngle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		//view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
 
 		// mouse settings
 		if (resetCameraPosition) {
 			camera->SetLookFrame(glm::mat4(1.0f));
-			camera->SetPosition(glm::vec4(0.0f, 3.0f, 20.0f, 1.0f));
+			camera->SetPosition(glm::vec4(0.0f, 5.5f, 20.0f, 1.0f));
 			resetCameraPosition = false;
 			lookWithMouse = false;
 		}
@@ -494,8 +494,8 @@ void GraphicsEnvironment::Run3D()
 		//objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
 
 		// pointing the pokes at the camera
-		objManager->GetObject("poke1")->PointAtTarget(camera->GetPosition());
-		objManager->GetObject("poke2")->PointAtTarget(camera->GetPosition());
+		//objManager->GetObject("poke1")->PointAtTarget(camera->GetPosition());
+		//objManager->GetObject("poke2")->PointAtTarget(camera->GetPosition());
 
 
 
@@ -546,8 +546,8 @@ void GraphicsEnvironment::Run3D()
 		//ImGui::SliderFloat("Camera Y", &cameraPosition.y, bottom, top);
 		//ImGui::SliderFloat("Camera Z", &cameraPosition.z, 20, 50);
 
-		//ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
-		//ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Global Intensity", &GetRenderer("renderer3d")->GetScene()->GetGlobalLight().intensity, 0, 1);
+		ImGui::SliderFloat("Local Intensity", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().intensity, 0, 1);
 		//ImGui::SliderFloat("Local Attenuation ", &GetRenderer("renderer3d")->GetScene()->GetLocalLight().attenuationCoef, 0, 1);
 		//ImGui::SliderFloat("Specular Cube", &objManager->GetObject("cube")->GetMaterial().specularIntensity, 0, 1);
 		//ImGui::SliderFloat("Shininess Cube", &objManager->GetObject("cube")->GetMaterial().shininess, 0, 100);
