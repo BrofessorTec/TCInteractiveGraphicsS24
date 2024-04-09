@@ -209,9 +209,9 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	poke2->SetPosition(glm::vec3(7.5f, 7.5f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(poke2);
 
-	attackBtn->SetPosition(glm::vec3(4.0f, 1.0f, 8.0f));
+	attackBtn->SetPosition(glm::vec3(-4.0f, 1.0f, 8.0f));
 	scene3d->AddObject(attackBtn);
-	catchBtn->SetPosition(glm::vec3(-4.0f, 1.0f, 8.0f));
+	catchBtn->SetPosition(glm::vec3(4.0f, 1.0f, 8.0f));
 	scene3d->AddObject(catchBtn);
 
 
