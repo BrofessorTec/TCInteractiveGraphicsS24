@@ -515,12 +515,9 @@ void GraphicsEnvironment::Run3D()
 		}
 
 		GraphicStructures::HighlightParams hp = { {}, &mouseRay };
-		objManager->GetObject("cube")->
-			SetBehaviorParameters("highlight", hp);
-		objManager->GetObject("Crate")->
-			SetBehaviorParameters("highlight", hp);
-		objManager->GetObject("globe")->
-			SetBehaviorParameters("highlight", hp);
+		//objManager->GetObject("cube")->SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("Crate")->SetBehaviorParameters("highlight", hp);
+		objManager->GetObject("globe")->SetBehaviorParameters("highlight", hp);
 		
 
 		// call update

@@ -24,6 +24,219 @@
 #include "HighlightBehavior.h"
 
 
+// inserting poke scene here
+static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
+	std::shared_ptr<Scene>& scene3d, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
+{
+
+	std::shared_ptr<TextFile> vertFile = std::make_shared<TextFile>();
+	// relative path 
+	vertFile->ReadFile("lighting.vert.glsl");
+
+	std::shared_ptr<TextFile> fragFile = std::make_shared<TextFile>();
+	// relative path 
+	fragFile->ReadFile("lighting.frag.glsl");
+
+
+	shader3d = std::make_shared<Shader>(vertFile->GetString(), fragFile->GetString());
+
+	shader3d->AddUniform("projection");
+	shader3d->AddUniform("world");
+	shader3d->AddUniform("view");
+	shader3d->AddUniform("materialAmbientIntensity");
+	shader3d->AddUniform("materialSpecularIntensity");
+	shader3d->AddUniform("materialShininess");
+	shader3d->AddUniform("globalLightPosition");
+	shader3d->AddUniform("globalLightColor");
+	shader3d->AddUniform("globalLightIntensity");
+	shader3d->AddUniform("globalLightAttenuationCoef");
+	shader3d->AddUniform("localLightPosition");
+	shader3d->AddUniform("localLightColor");
+	shader3d->AddUniform("localLightIntensity");
+	shader3d->AddUniform("localLightAttenuationCoef");
+	shader3d->AddUniform("viewPosition");
+	shader3d->AddUniform("texUnit");
+
+	unsigned int shaderProgram = shader3d->GetShaderProgram();
+
+
+	// Get the uniform locations
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+	unsigned int worldLoc = glGetUniformLocation(shaderProgram, "world");
+
+
+	std::shared_ptr<Texture> poke1Tex = std::make_shared<Texture>();
+
+	poke1Tex->LoadTextureDataFromFile("..\\3rdparty\\Gengar.jpg");
+
+	float poke1Width = 5.0f;
+	float poke1Height = 5.0f;
+
+
+	scene3d = std::make_shared<Scene>();
+	std::shared_ptr<GraphicsObject> poke1 = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferPoke1 = Generate::XYPlaneNorm(poke1Width, poke1Height);
+
+	bufferPoke1->AddVertexAttribute("position", 0, 3, 0);
+	bufferPoke1->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferPoke1->AddVertexAttribute("normal", 2, 3, 7);
+	bufferPoke1->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	poke1Tex->SetWrapS(GL_REPEAT);
+	poke1Tex->SetWrapT(GL_REPEAT);
+	poke1Tex->SetMagFilter(GL_NEAREST);
+	poke1Tex->SetMinFilter(GL_NEAREST);
+
+	bufferPoke1->SetTexture(poke1Tex);
+
+
+
+	poke1->SetVertexBuffer(bufferPoke1);
+
+	poke1->CreateBoundingBox(poke1Width, poke1Height, 0.5f);
+
+	// adding highlight behavior here
+	/*
+	std::shared_ptr<HighlightBehavior> cubeHighlight = std::make_shared<HighlightBehavior>();
+	cubeHighlight->SetObject(graphicsObject3d);
+	graphicsObject3d->AddBehavior("highlight", cubeHighlight);
+	*/
+
+
+	poke1->SetPosition(glm::vec3(0.0f, 2.6f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(poke1);
+
+
+	// new crate code here
+	std::shared_ptr<Texture> texture3dNew = std::make_shared<Texture>();
+
+	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
+	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
+
+
+	float crateWidth = 5.0f;
+	float crateHeight = 5.0f;
+	float crateDepth = 5.0f;
+
+	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferNew = Generate::CuboidNorm(crateWidth, crateHeight, crateDepth);
+
+	bufferNew->AddVertexAttribute("position", 0, 3, 0);
+	bufferNew->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferNew->AddVertexAttribute("normal", 2, 3, 7);
+	bufferNew->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	texture3dNew->SetWrapS(GL_REPEAT);
+	texture3dNew->SetWrapT(GL_REPEAT);
+	texture3dNew->SetMagFilter(GL_NEAREST);
+	texture3dNew->SetMinFilter(GL_NEAREST);
+
+	bufferNew->SetTexture(texture3dNew);
+
+
+	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
+	// add bounding box here?
+	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
+
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> crateHighlight = std::make_shared<HighlightBehavior>();
+	crateHighlight->SetObject(graphicsObject3dCrate);
+	graphicsObject3dCrate->AddBehavior("highlight", crateHighlight);
+
+
+	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dCrate);
+
+
+	// new Floor code here
+	std::shared_ptr<Texture> texture3dFloor = std::make_shared<Texture>();
+
+	texture3dFloor->LoadTextureDataFromFile("..\\3rdparty\\FloorTex.jpg");
+
+
+	std::shared_ptr<GraphicsObject> graphicsObject3dFloor = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferFloor = Generate::XZPlaneNorm(60, 60, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f }, glm::vec2{ 5.0f, 5.0f });
+
+	bufferFloor->AddVertexAttribute("position", 0, 3, 0);
+	bufferFloor->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferFloor->AddVertexAttribute("normal", 2, 3, 7);
+	bufferFloor->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	texture3dFloor->SetWrapS(GL_REPEAT);
+	texture3dFloor->SetWrapT(GL_REPEAT);
+	texture3dFloor->SetMagFilter(GL_NEAREST);
+	texture3dFloor->SetMinFilter(GL_NEAREST);
+
+	bufferFloor->SetTexture(texture3dFloor);
+
+
+
+	graphicsObject3dFloor->SetVertexBuffer(bufferFloor);
+
+	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
+	scene3d->AddObject(graphicsObject3dFloor);
+
+
+	// new globe code here
+	std::shared_ptr<Texture> textureGlobe = std::make_shared<Texture>();
+
+	textureGlobe->LoadTextureDataFromFile("..\\3rdparty\\GlobeTex.jpg");
+
+
+	float globeWidth = 5.0f;
+	float globeHeight = 5.0f;
+	float globeDepth = 5.0f;
+
+	std::shared_ptr<GraphicsObject> globe = std::make_shared<GraphicsObject>();
+	std::shared_ptr<VertexBuffer> bufferGlobe = Generate::CuboidNorm(globeWidth, globeHeight, globeDepth);
+
+	bufferGlobe->AddVertexAttribute("position", 0, 3, 0);
+	bufferGlobe->AddVertexAttribute("vertexColor", 1, 4, 3);
+	bufferGlobe->AddVertexAttribute("normal", 2, 3, 7);
+	bufferGlobe->AddVertexAttribute("texCoord", 3, 2, 10);
+
+	// adjusting the texture settings here
+	textureGlobe->SetWrapS(GL_REPEAT);
+	textureGlobe->SetWrapT(GL_REPEAT);
+	textureGlobe->SetMagFilter(GL_NEAREST);
+	textureGlobe->SetMinFilter(GL_NEAREST);
+
+	bufferGlobe->SetTexture(textureGlobe);
+
+
+	globe->SetVertexBuffer(bufferGlobe);
+	// add bounding box here?
+	globe->CreateBoundingBox(globeWidth, globeHeight, globeDepth);
+
+	// adding highlight behavior here
+	std::shared_ptr<HighlightBehavior> globeHighlight = std::make_shared<HighlightBehavior>();
+	globeHighlight->SetObject(globe);
+	globe->AddBehavior("highlight", globeHighlight);
+
+
+	globe->SetPosition(glm::vec3(27.5f, 2.5f, 27.5f));  //need to adjust to south east corner of plane
+	scene3d->AddObject(globe);
+
+
+
+
+	graphicsEnviron->AddObject("cube", poke1);
+	graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
+	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
+	graphicsEnviron->AddObject("globe", globe);
+
+
+
+}
+// poke scene ends here
+
+
+
+
 static void SetUp3DScene1(std::shared_ptr<Shader>& shader3d,
 	std::shared_ptr<Scene>& scene3d, std::shared_ptr<GraphicsEnvironment>& graphicsEnviron)
 {
@@ -313,10 +526,10 @@ static void SetUp3DScene2(std::shared_ptr<Shader>& shader3d,
 	bufferNew->AddVertexAttribute("texCoord", 3, 2, 10);
 
 	// adjusting the texture settings here
-	texture3d->SetWrapS(GL_REPEAT);
-	texture3d->SetWrapT(GL_REPEAT);
-	texture3d->SetMagFilter(GL_NEAREST);
-	texture3d->SetMinFilter(GL_NEAREST);
+	texture3dNew->SetWrapS(GL_REPEAT);
+	texture3dNew->SetWrapT(GL_REPEAT);
+	texture3dNew->SetMagFilter(GL_NEAREST);
+	texture3dNew->SetMinFilter(GL_NEAREST);
 
 	bufferNew->SetTexture(texture3dNew);
 
@@ -779,8 +992,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	std::shared_ptr<Shader> shader3d;
 	std::shared_ptr<Scene> scene3d;
 	//SetUp3DScene1(shader3d, scene3d, graphicsEnviron);
-	SetUp3DScene2(shader3d, scene3d, graphicsEnviron);
-
+	// set up the poke scene here
+	//SetUp3DScene2(shader3d, scene3d, graphicsEnviron);
+	SetUpPokeBattler(shader3d, scene3d, graphicsEnviron);
 
 	graphicsEnviron->CreateRenderer("renderer3d", shader3d);
 	graphicsEnviron->GetRenderer("renderer3d")->SetScene(scene3d);
