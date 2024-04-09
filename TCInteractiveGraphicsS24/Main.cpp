@@ -136,8 +136,8 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	url3 += ".png";
 	attackBtnTex->LoadTextureDataFromFile(url3);
 
-	float attackBtnWidth = 0.25f;
-	float attackBtnHeight = 0.2f;
+	float attackBtnWidth = 2.0f;
+	float attackBtnHeight = 1.5f;
 
 	std::shared_ptr<GraphicsObject> attackBtn = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> bufferAttackBtn = Generate::XYPlaneNorm(attackBtnWidth, attackBtnHeight);
@@ -160,11 +160,11 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	attackBtn->CreateBoundingBox(attackBtnWidth, attackBtnHeight, 0.5f);
 
 	// adding highlight behavior here
-	
+
 	std::shared_ptr<HighlightBehavior> attackBtnHighlight = std::make_shared<HighlightBehavior>();
 	attackBtnHighlight->SetObject(attackBtn);
 	attackBtn->AddBehavior("highlight", attackBtnHighlight);
-	
+
 
 	//catch button here
 	std::shared_ptr<Texture> catchBtnTex = std::make_shared<Texture>();
@@ -173,8 +173,8 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	url4 += ".png";
 	catchBtnTex->LoadTextureDataFromFile(url4);
 
-	float catchBtnWidth = 0.25f;
-	float catchBtnHeight = 0.2f;
+	float catchBtnWidth = 2.0f;
+	float catchBtnHeight = 1.5f;
 
 	std::shared_ptr<GraphicsObject> catchBtn = std::make_shared<GraphicsObject>();
 	std::shared_ptr<VertexBuffer> bufferCatchBtn = Generate::XYPlaneNorm(catchBtnWidth, catchBtnHeight);
@@ -209,52 +209,11 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 	poke2->SetPosition(glm::vec3(7.5f, 7.5f, 0.0f));  //can adjust position if needed
 	scene3d->AddObject(poke2);
 
+	attackBtn->SetPosition(glm::vec3(4.0f, 1.0f, 8.0f));
 	scene3d->AddObject(attackBtn);
+	catchBtn->SetPosition(glm::vec3(-4.0f, 1.0f, 8.0f));
 	scene3d->AddObject(catchBtn);
 
-
-	// new crate code here
-	/*
-	std::shared_ptr<Texture> texture3dNew = std::make_shared<Texture>();
-
-	//texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex.png");
-	texture3dNew->LoadTextureDataFromFile("..\\3rdparty\\CrateTex2.jpg");
-
-
-	float crateWidth = 5.0f;
-	float crateHeight = 5.0f;
-	float crateDepth = 5.0f;
-
-	std::shared_ptr<GraphicsObject> graphicsObject3dCrate = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bufferNew = Generate::CuboidNorm(crateWidth, crateHeight, crateDepth);
-
-	bufferNew->AddVertexAttribute("position", 0, 3, 0);
-	bufferNew->AddVertexAttribute("vertexColor", 1, 4, 3);
-	bufferNew->AddVertexAttribute("normal", 2, 3, 7);
-	bufferNew->AddVertexAttribute("texCoord", 3, 2, 10);
-
-	// adjusting the texture settings here
-	texture3dNew->SetWrapS(GL_REPEAT);
-	texture3dNew->SetWrapT(GL_REPEAT);
-	texture3dNew->SetMagFilter(GL_NEAREST);
-	texture3dNew->SetMinFilter(GL_NEAREST);
-
-	bufferNew->SetTexture(texture3dNew);
-
-
-	graphicsObject3dCrate->SetVertexBuffer(bufferNew);
-	// add bounding box here?
-	graphicsObject3dCrate->CreateBoundingBox(crateWidth, crateHeight, crateDepth);
-
-	// adding highlight behavior here
-	std::shared_ptr<HighlightBehavior> crateHighlight = std::make_shared<HighlightBehavior>();
-	crateHighlight->SetObject(graphicsObject3dCrate);
-	graphicsObject3dCrate->AddBehavior("highlight", crateHighlight);
-
-
-	graphicsObject3dCrate->SetPosition(glm::vec3(-10.0f, 2.6f, 0.0f));  //can adjust position if needed
-	scene3d->AddObject(graphicsObject3dCrate);
-	*/
 
 	// new Floor code here
 	std::shared_ptr<Texture> texture3dFloor = std::make_shared<Texture>();
@@ -278,70 +237,17 @@ static void SetUpPokeBattler(std::shared_ptr<Shader>& shader3d,
 
 	bufferFloor->SetTexture(texture3dFloor);
 
-
-
 	graphicsObject3dFloor->SetVertexBuffer(bufferFloor);
 
 	graphicsObject3dFloor->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));  //can adjust position if needed
 	graphicsObject3dFloor->RotateLocalY(90.0f);
 	scene3d->AddObject(graphicsObject3dFloor);
 
-
-	// new globe code here
-	/*std::shared_ptr<Texture> textureGlobe = std::make_shared<Texture>();
-
-	textureGlobe->LoadTextureDataFromFile("..\\3rdparty\\GlobeTex.jpg");
-
-
-	float globeWidth = 5.0f;
-	float globeHeight = 5.0f;
-	float globeDepth = 5.0f;
-
-	std::shared_ptr<GraphicsObject> globe = std::make_shared<GraphicsObject>();
-	std::shared_ptr<VertexBuffer> bufferGlobe = Generate::CuboidNorm(globeWidth, globeHeight, globeDepth);
-
-	bufferGlobe->AddVertexAttribute("position", 0, 3, 0);
-	bufferGlobe->AddVertexAttribute("vertexColor", 1, 4, 3);
-	bufferGlobe->AddVertexAttribute("normal", 2, 3, 7);
-	bufferGlobe->AddVertexAttribute("texCoord", 3, 2, 10);
-
-	// adjusting the texture settings here
-	textureGlobe->SetWrapS(GL_REPEAT);
-	textureGlobe->SetWrapT(GL_REPEAT);
-	textureGlobe->SetMagFilter(GL_NEAREST);
-	textureGlobe->SetMinFilter(GL_NEAREST);
-
-	bufferGlobe->SetTexture(textureGlobe);
-
-
-	globe->SetVertexBuffer(bufferGlobe);
-	// add bounding box here?
-	globe->CreateBoundingBox(globeWidth, globeHeight, globeDepth);
-
-	// adding highlight behavior here
-	std::shared_ptr<HighlightBehavior> globeHighlight = std::make_shared<HighlightBehavior>();
-	globeHighlight->SetObject(globe);
-	globe->AddBehavior("highlight", globeHighlight);
-
-
-	globe->SetPosition(glm::vec3(27.5f, 2.5f, 27.5f));  //need to adjust to south east corner of plane
-	scene3d->AddObject(globe);
-	*/
-
-
-
 	graphicsEnviron->AddObject("poke1", poke1);
 	graphicsEnviron->AddObject("poke2", poke2);
 	graphicsEnviron->AddObject("attackBtn", attackBtn);
 	graphicsEnviron->AddObject("catchBtn", catchBtn);
-
-
-
-	//graphicsEnviron->AddObject("Crate", graphicsObject3dCrate);
 	graphicsEnviron->AddObject("floor", graphicsObject3dFloor);
-	//graphicsEnviron->AddObject("globe", globe);
-
-
 
 }
 // poke scene ends here

@@ -487,10 +487,8 @@ void GraphicsEnvironment::Run3D()
 			object->RotateLocalZ(cubeZAngle);
 		}*/
 
-
-
-		// added this to point the lightbulb at the camera position and match the texture object to the light position
-		//objManager->GetObject("lightbulb")->SetPosition(GetRenderer("renderer3d")->GetScene()->GetLocalLight().position);
+		// if i want the buttons to move with the screen, can use this code
+		/*
 		glm::vec3 attackBtnPos = camera->GetPosition();
 		attackBtnPos = { attackBtnPos.x - 0.5f, attackBtnPos.y -0.4f, attackBtnPos.z - 1.0f };
 		objManager->GetObject("attackBtn")->SetPosition(attackBtnPos);
@@ -498,13 +496,11 @@ void GraphicsEnvironment::Run3D()
 		glm::vec3 catchBtnPos = camera->GetPosition();
 		catchBtnPos = { catchBtnPos.x + 0.5f, catchBtnPos.y - 0.4f, catchBtnPos.z - 1.0f };
 		objManager->GetObject("catchBtn")->SetPosition(catchBtnPos);
-
-		//objManager->GetObject("lightbulb")->PointAtTarget(camera->GetPosition());
+		*/
 
 		// pointing the pokes at the camera
 		//objManager->GetObject("poke1")->PointAtTarget(camera->GetPosition());
 		//objManager->GetObject("poke2")->PointAtTarget(camera->GetPosition());
-
 
 
 		// this should work for all renderers now
