@@ -114,20 +114,6 @@ std::shared_ptr<Renderer> GraphicsEnvironment::GetRenderer(const std::string& na
 
 void GraphicsEnvironment::StaticAllocate()
 {
-	/*
-	for (const auto& pair : rendererMap) {
-		std::string key = pair.first;
-		std::shared_ptr<Renderer> renderer = pair.second;
-
-		// Process key and renderer
-
-		std::cout << "Key: " << key << ", Renderer: ";
-		renderer->AllocateVertexBuffers();
-		std::cout << std::endl;
-	}
-	*/
-
-
 	for (const auto& [name, renderer] : rendererMap) {
 		renderer->AllocateVertexBuffers();
 	}
@@ -136,19 +122,8 @@ void GraphicsEnvironment::StaticAllocate()
 
 void GraphicsEnvironment::Render()
 {
-	/*
-	for (const auto& pair : rendererMap) {
-		std::string key = pair.first;
-		std::shared_ptr<Renderer> renderer = pair.second;
-
-		// Process key and renderer
-		std::cout << "Key: " << key << ", Renderer: ";
-		renderer->RenderScene();
-		std::cout << std::endl;
-	}*/
-
 	for (const auto& [name, renderer] : rendererMap) {
-		renderer->RenderScene(*camera);  //is this the right syntax?
+		renderer->RenderScene(*camera); 
 	}
 
 }
@@ -239,6 +214,15 @@ void GraphicsEnvironment::ProcessInput(GLFWwindow* window, double elapsedSeconds
 			bool isMoving = std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->GetMove();
 			std::static_pointer_cast<SlidingAnimation>(objManager->GetObject("globe")->GetAnimation())->SetMove(!isMoving);
 		}*/
+
+		
+		if (objManager->GetObject("attackBtn")->IsIntersectingWithRay(mouseRayVar)) {
+			// rotate left right left to simulate and attack rumble
+			//bool isMoving = std::static_pointer_cast<AttackAnimation>(objManager->GetObject("poke1")->GetAnimation())->GetMove();
+			std::static_pointer_cast<AttackAnimation>(objManager->GetObject("poke1")->GetAnimation())->SetMove(true);
+		}
+		
+
 		
 	}
 
@@ -264,103 +248,6 @@ glm::mat4 GraphicsEnvironment::CreateViewMatrix(const glm::vec3& position, const
 	view[3] = glm::vec4(position, 1.0f);
 	return glm::inverse(view);
 }
-
-void GraphicsEnvironment::Run2D()
-{
-
-	glm::vec3 clearColor = { 0.2f, 0.3f, 0.3f };
-
-	//glUseProgram(shader->GetShaderProgram());  // use new shaderProgram is this needed anymore?
-
-
-	// added the io back here
-	ImGuiIO& io = ImGui::GetIO();
-
-	float angle = 0, childAngle = 0;
-	float cameraX = -10, cameraY = 0;
-	glm::mat4 view;
-
-	Timer timer;
-	double elapsedSeconds;
-
-
-	while (!glfwWindowShouldClose(window)) {
-		elapsedSeconds = timer.GetElapsedTimeInSeconds();
-		ProcessInput(window, elapsedSeconds);
-
-		// moved projection matrix calc to here
-		int width, height;
-		glfwGetWindowSize(window, &width, &height);
-		float aspectRatio = width / (height * 1.0f);
-
-		float left = -50.0f;
-		float right = 50.0f;
-		float bottom = -50.0f;
-		float top = 50.0f;
-		left *= aspectRatio;
-		right *= aspectRatio;
-		glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
-
-		glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		view = CreateViewMatrix(
-			glm::vec3(cameraX, cameraY, 1.0f),
-			glm::vec3(0.0f, 0.0f, -1.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
-
-		// Update the objects in the scene
-		// should the update objects be in the render class?
-		for (auto& object : GetRenderer("renderer1")->GetScene()->GetObjects()) {
-			object->ResetOrientation();
-			object->RotateLocalZ(angle);
-			for (auto& child : object->GetChildren()) {
-				child->ResetOrientation();
-				child->RotateLocalZ(childAngle);
-			}
-		}
-
-		//GetRenderer("renderer1")->SetScene(scene);
-		GetRenderer("renderer1")->SetView(view);
-		GetRenderer("renderer1")->SetProjection(projection);
-		//GetRenderer("renderer2")->SetScene(textureScene);
-		GetRenderer("renderer2")->SetView(view);
-		GetRenderer("renderer2")->SetProjection(projection);
-
-
-		//StaticAllocate();
-
-		Render();
-
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::Begin("Computing Interactive Graphics");
-		//ImGui::Text(shader->GetLog().c_str());
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			1000.0f / io.Framerate, io.Framerate);
-		ImGui::ColorEdit3("Background color", (float*)&clearColor.r);
-		ImGui::SliderFloat("Angle", &angle, 0, 360);
-		ImGui::SliderFloat("Child Angle", &childAngle, 0, 360);
-		ImGui::SliderFloat("Camera X", &cameraX, left, right);
-		ImGui::SliderFloat("Camera Y", &cameraY, bottom, top);
-		ImGui::End();
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-
-	}
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	glfwTerminate();
-}
-
 
 void GraphicsEnvironment::Run3D()
 {	
@@ -413,11 +300,20 @@ void GraphicsEnvironment::Run3D()
 	//rotateAnimation->SetObject(objManager->GetObject("Crate"));
 	//objManager->GetObject("Crate")->SetAnimation(rotateAnimation);
 
-	std::shared_ptr<SlidingAnimation> slideAnimation =
-		std::make_shared<SlidingAnimation>();
+	std::shared_ptr<SlidingAnimation> slideAnimation = std::make_shared<SlidingAnimation>();
 	//slideAnimation->SetObject(objManager->GetObject("globe"));
 	//objManager->GetObject("globe")->SetAnimation(slideAnimation);
 	//slideAnimation->SetMove(true);
+	
+	// new attack animation here
+	std::shared_ptr<AttackAnimation> attackAnimation1 = std::make_shared<AttackAnimation>();
+	std::shared_ptr<AttackAnimation> attackAnimation2 = std::make_shared<AttackAnimation>();
+
+	attackAnimation1->SetObject(objManager->GetObject("poke1"));
+	objManager->GetObject("poke1")->SetAnimation(attackAnimation1);
+
+	//attackAnimation2->SetObject(objManager->GetObject("poke2"));
+	//objManager->GetObject("poke2")->SetAnimation(attackAnimation2);
 
 
 	// Set the behavior defaults for all objects

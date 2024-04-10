@@ -15,6 +15,7 @@
 #include "IAnimation.h"
 #include "RotateAnimation.h"
 #include "SlidingAnimation.h"
+#include "AttackAnimation.h"
 #include "Camera.h"
 #include "GraphicStructures.h"
 #include "Ray.h"
